@@ -4,6 +4,7 @@ import com.example.cineconnect.model.LoginRequest
 import com.example.cineconnect.model.LoginResponse
 import com.example.cineconnect.model.Movie
 import com.example.cineconnect.model.MovieListResponse
+import com.example.cineconnect.model.PeopleListResponse
 import com.example.cineconnect.model.Person
 import com.example.cineconnect.model.RegisterRequest
 import com.example.cineconnect.model.RegisterResponse
@@ -66,4 +67,13 @@ interface APIService {
         @Query("page") page: Int,
         @Query("q") query: String,
     ): Response<MovieListResponse>
+
+    @Headers(
+        "accept: application/json",
+    )
+    @GET("person/search/")
+    suspend fun getSearchPerson(
+        @Query("page") page: Int,
+        @Query("q") query: String,
+    ): Response<PeopleListResponse>
 }

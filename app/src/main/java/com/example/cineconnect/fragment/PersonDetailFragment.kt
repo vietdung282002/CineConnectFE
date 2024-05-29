@@ -92,7 +92,7 @@ class PersonDetailFragment : Fragment(), OnMovieClicked {
             tvPersonName.text = person.name
             Glide.with(requireContext()).load(PROFILE_LINK + person.profilePath).into(personImage)
             biographyText.text = person.biography
-            tvNumberOfMovies.text = person.movies.size.toString()
+            tvNumberOfMovies.text = person.movies?.size.toString()
             biographyText.setOnClickListener {
                 if (isExpanded) {
                     biographyText.maxHeight = itemHeight

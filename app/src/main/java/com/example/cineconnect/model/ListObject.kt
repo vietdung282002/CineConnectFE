@@ -45,3 +45,16 @@ data class MovieListResponse(
     @SerializedName("current_page")
     val currentPage: Int,
 )
+
+data class PeopleListResponse(
+    @SerializedName("next")
+    val next: String?,
+    @SerializedName("previous")
+    val previous: String?,
+    @SerializedName("results")
+    val personLists: List<Person>,
+    @SerializedName("total_pages")
+    val totalPages: Int,
+    @SerializedName("current_page")
+    val currentPage: Int,
+)

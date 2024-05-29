@@ -6,7 +6,7 @@ import androidx.core.text.HtmlCompat
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.cineconnect.databinding.MovieItemSearchBinding
+import com.example.cineconnect.databinding.MoviePersonItemSearchBinding
 import com.example.cineconnect.model.MovieList
 import com.example.cineconnect.onClickInterface.OnMovieClicked
 import com.example.cineconnect.utils.Utils
@@ -15,7 +15,7 @@ class MovieSearchListAdapter :
     ListAdapter<MovieList, MovieSearchListAdapter.MovieViewHolder>(MovieListAdapter.MovieItemDiffUtils()) {
     private var listener: OnMovieClicked? = null
 
-    class MovieViewHolder(movieItemSearchBinding: MovieItemSearchBinding) :
+    class MovieViewHolder(movieItemSearchBinding: MoviePersonItemSearchBinding) :
         RecyclerView.ViewHolder(movieItemSearchBinding.root) {
         val posterImage = movieItemSearchBinding.posterImage
         val tvContent = movieItemSearchBinding.tvContent
@@ -24,7 +24,7 @@ class MovieSearchListAdapter :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
         val adapterLayout =
-            MovieItemSearchBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            MoviePersonItemSearchBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return MovieViewHolder(adapterLayout)
     }
 

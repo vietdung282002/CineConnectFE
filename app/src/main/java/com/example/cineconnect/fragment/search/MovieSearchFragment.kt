@@ -48,7 +48,6 @@ class MovieSearchFragment(
         fragmentMovieSearchBinding.rvMovie.adapter = movieSearchListAdapter
 
         movieViewModel.movieListResult.observe(viewLifecycleOwner) {
-            Log.d(LOG_TAG, "onViewCreated: $it")
             when (it) {
                 is BaseResponse.Loading -> {
                     showLoading()

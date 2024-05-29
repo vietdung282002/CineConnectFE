@@ -1,0 +1,530 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".fragment.MovieDetailFragment">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/appBarLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/Base.Theme.CineConnect">
+
+                <!-- In CollapsingToolbarLayout some important attributes are:
+                 i)  app:layout_scrollFlags which is used to specify how collapsing
+                     layout behaves when content is scrolled.I have used
+                     app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
+                     so it will scroll until it's is completely collapsed.
+                 ii) app:contentScrim="@color/green" that specifies the color
+                      of the collapsed toolbar -->
+                <com.google.android.material.appbar.CollapsingToolbarLayout
+                    android:id="@+id/collapsing_toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/main_color"
+                    app:collapsedTitleGravity="center"
+                    app:collapsedTitleTextColor="@color/white"
+                    app:contentScrim="@color/black2"
+                    app:expandedTitleTextColor="@color/white"
+                    app:layout_scrollFlags="scroll|snap|exitUntilCollapsed">
+
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="250dp"
+                        app:layout_collapseMode="parallax">
+
+                        <ImageView
+                            android:id="@+id/iv_backdrop"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            tools:ignore="ContentDescription" />
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/gradient_background"
+                            tools:ignore="ContentDescription" />
+                    </FrameLayout>
+
+                    <!-- The attribute app:layout_collapseMode="pin" is set so that
+                         sticks to the top when the user scrolls the view up-->
+                    <androidx.appcompat.widget.Toolbar
+                        android:layout_width="match_parent"
+                        android:layout_height="?attr/actionBarSize"
+                        app:layout_collapseMode="pin"
+                        app:popupTheme="@style/ThemeOverlay.AppCompat.Dark">
+
+                        <ImageButton
+                            android:id="@+id/back_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            android:contentDescription="@string/none"
+                            android:src="@drawable/back"
+                            tools:ignore="ContentDescription,TouchTargetSizeCheck" />
+
+                        <ImageButton
+                            android:id="@+id/more_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:layout_marginEnd="10dp"
+                            android:background="@android:color/transparent"
+                            android:src="@drawable/baseline_more_horiz_24"
+                            tools:ignore="ContentDescription,TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+                    </androidx.appcompat.widget.Toolbar>
+
+
+                </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+            </com.google.android.material.appbar.AppBarLayout>
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fillViewport="true"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/bg_intro"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clipChildren="false"
+                        android:clipToPadding="false"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:background="@color/main_color"
+                        >
+
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/cl_top"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="15dp"
+                            android:layout_marginEnd="15dp"
+                            android:clipChildren="false"
+                            android:clipToPadding="false"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+
+                            <LinearLayout
+                                android:id="@+id/ll_release_date"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="30dp"
+                                android:orientation="horizontal"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent">
+
+                                <TextView
+                                    android:id="@+id/tv_release_date"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/grey"
+                                    android:textColorHint="@color/grey"
+                                    android:textSize="15sp" />
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_vertical"
+                                    android:layout_marginStart="10dp"
+                                    android:layout_marginEnd="10dp"
+                                    android:importantForAccessibility="no"
+                                    android:src="@drawable/baseline_circle_24"
+                                    tools:ignore="ImageContrastCheck" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/directed_by"
+                                    android:textColor="#D7CCC8"
+                                    android:textSize="15sp"
+
+                                    />
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/tv_director_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="15dp"
+                                android:textColor="@color/white"
+                                android:textColorHint="@color/white"
+                                android:textSize="17sp"
+                                android:textStyle="bold"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:onClick="onClick"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/ll_release_date" />
+
+                            <TextView
+                                android:id="@+id/tv_runtime"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="15dp"
+                                android:textColor="@color/grey"
+                                android:textColorHint="@color/grey"
+                                android:textSize="12sp"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/tv_director_name" />
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/movie_poster"
+                                android:layout_width="150dp"
+                                android:layout_height="225dp"
+                                android:scaleType="fitCenter"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:shapeAppearanceOverlay="@style/rounded_corner"
+                                app:strokeColor="@color/white"
+                                app:strokeWidth="1dp" />
+
+                            <TextView
+                                android:id="@+id/tv_tagline"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:textColor="@color/grey"
+                                android:textColorHint="@color/grey"
+                                android:textSize="18sp"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/movie_poster" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:layout_marginTop="10dp"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/tv_tagline">
+
+                                <FrameLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    tools:ignore="UselessParent">
+
+                                    <TextView
+                                        android:id="@+id/overview_text"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginBottom="16dp"
+                                        android:clickable="true"
+                                        android:ellipsize="end"
+                                        android:focusable="true"
+                                        android:maxLines="3"
+                                        android:onClick="onClick"
+                                        android:textColor="@color/grey"
+                                        android:textColorHint="@color/grey"
+                                        android:textSize="14sp"
+                                        tools:ignore="VisualLintOverlap,TextContrastCheck,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+                                    <View
+                                        android:id="@+id/gradient_view"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="60dp"
+                                        android:layout_gravity="bottom"
+                                        android:background="@drawable/gradient_background"
+                                        />
+
+                                </FrameLayout>
+
+                            </LinearLayout>
+
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <com.google.android.material.divider.MaterialDivider
+                            android:id="@+id/divider1"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="20dp"
+                            android:color="@color/grey"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/cl_top" />
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/ll_chart"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_margin="10dp"
+                            android:importantForAccessibility="no"
+                            android:orientation="horizontal"
+                            app:layout_constraintHeight_percent="0.13"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/divider1">
+
+                            <ImageView
+                                android:id="@+id/star1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="bottom"
+                                android:paddingBottom="20dp"
+                                android:src="@drawable/baseline_star_24"
+                                tools:ignore="ContentDescription"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                            <com.github.mikephil.charting.charts.BarChart
+                                android:id="@+id/BarChart"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:alwaysDrawnWithCache="false"
+                                android:foregroundGravity="bottom"
+                                android:paddingBottom="15dp"
+                                app:layout_constraintBottom_toBottomOf="@id/star1"
+                                app:layout_constraintEnd_toStartOf="@id/ll_avr_rating"
+                                app:layout_constraintStart_toEndOf="@id/star1" />
+
+                            <LinearLayout
+                                android:id="@+id/ll_avr_rating"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:paddingBottom="20dp"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent">
+
+                                <TextView
+                                    android:id="@+id/tv_avr_rating"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="0dp"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="1"
+                                    android:gravity="bottom"
+                                    android:textColor="@color/green"
+                                    android:textColorHint="@color/green"
+                                    android:textSize="25sp" />
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    >
+
+                                    <ImageView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="bottom"
+                                        android:src="@drawable/baseline_star_24"
+                                        tools:ignore="ContentDescription" />
+
+                                    <ImageView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="bottom"
+                                        android:src="@drawable/baseline_star_24"
+                                        tools:ignore="ContentDescription" />
+
+                                    <ImageView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="bottom"
+                                        android:src="@drawable/baseline_star_24"
+                                        tools:ignore="ContentDescription" />
+
+                                    <ImageView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="bottom"
+                                        android:src="@drawable/baseline_star_24"
+                                        tools:ignore="ContentDescription" />
+
+                                    <ImageView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="bottom"
+                                        android:src="@drawable/baseline_star_24"
+                                        tools:ignore="ContentDescription" />
+
+                                </LinearLayout>
+
+
+                            </LinearLayout>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <com.google.android.material.divider.MaterialDivider
+                            android:id="@+id/divider2"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="20dp"
+                            android:color="@color/grey"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/ll_chart" />
+
+                        <LinearLayout
+                            android:id="@+id/ll_like_review"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="15dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginEnd="15dp"
+                            android:baselineAligned="false"
+                            app:layout_constraintTop_toBottomOf="@id/divider2">
+
+                            <LinearLayout
+                                android:id="@+id/liked_list"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="10dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/bg_rounded_red"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:onClick="onClick"
+                                android:orientation="vertical"
+                                android:padding="10dp">
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:padding="3dp"
+                                    android:src="@drawable/baseline_favorite_24"
+                                    tools:ignore="ContentDescription,ImageContrastCheck" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:padding="3dp"
+                                    android:text="@string/liked"
+                                    android:textColor="#263238" />
+
+                                <TextView
+                                    android:id="@+id/tv_number_of_likes"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:padding="3dp"
+                                    />
+
+
+                            </LinearLayout>
+
+
+                            <LinearLayout
+                                android:id="@+id/reviews_list"
+
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="10dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/bg_rounded"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:onClick="onClick"
+                                android:orientation="vertical"
+                                android:padding="10dp">
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:padding="3dp"
+                                    android:src="@drawable/baseline_rate_review_24"
+                                    tools:ignore="ContentDescription,ImageContrastCheck" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:padding="3dp"
+                                    android:text="@string/reviews"
+                                    android:textColor="#263238" />
+
+                                <TextView
+                                    android:id="@+id/tv_number_of_reviews"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:padding="3dp"
+                                    />
+
+
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+
+                        <com.google.android.material.divider.MaterialDivider
+                            android:id="@+id/divider3"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="20dp"
+                            android:color="@color/grey"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/ll_like_review" />
+
+                        <com.example.cineconnect.customLayout.CustomTabBar
+                            android:id="@+id/tab_bar"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:entries="@array/tabs"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/divider3" />
+
+                        <com.google.android.material.divider.MaterialDivider
+                            android:id="@+id/divider4"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="10dp"
+                            android:color="@color/grey"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/tab_bar" />
+
+                        <androidx.viewpager2.widget.ViewPager2
+                            android:id="@+id/view_pager"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginBottom="16dp"
+                            android:paddingBottom="20dp"
+                            app:layout_constraintTop_toBottomOf="@id/divider4" />
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </FrameLayout>
+
+
+
+            </androidx.core.widget.NestedScrollView>
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+        <FrameLayout
+            android:id="@+id/progress_bar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.5"
+            android:background="@color/black"
+            android:visibility="gone">
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:visibility="visible"
+                android:layout_gravity="center"
+                android:indeterminate="true"
+                android:indeterminateTint="@color/white"
+
+                />
+        </FrameLayout>
+    </FrameLayout>
+
+
+
+</layout>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    tools:context=".MainActivity">
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/main_color">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:backgroundTint="#FFFFFF"
+            android:orientation="vertical">
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/home_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:name="com.example.cineconnect.fragment.HomeFragment"
+                tools:layout="@layout/fragment_home"
+                />
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/discover_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:name="com.example.cineconnect.fragment.DiscoverFragment"
+                tools:layout="@layout/fragment_discover"
+                android:visibility="gone"
+                />
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/search_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:name="com.example.cineconnect.fragment.SearchFragment"
+                tools:layout="@layout/fragment_search"
+                android:visibility="gone"
+                />
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/profile_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:name="com.example.cineconnect.fragment.ProfileFragment"
+                tools:layout="@layout/fragment_profile"
+                android:visibility="gone"
+                />
+
+            <FrameLayout
+                android:id="@+id/main_activity_frame_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_rounded">
+
+                <com.google.android.material.bottomnavigation.BottomNavigationView
+
+                    android:id="@+id/bottom_navigation_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_rounded"
+                    app:itemActiveIndicatorStyle="@color/white"
+                    app:itemIconTint="@drawable/icon_tint_selector"
+                    app:itemRippleColor="#FFFFFF"
+                    app:itemTextColor="@drawable/icon_tint_selector"
+                    app:labelVisibilityMode="labeled"
+                    app:menu="@menu/bottom_nav_menu" />
+            </FrameLayout>
+
+
+        </LinearLayout>
+
+
+    </FrameLayout>
+
+
+</layout>

@@ -1,29 +1,27 @@
 package com.example.cineconnect.fragment
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import com.example.cineconnect.utils.DataSource
+import androidx.fragment.app.Fragment
 import com.example.cineconnect.R
 import com.example.cineconnect.adapter.CastListAdapter
 import com.example.cineconnect.databinding.FragmentCastListBinding
 import com.example.cineconnect.model.CastList
 import com.example.cineconnect.onClickInterface.OnPersonClicked
-import com.example.cineconnect.utils.Utils
 import com.example.cineconnect.utils.Utils.Companion.PERSON_ID
 
-class CastListFragment(private val castList: List<CastList>, private  val parentId: Int) : Fragment(), OnPersonClicked {
+class CastListFragment(private val castList: List<CastList>, private val parentId: Int) :
+    Fragment(), OnPersonClicked {
     private lateinit var fragmentCastListBinding: FragmentCastListBinding
     private lateinit var castListAdapter: CastListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         fragmentCastListBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_cast_list, container, false)
@@ -33,7 +31,6 @@ class CastListFragment(private val castList: List<CastList>, private  val parent
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val dataset = DataSource().loadCast()
         castListAdapter = CastListAdapter()
         castListAdapter.setOnPersonClicked(this)
         fragmentCastListBinding.lifecycleOwner = viewLifecycleOwner

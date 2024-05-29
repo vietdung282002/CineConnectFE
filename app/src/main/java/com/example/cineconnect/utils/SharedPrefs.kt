@@ -24,7 +24,7 @@ class SharedPrefs(context: Context) {
         return prefs.getInt(key, i)
     }
 
-    fun clearValue(){
+    fun clearValue() {
         prefs.edit().clear().apply()
     }
 }

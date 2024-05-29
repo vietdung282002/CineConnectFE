@@ -23,7 +23,7 @@ data class Movie(
     @SerializedName("review_count") val reviewCount: Int,
     @SerializedName("favourite_count") val favouriteCount: Int,
     @SerializedName("rating") val rating: List<Rating>,
-    )
+)
 
 data class Rating(
     @SerializedName("avr") val avr: Avr,

@@ -9,10 +9,10 @@ import com.example.cineconnect.databinding.GenreItemBinding
 import com.example.cineconnect.model.Genre
 import com.example.cineconnect.onClickInterface.OnGenreClicked
 
-class GenreListAdapter: ListAdapter<Genre,GenreListAdapter.GenreViewHolder>(GenreItemDiffUtil()) {
+class GenreListAdapter : ListAdapter<Genre, GenreListAdapter.GenreViewHolder>(GenreItemDiffUtil()) {
     private var listener: OnGenreClicked? = null
 
-    class GenreItemDiffUtil: DiffUtil.ItemCallback<Genre>() {
+    class GenreItemDiffUtil : DiffUtil.ItemCallback<Genre>() {
         override fun areItemsTheSame(oldItem: Genre, newItem: Genre): Boolean {
             return oldItem.id == newItem.id
         }
@@ -23,17 +23,19 @@ class GenreListAdapter: ListAdapter<Genre,GenreListAdapter.GenreViewHolder>(Genr
 
     }
 
-    class GenreViewHolder(genreItemBinding: GenreItemBinding): RecyclerView.ViewHolder(genreItemBinding.root) {
+    class GenreViewHolder(genreItemBinding: GenreItemBinding) :
+        RecyclerView.ViewHolder(genreItemBinding.root) {
         val genreName = genreItemBinding.genreName
         val genreDetail = genreItemBinding.genreDetail
     }
 
     override fun submitList(list: List<Genre>?) {
-        super.submitList(list?.let{ArrayList(it)})
+        super.submitList(list?.let { ArrayList(it) })
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GenreViewHolder {
-        val adapterLayout = GenreItemBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        val adapterLayout =
+            GenreItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return GenreViewHolder(adapterLayout)
     }
 
@@ -41,9 +43,10 @@ class GenreListAdapter: ListAdapter<Genre,GenreListAdapter.GenreViewHolder>(Genr
         val genre = getItem(position)
         holder.genreName.text = genre.name
         holder.genreDetail.setOnClickListener {
-            listener?.getOnGenreClicked(position,genre.id,genre.name)
+            listener?.getOnGenreClicked(position, genre.id, genre.name)
         }
     }
+
     fun setOnGenreClicked(listener: OnGenreClicked) {
         this.listener = listener
     }

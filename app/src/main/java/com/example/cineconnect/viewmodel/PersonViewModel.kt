@@ -8,23 +8,22 @@ import com.example.cineconnect.network.BaseResponse
 import com.example.cineconnect.repository.PersonRepository
 import kotlinx.coroutines.launch
 
-class PersonViewModel: ViewModel() {
+class PersonViewModel : ViewModel() {
     private val personRepository = PersonRepository()
     val personResult: MutableLiveData<BaseResponse<Person>> = MutableLiveData()
 
     fun getPerson(id: Int) {
         personResult.value = BaseResponse.Loading()
         viewModelScope.launch {
-            try{
+            try {
                 val response = personRepository.getPerson(id)
 
-                if(response.code() == 200){
+                if (response.code() == 200) {
                     personResult.value = BaseResponse.Success(response.body()!!)
-                }else{
+                } else {
                     personResult.value = BaseResponse.Error(response.message())
                 }
-            }
-            catch (e: Exception){
+            } catch (e: Exception) {
                 personResult.value = BaseResponse.Error(e.message.toString())
             }
         }

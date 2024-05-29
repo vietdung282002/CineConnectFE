@@ -1,4 +1,5 @@
 package com.example.cineconnect.fragment
+
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,11 +10,11 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
-import com.example.cineconnect.databinding.FragmentSignInBinding
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import com.example.cineconnect.MainActivity
 import com.example.cineconnect.R
+import com.example.cineconnect.databinding.FragmentSignInBinding
 import com.example.cineconnect.model.LoginResponse
 import com.example.cineconnect.network.BaseResponse
 import com.example.cineconnect.utils.SessionManager
@@ -28,10 +29,12 @@ class SignInFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        fragmentSignInBinding = DataBindingUtil.inflate(inflater,
-            R.layout.fragment_sign_in, container, false)
+        fragmentSignInBinding = DataBindingUtil.inflate(
+            inflater,
+            R.layout.fragment_sign_in, container, false
+        )
 
         return fragmentSignInBinding.root
     }
@@ -80,6 +83,7 @@ class SignInFragment : Fragment() {
                     processError(it.msg)
                     stopLoading()
                 }
+
                 else -> {
                     stopLoading()
                 }
@@ -104,18 +108,18 @@ class SignInFragment : Fragment() {
     private fun processLogin(loginResponse: LoginResponse?) {
         if (!loginResponse?.data?.token.isNullOrEmpty()) {
             loginResponse?.data?.token?.let {
-                SessionManager.saveAuthToken(requireContext(),it)
+                SessionManager.saveAuthToken(requireContext(), it)
             }
         }
         if (!loginResponse?.data?.id.isNullOrEmpty()) {
             loginResponse?.data?.id?.let {
-                SessionManager.saveUserId(requireContext(),it)
+                SessionManager.saveUserId(requireContext(), it)
             }
         }
         navigateToHome()
     }
 
-    private fun navigateToHome(){
+    private fun navigateToHome() {
         val intent = Intent(activity, MainActivity::class.java)
         startActivity(intent)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)

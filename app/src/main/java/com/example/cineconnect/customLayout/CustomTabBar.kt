@@ -3,7 +3,6 @@ package com.example.cineconnect.customLayout
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -33,7 +32,6 @@ class CustomTabBar(context: Context?, attrs: AttributeSet?) :
     fun attachTo(viewPager: ViewPager2) {
         onTabSelectedListener = {
             viewPager.setCurrentItem(it, true)
-            Log.d("TAG123", "attachTo: $viewPager.currentItem")
         }
 
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
@@ -48,7 +46,8 @@ class CustomTabBar(context: Context?, attrs: AttributeSet?) :
     private fun setupAttrs(attrs: AttributeSet?) {
         val typedArray = context.theme.obtainStyledAttributes(
             attrs, R.styleable.CustomTabBar,
-            0, 0)
+            0, 0
+        )
 
         listTabName = typedArray
             .getTextArray(R.styleable.CustomTabBar_android_entries)

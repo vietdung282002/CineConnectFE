@@ -7,15 +7,19 @@ import retrofit2.Response
 
 
 class MovieRepository {
-    suspend fun movieList(): Response<MovieListResponse>{
-        return API.apiService.movieList()
+    suspend fun movieList(page: Int): Response<MovieListResponse> {
+        return API.apiService.movieList(page)
     }
 
-    suspend fun getMovie(id: Int): Response<Movie>{
+    suspend fun getMovie(id: Int): Response<Movie> {
         return API.apiService.getMovie(id.toString())
     }
 
-    suspend fun getMovieByGenre(id:Int): Response<MovieListResponse>{
+    suspend fun getMovieByGenre(id: Int): Response<MovieListResponse> {
         return API.apiService.getMovieListByGenre(id.toString())
+    }
+
+    suspend fun getSearchMovie(page: Int, query: String): Response<MovieListResponse> {
+        return API.apiService.getSearchMovie(page, query)
     }
 }

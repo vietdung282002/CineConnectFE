@@ -18,47 +18,33 @@ class DataSource {
             "https://cineconnect.blob.core.windows.net/poster/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg",
             "https://cineconnect.blob.core.windows.net/poster/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg",
             "https://cineconnect.blob.core.windows.net/poster/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg",
-            )
+        )
     }
 
     fun loadMovie(): List<MovieList> {
         return listOf<MovieList>(
-            MovieList(617127,"Blade","/fKqA4rgVJwrM7Gb3tQ9TGHnu8Tr.jpg"),
-            MovieList(617127,"Blade","/fKqA4rgVJwrM7Gb3tQ9TGHnu8Tr.jpg"),
-            MovieList(617127,"Blade","/fKqA4rgVJwrM7Gb3tQ9TGHnu8Tr.jpg"),
-            MovieList(617127,"Blade","/fKqA4rgVJwrM7Gb3tQ9TGHnu8Tr.jpg"),
-            MovieList(617127,"Blade","/fKqA4rgVJwrM7Gb3tQ9TGHnu8Tr.jpg"),
-            MovieList(617127,"Blade","/fKqA4rgVJwrM7Gb3tQ9TGHnu8Tr.jpg"),
-            MovieList(617127,"Blade","/fKqA4rgVJwrM7Gb3tQ9TGHnu8Tr.jpg"),
-            MovieList(617127,"Blade","/fKqA4rgVJwrM7Gb3tQ9TGHnu8Tr.jpg"),
-            MovieList(617127,"Blade","/fKqA4rgVJwrM7Gb3tQ9TGHnu8Tr.jpg"),
-            MovieList(617127,"Blade","/fKqA4rgVJwrM7Gb3tQ9TGHnu8Tr.jpg"),
-            MovieList(617127,"Blade","/fKqA4rgVJwrM7Gb3tQ9TGHnu8Tr.jpg"),
-            MovieList(617127,"Blade","/fKqA4rgVJwrM7Gb3tQ9TGHnu8Tr.jpg"),
-            MovieList(617127,"Blade","/fKqA4rgVJwrM7Gb3tQ9TGHnu8Tr.jpg"),
-            MovieList(617127,"Blade","/fKqA4rgVJwrM7Gb3tQ9TGHnu8Tr.jpg"),
-            MovieList(617127,"Blade","/fKqA4rgVJwrM7Gb3tQ9TGHnu8Tr.jpg"),
+//
         )
     }
 
     fun loadCast(): List<CastList> {
         return listOf<CastList>(
-            CastList(30614,false,"male","Acting","Ryan Gosling","Ryan Gosling","/lyUyVARQKhGxaxy0FbPJCQRpiaW.jpg","Colt Seavers",0),
-            CastList(30614,false,"male","Acting","Ryan Gosling","Ryan Gosling","/lyUyVARQKhGxaxy0FbPJCQRpiaW.jpg","Colt Seavers",0),
-            CastList(30614,false,"male","Acting","Ryan Gosling","Ryan Gosling","/lyUyVARQKhGxaxy0FbPJCQRpiaW.jpg","Colt Seavers",0),
-            CastList(30614,false,"male","Acting","Ryan Gosling","Ryan Gosling","/lyUyVARQKhGxaxy0FbPJCQRpiaW.jpg","Colt Seavers",0),
-            CastList(30614,false,"male","Acting","Ryan Gosling","Ryan Gosling","/lyUyVARQKhGxaxy0FbPJCQRpiaW.jpg","Colt Seavers",0),
-            CastList(30614,false,"male","Acting","Ryan Gosling","Ryan Gosling","/lyUyVARQKhGxaxy0FbPJCQRpiaW.jpg","Colt Seavers",0),
-            CastList(30614,false,"male","Acting","Ryan Gosling","Ryan Gosling","/lyUyVARQKhGxaxy0FbPJCQRpiaW.jpg","Colt Seavers",0),
+//            CastList(30614,false,"male","Acting","Ryan Gosling","Ryan Gosling","/lyUyVARQKhGxaxy0FbPJCQRpiaW.jpg","Colt Seavers",0),
+//            CastList(30614,false,"male","Acting","Ryan Gosling","Ryan Gosling","/lyUyVARQKhGxaxy0FbPJCQRpiaW.jpg","Colt Seavers",0),
+//            CastList(30614,false,"male","Acting","Ryan Gosling","Ryan Gosling","/lyUyVARQKhGxaxy0FbPJCQRpiaW.jpg","Colt Seavers",0),
+//            CastList(30614,false,"male","Acting","Ryan Gosling","Ryan Gosling","/lyUyVARQKhGxaxy0FbPJCQRpiaW.jpg","Colt Seavers",0),
+//            CastList(30614,false,"male","Acting","Ryan Gosling","Ryan Gosling","/lyUyVARQKhGxaxy0FbPJCQRpiaW.jpg","Colt Seavers",0),
+//            CastList(30614,false,"male","Acting","Ryan Gosling","Ryan Gosling","/lyUyVARQKhGxaxy0FbPJCQRpiaW.jpg","Colt Seavers",0),
+//            CastList(30614,false,"male","Acting","Ryan Gosling","Ryan Gosling","/lyUyVARQKhGxaxy0FbPJCQRpiaW.jpg","Colt Seavers",0),
         )
     }
 
-    fun loadGenre():List<Genre>{
+    fun loadGenre(): List<Genre> {
         return listOf<Genre>(
-            Genre(1,"Action"),
-            Genre(2,"Adventure"),
-            Genre(3,"Animation"),
-            Genre(4,"Biography"),
+//            Genre(1,"Action"),
+//            Genre(2,"Adventure"),
+//            Genre(3,"Animation"),
+//            Genre(4,"Biography"),
         )
     }
 

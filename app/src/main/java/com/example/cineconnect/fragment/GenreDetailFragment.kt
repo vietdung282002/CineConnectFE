@@ -1,12 +1,12 @@
 package com.example.cineconnect.fragment
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import com.example.cineconnect.R
@@ -31,9 +31,10 @@ class GenreDetailFragment : Fragment(), OnMovieClicked {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        fragmentGenreDetailBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_genre_detail, container, false)
+        fragmentGenreDetailBinding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_genre_detail, container, false)
         arguments?.let {
             genreId = it.getInt(Utils.GENRE_ID)
             genreName = it.getString(Utils.GENRE_NAME)
@@ -56,7 +57,7 @@ class GenreDetailFragment : Fragment(), OnMovieClicked {
         movieListAdapter.setOnMovieListener(this)
 
         fragmentGenreDetailBinding.rvMovie.adapter = movieListAdapter
-        movieViewModel.movieListResult.observe(viewLifecycleOwner){
+        movieViewModel.movieListResult.observe(viewLifecycleOwner) {
             when (it) {
                 is BaseResponse.Loading -> {
                     showLoading()
@@ -71,6 +72,7 @@ class GenreDetailFragment : Fragment(), OnMovieClicked {
                     processError(it.msg)
                     stopLoading()
                 }
+
                 else -> {
                     stopLoading()
                 }
@@ -112,7 +114,7 @@ class GenreDetailFragment : Fragment(), OnMovieClicked {
         Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
     }
 
-    private fun submitList(response: MovieListResponse?){
+    private fun submitList(response: MovieListResponse?) {
         movieList = response?.movieLists!!
         movieListAdapter.submitList(movieList)
     }

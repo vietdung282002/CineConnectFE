@@ -12,7 +12,7 @@ import com.example.cineconnect.network.BaseResponse
 import com.example.cineconnect.repository.UserRepository
 import kotlinx.coroutines.launch
 
-class UserViewModel: ViewModel() {
+class UserViewModel : ViewModel() {
     private val userRepo = UserRepository()
     val loginResult: MutableLiveData<BaseResponse<LoginResponse>> = MutableLiveData()
     val registerResult: MutableLiveData<BaseResponse<RegisterResponse>> = MutableLiveData()
@@ -31,14 +31,13 @@ class UserViewModel: ViewModel() {
                 } else {
                     loginResult.value = BaseResponse.Error(response?.message())
                 }
-            }
-            catch (e: Exception) {
+            } catch (e: Exception) {
                 loginResult.value = BaseResponse.Error(e.message)
             }
         }
     }
 
-    fun register(username: String, email: String, password: String){
+    fun register(username: String, email: String, password: String) {
         registerResult.value = BaseResponse.Loading()
         viewModelScope.launch {
             try {
@@ -57,8 +56,7 @@ class UserViewModel: ViewModel() {
                 } else {
                     registerResult.value = BaseResponse.Error(response?.message())
                 }
-            }
-            catch (e: Exception) {
+            } catch (e: Exception) {
                 registerResult.value = BaseResponse.Error(e.message)
             }
         }

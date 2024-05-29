@@ -1,25 +1,22 @@
 package com.example.cineconnect.fragment
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.example.cineconnect.R
 import com.example.cineconnect.adapter.MovieListAdapter
-import com.example.cineconnect.databinding.FragmentMovieDetailBinding
 import com.example.cineconnect.databinding.FragmentPersonDetailBinding
 import com.example.cineconnect.model.Person
 import com.example.cineconnect.network.BaseResponse
 import com.example.cineconnect.onClickInterface.OnMovieClicked
 import com.example.cineconnect.utils.Utils
-import com.example.cineconnect.utils.Utils.Companion.LOG_TAG
 import com.example.cineconnect.utils.Utils.Companion.PERSON_ID
 import com.example.cineconnect.utils.Utils.Companion.PROFILE_LINK
 import com.example.cineconnect.viewmodel.PersonViewModel
@@ -35,7 +32,7 @@ class PersonDetailFragment : Fragment(), OnMovieClicked {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         personDetailBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_person_detail, container, false)
@@ -66,7 +63,7 @@ class PersonDetailFragment : Fragment(), OnMovieClicked {
 
         fragmentManager = requireActivity().supportFragmentManager
 
-        personViewModel.personResult.observe(viewLifecycleOwner){response ->
+        personViewModel.personResult.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is BaseResponse.Loading -> {
                     showLoading()
@@ -74,13 +71,14 @@ class PersonDetailFragment : Fragment(), OnMovieClicked {
 
                 is BaseResponse.Success -> {
                     stopLoading()
-                    response.data?.let { person -> showDetail(person,itemHeight) }
+                    response.data?.let { person -> showDetail(person, itemHeight) }
                 }
 
                 is BaseResponse.Error -> {
                     processError(response.msg)
                     stopLoading()
                 }
+
                 else -> {
                     stopLoading()
                 }
@@ -89,17 +87,17 @@ class PersonDetailFragment : Fragment(), OnMovieClicked {
         }
     }
 
-    private fun showDetail(person: Person,itemHeight: Int) {
+    private fun showDetail(person: Person, itemHeight: Int) {
         personDetailBinding.apply {
             tvPersonName.text = person.name
             Glide.with(requireContext()).load(PROFILE_LINK + person.profilePath).into(personImage)
             biographyText.text = person.biography
             tvNumberOfMovies.text = person.movies.size.toString()
             biographyText.setOnClickListener {
-                if(isExpanded){
+                if (isExpanded) {
                     biographyText.maxHeight = itemHeight
                     gradientView.visibility = View.VISIBLE
-                }else{
+                } else {
                     biographyText.maxHeight = Int.MAX_VALUE
                     gradientView.visibility = View.GONE
                 }
@@ -108,7 +106,7 @@ class PersonDetailFragment : Fragment(), OnMovieClicked {
             rvMovie.adapter = movieListAdapter
             movieListAdapter.submitList(person.movies)
             rvMovie.setHasFixedSize(true)
-            backBtn.setOnClickListener{
+            backBtn.setOnClickListener {
                 fragmentManager.popBackStack()
             }
         }

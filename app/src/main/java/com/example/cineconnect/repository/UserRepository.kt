@@ -8,12 +8,12 @@ import com.example.cineconnect.network.API
 import retrofit2.Response
 
 class UserRepository {
-    suspend fun loginUser(loginRequest: LoginRequest): Response<LoginResponse>? {
-        return  API.apiService.loginUser(loginRequest = loginRequest)
+    suspend fun loginUser(loginRequest: LoginRequest): Response<LoginResponse> {
+        return API.apiService.loginUser(loginRequest = loginRequest)
     }
 
-    suspend fun registerUser(registerRequest: RegisterRequest): Response<RegisterResponse>? {
-        return  API.apiService.registerUser(registerRequest = registerRequest)
+    suspend fun registerUser(registerRequest: RegisterRequest): Response<RegisterResponse> {
+        return API.apiService.registerUser(registerRequest = registerRequest)
     }
 
 }

@@ -12,14 +12,16 @@ import com.example.cineconnect.model.MovieList
 import com.example.cineconnect.onClickInterface.OnMovieClicked
 import com.example.cineconnect.utils.Utils.Companion.POSTER_LINK
 
-class MovieListAdapter: ListAdapter<MovieList, MovieListAdapter.MovieViewHolder>(MovieItemDiffUtils()) {
+class MovieListAdapter :
+    ListAdapter<MovieList, MovieListAdapter.MovieViewHolder>(MovieItemDiffUtils()) {
     private var listener: OnMovieClicked? = null
 
-    class MovieViewHolder(movieItemBinding: MovieItemBinding) : RecyclerView.ViewHolder(movieItemBinding.root){
+    class MovieViewHolder(movieItemBinding: MovieItemBinding) :
+        RecyclerView.ViewHolder(movieItemBinding.root) {
         val poster: ImageView = movieItemBinding.posterImage
     }
 
-    class MovieItemDiffUtils: DiffUtil.ItemCallback<MovieList>() {
+    class MovieItemDiffUtils : DiffUtil.ItemCallback<MovieList>() {
         override fun areItemsTheSame(oldItem: MovieList, newItem: MovieList): Boolean {
             return oldItem.id == newItem.id
         }
@@ -29,6 +31,7 @@ class MovieListAdapter: ListAdapter<MovieList, MovieListAdapter.MovieViewHolder>
         }
 
     }
+
     override fun submitList(list: List<MovieList>?) {
         super.submitList(list?.let { ArrayList(it) })
     }
@@ -59,7 +62,7 @@ class MovieListAdapter: ListAdapter<MovieList, MovieListAdapter.MovieViewHolder>
         Glide.with(holder.itemView.context).load(POSTER_LINK + movie.posterPath).into(holder.poster)
 
         holder.poster.setOnClickListener {
-            listener?.getOnMovieClicked(position,movie.id)
+            listener?.getOnMovieClicked(position, movie.id)
         }
     }
 

@@ -2,25 +2,22 @@ package com.example.cineconnect.fragment
 
 import android.graphics.Color
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.bumptech.glide.request.target.Target
 import com.example.cineconnect.R
 import com.example.cineconnect.adapter.ViewPagerAdapter
 import com.example.cineconnect.databinding.FragmentMovieDetailBinding
 import com.example.cineconnect.model.Movie
 import com.example.cineconnect.model.Rating
 import com.example.cineconnect.network.BaseResponse
+import com.example.cineconnect.utils.Utils
 import com.example.cineconnect.utils.Utils.Companion.BACKDROP_LINK
 import com.example.cineconnect.utils.Utils.Companion.MOVIE_ID
 import com.example.cineconnect.utils.Utils.Companion.POSTER_LINK
@@ -45,7 +42,7 @@ class MovieDetailFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         fragmentMovieDetailBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_movie_detail, container, false)
@@ -61,7 +58,7 @@ class MovieDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        containerId = (view?.parent as? ViewGroup)?.id!!
+        containerId = (view.parent as? ViewGroup)?.id!!
 
         val displayMetrics = requireContext().resources.displayMetrics
         val screenWidth = displayMetrics.widthPixels
@@ -74,7 +71,7 @@ class MovieDetailFragment : Fragment() {
 
         fragmentMovieDetailBinding.moviePoster.layoutParams = layoutParams
 
-        movieViewmodel.movieResult.observe(viewLifecycleOwner) {response ->
+        movieViewmodel.movieResult.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is BaseResponse.Loading -> {
                     showLoading()
@@ -82,13 +79,14 @@ class MovieDetailFragment : Fragment() {
 
                 is BaseResponse.Success -> {
                     stopLoading()
-                    response.data?.let { movie -> showDetail(movie) }
+                    response.data?.let { movie -> updateUI(movie) }
                 }
 
                 is BaseResponse.Error -> {
                     processError(response.msg)
                     stopLoading()
                 }
+
                 else -> {
                     stopLoading()
                 }
@@ -97,7 +95,7 @@ class MovieDetailFragment : Fragment() {
 
     }
 
-    private fun showDetail(movieObj: Movie){
+    private fun updateUI(movieObj: Movie) {
         val directorObj = movieObj.directors[0]
         val ratingObj = movieObj.rating[0]
         val castList = movieObj.casts.toList()
@@ -106,7 +104,8 @@ class MovieDetailFragment : Fragment() {
         fragmentMovieDetailBinding.apply {
             collapsingToolbar.title = movieObj.title
 
-            Glide.with(this@MovieDetailFragment).load(BACKDROP_LINK + movieObj.backdropPath).placeholder(R.drawable.loading_image)
+            Glide.with(this@MovieDetailFragment).load(BACKDROP_LINK + movieObj.backdropPath)
+                .placeholder(R.drawable.loading_image)
                 .error(R.drawable.try_later).into(ivBackdrop)
             backBtn.setOnClickListener {
                 val fragmentManager = activity?.supportFragmentManager
@@ -117,7 +116,24 @@ class MovieDetailFragment : Fragment() {
             }
             tvReleaseDate.text = movieObj.releaseDate.take(4)
             tvDirectorName.text = directorObj.name
-            tvDirectorName.setOnClickListener {  }
+            tvDirectorName.setOnClickListener {
+                val bundle = Bundle()
+                bundle.putInt(Utils.PERSON_ID, directorObj.id)
+
+                val personDetailFragment = PersonDetailFragment().apply {
+                    arguments = bundle
+                }
+
+                val fragmentManager = requireActivity().supportFragmentManager
+                val containerId = (view?.parent as? ViewGroup)?.id
+                if (containerId != null) {
+                    fragmentManager.beginTransaction()
+                        .add(containerId, personDetailFragment)
+                        .addToBackStack(null)
+                        .commit()
+                }
+
+            }
             tvRuntime.text = movieObj.runtime.toString() + " mins"
             Glide.with(this@MovieDetailFragment)
                 .load(POSTER_LINK + movieObj.posterPath)
@@ -127,10 +143,10 @@ class MovieDetailFragment : Fragment() {
             tvTagline.text = movieObj.tagline
             overviewText.text = movieObj.overview
             overviewText.setOnClickListener {
-                if(isExpanded){
+                if (isExpanded) {
                     overviewText.maxLines = 3
                     gradientView.visibility = View.VISIBLE
-                }else{
+                } else {
                     overviewText.maxLines = Integer.MAX_VALUE
                     gradientView.visibility = View.GONE
                 }
@@ -142,16 +158,16 @@ class MovieDetailFragment : Fragment() {
 
             tvNumberOfLikes.apply {
                 text = movieObj.favouriteCount.toString()
-                setOnClickListener {  }
+                setOnClickListener { }
             }
             tvNumberOfReviews.apply {
                 text = movieObj.reviewCount.toString()
-                setOnClickListener {  }
+                setOnClickListener { }
             }
 
             tvAvrRating.text = ratingObj.avr.rateAvg.toString()
         }
-        vpAdapter = activity?.let { ViewPagerAdapter(it,castList,genreList,containerId) }!!
+        vpAdapter = activity?.let { ViewPagerAdapter(it, castList, genreList, containerId) }!!
 
         val viewPager = fragmentMovieDetailBinding.viewPager
         viewPager.adapter = vpAdapter

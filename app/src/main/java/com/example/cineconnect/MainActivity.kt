@@ -7,8 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.add
-import androidx.fragment.app.commit
 import com.example.cineconnect.databinding.ActivityMainBinding
 import com.example.cineconnect.fragment.DiscoverFragment
 import com.example.cineconnect.fragment.HomeFragment

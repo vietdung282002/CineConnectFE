@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <array name="tabs">
+    <array name="movieDetailTabs">
         <item>Cast</item>
         <item>Genres</item>
+    </array>
+
+    <array name="searchTabs">
+        <item>Movie</item>
+        <item>People</item>
+        <item>User</item>
+        <item>Review</item>
     </array>
 </resources>

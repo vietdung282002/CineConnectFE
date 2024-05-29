@@ -46,8 +46,10 @@ object SessionManager {
         return prefs.getString(USER_TOKEN, null)
     }
 
-    fun clearData(context: Context){
-        val editor = context.getSharedPreferences(context.getString(R.string.app_name), Context.MODE_PRIVATE).edit()
+    fun clearData(context: Context) {
+        val editor =
+            context.getSharedPreferences(context.getString(R.string.app_name), Context.MODE_PRIVATE)
+                .edit()
         editor.clear()
         editor.apply()
     }

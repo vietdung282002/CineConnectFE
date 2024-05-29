@@ -9,63 +9,75 @@ import com.example.cineconnect.network.BaseResponse
 import com.example.cineconnect.repository.MovieRepository
 import kotlinx.coroutines.launch
 
-class MovieViewModel: ViewModel() {
+class MovieViewModel : ViewModel() {
     private val movieRepository = MovieRepository()
     val movieListResult: MutableLiveData<BaseResponse<MovieListResponse>> = MutableLiveData()
     val movieResult: MutableLiveData<BaseResponse<Movie>> = MutableLiveData()
+    val searchQuery = MutableLiveData<String>()
 
-    fun getMovieList() {
+    fun getMovieList(page: Int) {
         movieListResult.value = BaseResponse.Loading()
         viewModelScope.launch {
             try {
-                val response = movieRepository.movieList()
+                val response = movieRepository.movieList(page)
 
-                if(response.code() == 200){
+                if (response.code() == 200) {
                     movieListResult.value = BaseResponse.Success(response.body())
-                }
-                else{
+                } else {
                     movieListResult.value = BaseResponse.Error(response.message())
                 }
-            }
-            catch (e: Exception){
+            } catch (e: Exception) {
                 movieListResult.value = BaseResponse.Error(e.message)
             }
         }
     }
 
-    fun getMovie(id: Int){
+    fun getMovie(id: Int) {
         movieResult.value = BaseResponse.Loading()
         viewModelScope.launch {
             try {
                 val response = movieRepository.getMovie(id)
 
-                if(response.code() == 200){
+                if (response.code() == 200) {
                     movieResult.value = BaseResponse.Success(response.body())
-                }
-                else{
+                } else {
                     movieResult.value = BaseResponse.Error(response.message())
                 }
-            }
-            catch (e: Exception){
+            } catch (e: Exception) {
                 movieResult.value = BaseResponse.Error(e.message)
             }
         }
     }
 
-    fun getMovieListByGenre(genreId: Int){
+    fun getMovieListByGenre(genreId: Int) {
         movieListResult.value = BaseResponse.Loading()
         viewModelScope.launch {
             try {
                 val response = movieRepository.getMovieByGenre(genreId)
 
-                if(response.code() == 200){
+                if (response.code() == 200) {
                     movieListResult.value = BaseResponse.Success(response.body())
-                }
-                else{
+                } else {
                     movieListResult.value = BaseResponse.Error(response.message())
                 }
+            } catch (e: Exception) {
+                movieListResult.value = BaseResponse.Error(e.message)
             }
-            catch (e: Exception){
+        }
+    }
+
+    fun getSearchMovie(page: Int, query: String) {
+        movieListResult.value = BaseResponse.Loading()
+        viewModelScope.launch {
+            try {
+                val response = movieRepository.getSearchMovie(page, query)
+
+                if (response.code() == 200) {
+                    movieListResult.value = BaseResponse.Success(response.body())
+                } else {
+                    movieListResult.value = BaseResponse.Error(response.message())
+                }
+            } catch (e: Exception) {
                 movieListResult.value = BaseResponse.Error(e.message)
             }
         }

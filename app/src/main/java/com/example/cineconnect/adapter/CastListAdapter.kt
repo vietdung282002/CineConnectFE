@@ -11,10 +11,10 @@ import com.example.cineconnect.model.CastList
 import com.example.cineconnect.onClickInterface.OnPersonClicked
 import com.example.cineconnect.utils.Utils.Companion.PROFILE_LINK
 
-class CastListAdapter:ListAdapter<CastList,CastListAdapter.CastViewHolder>(CastItemDiffUtils()) {
+class CastListAdapter : ListAdapter<CastList, CastListAdapter.CastViewHolder>(CastItemDiffUtils()) {
     private var listener: OnPersonClicked? = null
 
-    class CastItemDiffUtils: DiffUtil.ItemCallback<CastList>() {
+    class CastItemDiffUtils : DiffUtil.ItemCallback<CastList>() {
         override fun areItemsTheSame(oldItem: CastList, newItem: CastList): Boolean {
             return oldItem.id == newItem.id
         }
@@ -26,10 +26,11 @@ class CastListAdapter:ListAdapter<CastList,CastListAdapter.CastViewHolder>(CastI
     }
 
     override fun submitList(list: List<CastList>?) {
-        super.submitList(list?.let{ArrayList(it)})
+        super.submitList(list?.let { ArrayList(it) })
     }
 
-    class CastViewHolder(castItemBinding: CastItemBinding): RecyclerView.ViewHolder(castItemBinding.root) {
+    class CastViewHolder(castItemBinding: CastItemBinding) :
+        RecyclerView.ViewHolder(castItemBinding.root) {
         val castPoster = castItemBinding.castPoster
         val castName = castItemBinding.castName
         val castRole = castItemBinding.castRole
@@ -37,7 +38,8 @@ class CastListAdapter:ListAdapter<CastList,CastListAdapter.CastViewHolder>(CastI
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CastViewHolder {
-        val adapterLayout = CastItemBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        val adapterLayout =
+            CastItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return CastViewHolder(adapterLayout)
     }
 
@@ -63,6 +65,7 @@ class CastListAdapter:ListAdapter<CastList,CastListAdapter.CastViewHolder>(CastI
             listener?.getOnPersonClicked(position, cast.id)
         }
     }
+
     fun setOnPersonClicked(listener: OnPersonClicked) {
         this.listener = listener
     }

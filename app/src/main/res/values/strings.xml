@@ -26,4 +26,6 @@
     <string name="liked">Liked</string>
     <string name="reviews">Reviews</string>
     <string name="movie_participate">Movie Participate</string>
+    <string name="find_movies_reviews_people">Find movies,reviews,people</string>
+    <string name="cancel">Cancel</string>
 </resources>

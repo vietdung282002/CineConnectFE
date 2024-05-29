@@ -1,7 +1,7 @@
 package com.example.cineconnect.utils
 
 class Utils {
-    companion object{
+    companion object {
         const val USER_TOKEN = "user_token"
         const val USER_ID = "user_id"
 

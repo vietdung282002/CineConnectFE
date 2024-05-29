@@ -15,13 +15,8 @@ data class CastList(
 )
 
 data class DirectorList(
-    @SerializedName("adult") val adult: Boolean,
-    @SerializedName("gender") val gender: String,
     @SerializedName("id") val id: Int,
-    @SerializedName("known_for_department") val knownForDepartment: String,
     @SerializedName("name") val name: String,
-    @SerializedName("original_name") val originalName: String,
-    @SerializedName("profile_path") val profilePath: String?
 )
 
 data class MovieList(
@@ -31,11 +26,14 @@ data class MovieList(
     var originalTitle: String,
     @SerializedName("poster_path")
     var posterPath: String,
-)
+    @SerializedName("release_date")
+    var releaseDate: String?,
+    @SerializedName("directors")
+    var directors: List<DirectorList>?,
+
+    )
 
 data class MovieListResponse(
-    @SerializedName("id")
-    val count: Int,
     @SerializedName("next")
     val next: String?,
     @SerializedName("previous")
@@ -46,4 +44,4 @@ data class MovieListResponse(
     val totalPages: Int,
     @SerializedName("current_page")
     val currentPage: Int,
- )
+)

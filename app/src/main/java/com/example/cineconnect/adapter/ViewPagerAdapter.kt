@@ -8,7 +8,7 @@ import com.example.cineconnect.fragment.GenresListFragment
 import com.example.cineconnect.model.CastList
 import com.example.cineconnect.model.Genre
 
-class ViewPagerAdapter (
+class ViewPagerAdapter(
     fragmentActivity: FragmentActivity,
     private val castList: List<CastList>,
     private val genresList: List<Genre>,
@@ -18,8 +18,8 @@ class ViewPagerAdapter (
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
-            0 -> CastListFragment(castList,parentIds)
-            else -> GenresListFragment(genresList,parentIds)
+            0 -> CastListFragment(castList, parentIds)
+            else -> GenresListFragment(genresList, parentIds)
         }
     }
 }

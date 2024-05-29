@@ -3,12 +3,12 @@ package com.example.cineconnect.network
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-object API{
+object API {
     private var retrofit: Retrofit? = null
 
     val apiService: APIService
         get() {
-            if(retrofit == null){
+            if (retrofit == null) {
                 retrofit = Retrofit.Builder()
                     .baseUrl("https://cineconnect.azurewebsites.net")
                     .addConverterFactory(GsonConverterFactory.create())

@@ -34,7 +34,9 @@ interface APIService {
         "accept: application/json",
     )
     @GET("movie/")
-    suspend fun movieList(): Response<MovieListResponse>
+    suspend fun movieList(
+        @Query("page") page: Int,
+    ): Response<MovieListResponse>
 
     @Headers(
         "accept: application/json",
@@ -54,5 +56,14 @@ interface APIService {
     @GET("movie/genre/")
     suspend fun getMovieListByGenre(
         @Query("q") genreId: String
+    ): Response<MovieListResponse>
+
+    @Headers(
+        "accept: application/json",
+    )
+    @GET("movie/search/")
+    suspend fun getSearchMovie(
+        @Query("page") page: Int,
+        @Query("q") query: String,
     ): Response<MovieListResponse>
 }

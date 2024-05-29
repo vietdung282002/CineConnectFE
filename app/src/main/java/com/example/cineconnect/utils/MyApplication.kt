@@ -2,7 +2,7 @@ package com.example.cineconnect.utils
 
 import android.app.Application
 
-class MyApplication: Application() {
+class MyApplication : Application() {
     companion object {
         lateinit var instance: MyApplication
             private set

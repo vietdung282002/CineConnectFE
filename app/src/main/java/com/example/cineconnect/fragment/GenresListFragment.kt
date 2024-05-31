@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import com.example.cineconnect.R
 import com.example.cineconnect.adapter.GenreListAdapter
 import com.example.cineconnect.databinding.FragmentGenresListBinding
+import com.example.cineconnect.fragment.detailFragment.GenreDetailFragment
 import com.example.cineconnect.model.Genre
 import com.example.cineconnect.onClickInterface.OnGenreClicked
 import com.example.cineconnect.utils.DataSource

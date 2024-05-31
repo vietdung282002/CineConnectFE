@@ -70,11 +70,15 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
-    val navVersion = "2.5.3"
-    implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
-    implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
-    implementation("androidx.navigation:navigation-dynamic-features-fragment:$navVersion")
-    androidTestImplementation("androidx.navigation:navigation-testing:$navVersion")
-    implementation("androidx.navigation:navigation-compose:$navVersion")
 
+    val pagingVersion = "3.3.0"
+
+    implementation("androidx.paging:paging-runtime:$pagingVersion")
+    testImplementation("androidx.paging:paging-common:$pagingVersion")
+    implementation("androidx.paging:paging-rxjava2:$pagingVersion")
+    implementation("androidx.paging:paging-rxjava3:$pagingVersion")
+    implementation("androidx.paging:paging-guava:$pagingVersion")
+    implementation("androidx.paging:paging-compose:3.3.0")
+    implementation("de.hdodenhof:circleimageview:3.1.0")
+//    implementation("com.iarcuschin:simpleratingbar:0.1.5")
 }

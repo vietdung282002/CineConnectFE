@@ -26,7 +26,7 @@ class UserViewModel : ViewModel() {
                     usernameOrEmail = usernameOrEmail
                 )
                 val response = userRepo.loginUser(loginRequest = loginRequest)
-                if (response?.code() == 200) {
+                if (response.isSuccessful) {
                     loginResult.value = BaseResponse.Success(response.body())
                 } else {
                     loginResult.value = BaseResponse.Error(response?.message())
@@ -51,7 +51,7 @@ class UserViewModel : ViewModel() {
                     Log.d("Response123", response.body().toString())
 
                 }
-                if (response?.code() == 201) {
+                if (response.isSuccessful) {
                     registerResult.value = BaseResponse.Success(response.body())
                 } else {
                     registerResult.value = BaseResponse.Error(response?.message())

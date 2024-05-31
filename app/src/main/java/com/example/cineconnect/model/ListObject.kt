@@ -58,3 +58,30 @@ data class PeopleListResponse(
     @SerializedName("current_page")
     val currentPage: Int,
 )
+
+data class UserLikedMovieResponse(
+    @SerializedName("next")
+    val next: String?,
+    @SerializedName("previous")
+    val previous: String?,
+    @SerializedName("results")
+    val userLists: List<FavouriteList>,
+    @SerializedName("total_pages")
+    val totalPages: Int,
+    @SerializedName("current_page")
+    val currentPage: Int,
+)
+
+data class FavouriteList(
+    @SerializedName("user") val user: UserList,
+    @SerializedName("rate") val rate: Double?
+)
+
+data class UserList(
+    @SerializedName("id")
+    var id: Int,
+    @SerializedName("username")
+    var username: String,
+    @SerializedName("profile_pic")
+    var profilePic: String,
+)

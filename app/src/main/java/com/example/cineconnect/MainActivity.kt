@@ -8,10 +8,10 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.example.cineconnect.databinding.ActivityMainBinding
-import com.example.cineconnect.fragment.DiscoverFragment
-import com.example.cineconnect.fragment.HomeFragment
-import com.example.cineconnect.fragment.ProfileFragment
-import com.example.cineconnect.fragment.SearchFragment
+import com.example.cineconnect.fragment.mainFragment.DiscoverFragment
+import com.example.cineconnect.fragment.mainFragment.HomeFragment
+import com.example.cineconnect.fragment.mainFragment.ProfileFragment
+import com.example.cineconnect.fragment.mainFragment.SearchFragment
 
 class MainActivity : AppCompatActivity() {
     private lateinit var activityMainBinding: ActivityMainBinding

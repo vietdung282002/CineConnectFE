@@ -2,7 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".fragment.MovieDetailFragment">
+    tools:context=".fragment.detailFragment.MovieDetailFragment">
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -69,7 +69,7 @@
                             android:layout_height="wrap_content"
                             android:background="@android:color/transparent"
                             android:contentDescription="@string/none"
-                            android:src="@drawable/back"
+                            android:src="@drawable/baseline_arrow_back_ios_24"
                             tools:ignore="ContentDescription,TouchTargetSizeCheck" />
 
                         <ImageButton

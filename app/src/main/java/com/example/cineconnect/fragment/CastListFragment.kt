@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import com.example.cineconnect.R
 import com.example.cineconnect.adapter.CastListAdapter
 import com.example.cineconnect.databinding.FragmentCastListBinding
+import com.example.cineconnect.fragment.detailFragment.PersonDetailFragment
 import com.example.cineconnect.model.CastList
 import com.example.cineconnect.onClickInterface.OnPersonClicked
 import com.example.cineconnect.utils.Utils.Companion.PERSON_ID

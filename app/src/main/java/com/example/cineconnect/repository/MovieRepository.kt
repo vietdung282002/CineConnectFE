@@ -15,11 +15,11 @@ class MovieRepository {
         return API.apiService.getMovie(id.toString())
     }
 
-    suspend fun getMovieByGenre(id: Int): Response<MovieListResponse> {
-        return API.apiService.getMovieListByGenre(id.toString())
+    suspend fun getMovieByGenre(page: Int, id: Int): Response<MovieListResponse> {
+        return API.apiService.getMovieListByGenre(page, id.toString())
     }
 
-    suspend fun getSearchMovie(page: Int, query: String): Response<MovieListResponse> {
-        return API.apiService.getSearchMovie(page, query)
-    }
+//    suspend fun getSearchMovie(page: Int, query: String): Response<MovieListResponse> {
+//        return API.apiService.getSearchMovie(page, query)
+//    }
 }

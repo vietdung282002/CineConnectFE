@@ -22,6 +22,7 @@ import com.example.cineconnect.network.BaseResponse
 import com.example.cineconnect.utils.Utils
 import com.example.cineconnect.utils.Utils.Companion.BACKDROP_LINK
 import com.example.cineconnect.utils.Utils.Companion.MOVIE_ID
+import com.example.cineconnect.utils.Utils.Companion.MOVIE_NAME
 import com.example.cineconnect.utils.Utils.Companion.POSTER_LINK
 import com.example.cineconnect.viewmodel.MovieViewModel
 import com.github.mikephil.charting.charts.BarChart
@@ -172,8 +173,15 @@ class MovieDetailFragment : Fragment() {
             tvAvrRating.text = ratingObj.avr.rateAvg.toString()
 
             likedList.setOnClickListener {
+                val bundle = Bundle()
+                bundle.putInt(MOVIE_ID, movieObj.id)
+                bundle.putString(MOVIE_NAME, movieObj.title)
+
+                val userLikeFavouriteFragment = UserLikeFavouriteFragment().apply {
+                    arguments = bundle
+                }
                 fragmentManager.beginTransaction()
-                    .add(containerId, UserLikeFavouriteFragment())
+                    .add(containerId, userLikeFavouriteFragment)
                     .addToBackStack(null)
                     .commit()
             }

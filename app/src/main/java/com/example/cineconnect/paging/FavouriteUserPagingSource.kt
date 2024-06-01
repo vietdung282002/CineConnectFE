@@ -7,7 +7,7 @@ import com.example.cineconnect.network.API
 import retrofit2.HttpException
 import java.io.IOException
 
-class FavouriteUserPagingSource(private val movie:Int): PagingSource<Int, FavouriteList>() {
+class FavouriteUserPagingSource(private val movie: Int) : PagingSource<Int, FavouriteList>() {
     override fun getRefreshKey(state: PagingState<Int, FavouriteList>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
@@ -18,12 +18,12 @@ class FavouriteUserPagingSource(private val movie:Int): PagingSource<Int, Favour
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, FavouriteList> {
         val page = params.key ?: 1
         return try {
-            val response = API.apiService.getListUserLikeMovie(page,movie)
+            val response = API.apiService.getListUserLikeMovie(page, movie)
             if (response.isSuccessful) {
                 val userListResponse = response.body()
                 if (userListResponse != null) {
                     LoadResult.Page(
-                        data = userListResponse.userLists,
+                        data = userListResponse.favouriteLists,
                         prevKey = if (page == 1) null else page - 1,
                         nextKey = if (page == userListResponse.totalPages) null else page + 1
                     )

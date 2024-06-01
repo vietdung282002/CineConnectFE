@@ -48,18 +48,20 @@ class MovieSearchFragment(
         fragmentMovieSearchBinding.rvMovie.adapter = movieAdapter
 
         viewLifecycleOwner.lifecycleScope.launch {
-            movieViewModel.moviesState.collectLatest {state ->
+            movieViewModel.moviesState.collectLatest { state ->
 
                 when (state) {
                     is BaseResponse.Loading -> {
                         showLoading()
                     }
+
                     is BaseResponse.Success -> {
                         stopLoading()
                         state.data?.let { pagingData ->
                             movieAdapter.submitData(pagingData)
                         }
                     }
+
                     is BaseResponse.Error -> {
                         stopLoading()
                         processError(state.msg)
@@ -97,13 +99,13 @@ class MovieSearchFragment(
         }
 
         val fragmentManager = requireActivity().supportFragmentManager
-        if (parentId != null) {
-            fragmentManager.beginTransaction()
-                .add(parentId, movieDetailFragment)
-                .addToBackStack(null)
-                .commit()
-        }
+        fragmentManager.beginTransaction()
+            .add(parentId, movieDetailFragment)
+            .addToBackStack(null)
+            .commit()
+
     }
+
     private fun hideKeyboard() {
         val imm =
             requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager

@@ -65,7 +65,7 @@ data class UserLikedMovieResponse(
     @SerializedName("previous")
     val previous: String?,
     @SerializedName("results")
-    val userLists: List<FavouriteList>,
+    val favouriteLists: List<FavouriteList>,
     @SerializedName("total_pages")
     val totalPages: Int,
     @SerializedName("current_page")

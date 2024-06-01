@@ -23,7 +23,8 @@ class MovieViewModel : ViewModel() {
     val movieListResult: MutableLiveData<BaseResponse<MovieListResponse>> = MutableLiveData()
     val movieResult: MutableLiveData<BaseResponse<Movie>> = MutableLiveData()
     val searchQuery = MutableLiveData<String>()
-    private val _moviesState = MutableStateFlow<BaseResponse<PagingData<MovieList>>>(BaseResponse.Loading())
+    private val _moviesState =
+        MutableStateFlow<BaseResponse<PagingData<MovieList>>>(BaseResponse.Loading())
     val moviesState: StateFlow<BaseResponse<PagingData<MovieList>>> = _moviesState
 
     fun getMovieList(page: Int) {
@@ -60,12 +61,11 @@ class MovieViewModel : ViewModel() {
         }
     }
 
-    fun getMovieListByGenre(genreId: Int) {
+    fun getMovieListByGenre(page: Int, genreId: Int) {
         movieListResult.value = BaseResponse.Loading()
         viewModelScope.launch {
             try {
-                val response = movieRepository.getMovieByGenre(genreId)
-
+                val response = movieRepository.getMovieByGenre(page, genreId)
                 if (response.isSuccessful) {
                     movieListResult.value = BaseResponse.Success(response.body())
                 } else {
@@ -78,16 +78,16 @@ class MovieViewModel : ViewModel() {
     }
 
 
-
-
     fun searchMovies(query: String) {
         _moviesState.value = BaseResponse.Loading()
         viewModelScope.launch {
-            Pager(PagingConfig(pageSize = 10,enablePlaceholders = true)) {
+            Pager(PagingConfig(pageSize = 12, enablePlaceholders = true)) {
                 MoviePagingSource(query)
             }.flow
                 .catch { e -> _moviesState.value = BaseResponse.Error(e.message) }
-                .collectLatest { pagingData -> _moviesState.value = BaseResponse.Success(pagingData) }
+                .collectLatest { pagingData ->
+                    _moviesState.value = BaseResponse.Success(pagingData)
+                }
         }
     }
 }

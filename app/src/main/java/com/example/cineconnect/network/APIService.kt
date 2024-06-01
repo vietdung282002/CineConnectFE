@@ -57,6 +57,7 @@ interface APIService {
     )
     @GET("movie/genre/")
     suspend fun getMovieListByGenre(
+        @Query("page") page: Int,
         @Query("q") genreId: String
     ): Response<MovieListResponse>
 
@@ -81,5 +82,5 @@ interface APIService {
     suspend fun getListUserLikeMovie(
         @Query("page") page: Int,
         @Query("movie") movie: Int,
-    ):Response<UserLikedMovieResponse>
+    ): Response<UserLikedMovieResponse>
 }

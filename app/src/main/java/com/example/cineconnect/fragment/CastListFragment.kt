@@ -51,12 +51,10 @@ class CastListFragment(private val castList: List<CastList>, private val parentI
         }
 
         val fragmentManager = requireActivity().supportFragmentManager
-        if (parentId != null) {
-            fragmentManager.beginTransaction()
-                .add(parentId, personDetailFragment)
-                .addToBackStack(null)
-                .commit()
-        }
+        fragmentManager.beginTransaction()
+            .add(parentId, personDetailFragment)
+            .addToBackStack(null)
+            .commit()
     }
 
 }

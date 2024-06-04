@@ -54,7 +54,7 @@
                     android:layout_height="wrap_content"
                     android:hint="Cast Role"
                     android:textColor="@color/grey"
-                    android:textColorHint="@color/grey"/>
+                    android:textColorHint="@color/grey" />
 
             </LinearLayout>
 

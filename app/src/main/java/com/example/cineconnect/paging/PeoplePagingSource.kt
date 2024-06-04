@@ -1,6 +1,5 @@
 package com.example.cineconnect.paging
 
-import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.cineconnect.model.Person
@@ -8,7 +7,7 @@ import com.example.cineconnect.network.API
 import retrofit2.HttpException
 import java.io.IOException
 
-class PeoplePagingSource(private val query:String) : PagingSource<Int, Person>(){
+class PeoplePagingSource(private val query: String) : PagingSource<Int, Person>() {
     override fun getRefreshKey(state: PagingState<Int, Person>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
@@ -19,7 +18,7 @@ class PeoplePagingSource(private val query:String) : PagingSource<Int, Person>()
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Person> {
         val page = params.key ?: 1
         return try {
-            val response = API.apiService.getSearchPerson(page,query)
+            val response = API.apiService.getSearchPerson(page, query)
             if (response.isSuccessful) {
                 val peopleLists = response.body()
                 if (peopleLists != null) {

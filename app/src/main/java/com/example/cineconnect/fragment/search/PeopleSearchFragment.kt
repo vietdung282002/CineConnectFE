@@ -24,7 +24,8 @@ import kotlinx.coroutines.launch
 
 class PeopleSearchFragment(
     private val query: String,
-    private val parentId: Int) : Fragment(),OnPersonClicked {
+    private val parentId: Int
+) : Fragment(), OnPersonClicked {
     private lateinit var fragmentPeopleSearchBinding: FragmentPeopleSearchBinding
     private val personAdapter = PersonPagingAdapter()
     private val personViewModel: PersonViewModel by viewModels()
@@ -32,9 +33,10 @@ class PeopleSearchFragment(
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        fragmentPeopleSearchBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_people_search, container, false)
+        fragmentPeopleSearchBinding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_people_search, container, false)
         personViewModel.searchPeople(query)
         return fragmentPeopleSearchBinding.root
     }
@@ -51,12 +53,14 @@ class PeopleSearchFragment(
                     is BaseResponse.Loading -> {
                         showLoading()
                     }
+
                     is BaseResponse.Success -> {
                         stopLoading()
                         state.data?.let { pagingData ->
                             personAdapter.submitData(pagingData)
                         }
                     }
+
                     is BaseResponse.Error -> {
                         stopLoading()
                         processError(state.msg)
@@ -78,12 +82,11 @@ class PeopleSearchFragment(
         }
 
         val fragmentManager = requireActivity().supportFragmentManager
-        if (parentId != null) {
-            fragmentManager.beginTransaction()
-                .add(parentId, personDetailFragment)
-                .addToBackStack(null)
-                .commit()
-        }
+        fragmentManager.beginTransaction()
+            .add(parentId, personDetailFragment)
+            .addToBackStack(null)
+            .commit()
+
     }
 
     private fun showLoading() {

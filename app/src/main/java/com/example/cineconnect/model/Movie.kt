@@ -32,6 +32,6 @@ data class Rating(
 )
 
 data class Avr(
-    @SerializedName("rate__avg") val rateAvg: Float
+    @SerializedName("avg_rate") val rateAvg: Float
 )
 

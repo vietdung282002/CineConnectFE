@@ -62,6 +62,7 @@ class SearchFragment : Fragment() {
                         viewPager.visibility = View.GONE
                     }
                 }
+
         }
         viewPager = fragmentSearchBinding.viewPager
         searchViewPagerAdapter = activity?.let { SearchViewPagerAdapter(it) }!!

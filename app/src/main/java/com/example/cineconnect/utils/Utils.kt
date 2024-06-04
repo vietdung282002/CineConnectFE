@@ -12,7 +12,7 @@ class Utils {
         const val MOVIE_NAME = "movie_name"
 
 
-        const val LOG_TAG_MAIN = "LOG_TAG"
+        const val LOG_TAG_MAIN = "LOG_TAG_MAIN"
 
         const val PROFILE_LINK = "https://cineconnect.blob.core.windows.net/profile"
         const val POSTER_LINK = "https://cineconnect.blob.core.windows.net/poster"

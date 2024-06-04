@@ -12,7 +12,7 @@ class SearchViewPagerAdapter(
     fragmentActivity: FragmentActivity,
 ) : FragmentStateAdapter(fragmentActivity) {
 
-    var query: String =""
+    var query: String = ""
     var parentIds: Int = -1
 
     override fun getItemCount(): Int = 4

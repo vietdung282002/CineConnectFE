@@ -2,6 +2,7 @@ package com.example.cineconnect.fragment.detailFragment
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,12 +16,12 @@ import com.bumptech.glide.Glide
 import com.example.cineconnect.R
 import com.example.cineconnect.adapter.ViewPagerAdapter
 import com.example.cineconnect.databinding.FragmentMovieDetailBinding
-import com.example.cineconnect.fragment.UserLikeFavouriteFragment
 import com.example.cineconnect.model.Movie
 import com.example.cineconnect.model.Rating
 import com.example.cineconnect.network.BaseResponse
 import com.example.cineconnect.utils.Utils
 import com.example.cineconnect.utils.Utils.Companion.BACKDROP_LINK
+import com.example.cineconnect.utils.Utils.Companion.LOG_TAG_MAIN
 import com.example.cineconnect.utils.Utils.Companion.MOVIE_ID
 import com.example.cineconnect.utils.Utils.Companion.MOVIE_NAME
 import com.example.cineconnect.utils.Utils.Companion.POSTER_LINK
@@ -52,7 +53,7 @@ class MovieDetailFragment : Fragment() {
             DataBindingUtil.inflate(inflater, R.layout.fragment_movie_detail, container, false)
 
         arguments?.let {
-            val movieId = it.getInt(MOVIE_ID)
+            movieId = it.getInt(MOVIE_ID)
             movieViewmodel.getMovie(movieId)
         }
 
@@ -163,13 +164,12 @@ class MovieDetailFragment : Fragment() {
 
             tvNumberOfLikes.apply {
                 text = movieObj.favouriteCount.toString()
-                setOnClickListener { }
             }
             tvNumberOfReviews.apply {
                 text = movieObj.reviewCount.toString()
-                setOnClickListener { }
             }
 
+            Log.d(LOG_TAG_MAIN, ratingObj.toString())
             tvAvrRating.text = ratingObj.avr.rateAvg.toString()
 
             likedList.setOnClickListener {
@@ -177,14 +177,30 @@ class MovieDetailFragment : Fragment() {
                 bundle.putInt(MOVIE_ID, movieObj.id)
                 bundle.putString(MOVIE_NAME, movieObj.title)
 
-                val userLikeFavouriteFragment = UserLikeFavouriteFragment().apply {
+                val favouriteListFragment = FavouriteListFragment().apply {
                     arguments = bundle
                 }
                 fragmentManager.beginTransaction()
-                    .add(containerId, userLikeFavouriteFragment)
+                    .add(containerId, favouriteListFragment)
                     .addToBackStack(null)
                     .commit()
             }
+
+            reviewsList.setOnClickListener {
+                val bundle = Bundle()
+                bundle.putInt(MOVIE_ID, movieObj.id)
+                bundle.putString(MOVIE_NAME, movieObj.title)
+
+                val reviewListOfMovieFragment = ReviewListOfMovieFragment().apply {
+                    arguments = bundle
+                }
+                fragmentManager.beginTransaction()
+                    .add(containerId, reviewListOfMovieFragment)
+                    .addToBackStack(null)
+                    .commit()
+            }
+
+
         }
         vpAdapter = activity?.let { ViewPagerAdapter(it, castList, genreList, containerId) }!!
 
@@ -216,13 +232,15 @@ class MovieDetailFragment : Fragment() {
         barDataSet.setDrawValues(false)
         barDataSet.barShadowColor = Color.TRANSPARENT
         barData = BarData(barDataSet)
-        barData.barWidth = 0.5f
+        barData.barWidth = 0.4f
         barChart.data = barData
 
         barDataSet.setColor(ContextCompat.getColor(requireContext(), R.color.orange))
 
 
         barDataSet.valueTextSize = 16f
+
+        barChart.setFitBars(true)
 
         barChart.setDrawValueAboveBar(false)
         barChart.description.isEnabled = false
@@ -248,7 +266,7 @@ class MovieDetailFragment : Fragment() {
         val barEntriesList = ArrayList<BarEntry>()
 
         for ((ratingValue, count) in rating.rating) {
-            val adjustedCount = if (count == 0) 0.1f else count.toFloat()
+            val adjustedCount = if (count == 0) 0.01f else count.toFloat()
             barEntriesList.add(BarEntry(ratingValue.toFloat(), adjustedCount))
         }
 

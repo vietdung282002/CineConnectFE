@@ -68,7 +68,7 @@ class UserViewModel : ViewModel() {
         }
     }
 
-    fun getUserFavourite(movieId: Int) {
+    fun getFavourite(movieId: Int) {
         _userFavouriteState.value = BaseResponse.Loading()
         viewModelScope.launch {
             Pager(PagingConfig(pageSize = 10, enablePlaceholders = true)) {

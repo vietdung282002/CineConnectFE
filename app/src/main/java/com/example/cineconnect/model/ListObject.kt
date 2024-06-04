@@ -85,3 +85,20 @@ data class UserList(
     @SerializedName("profile_pic")
     var profilePic: String,
 )
+
+data class ReviewListResponse(
+    @SerializedName("count") val count: Int,
+    @SerializedName("next") val next: String?,
+    @SerializedName("previous") val previous: String?,
+    @SerializedName("results") val reviewLists: List<ReviewList>,
+    @SerializedName("total_pages") val totalPages: Int,
+    @SerializedName("current_page") val currentPage: Int
+)
+
+data class ReviewList(
+    @SerializedName("id") val id: Int,
+    @SerializedName("user") val user: UserList,
+    @SerializedName("rating") val rating: Int,
+    @SerializedName("favourite") val favourite: Boolean,
+    @SerializedName("content") val content: String
+)

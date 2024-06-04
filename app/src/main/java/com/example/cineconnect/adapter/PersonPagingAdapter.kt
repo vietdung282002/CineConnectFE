@@ -8,17 +8,17 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.cineconnect.databinding.MoviePersonItemSearchBinding
-import com.example.cineconnect.model.MovieList
 import com.example.cineconnect.model.Person
 import com.example.cineconnect.onClickInterface.OnPersonClicked
 import com.example.cineconnect.utils.Utils
 
-class PersonPagingAdapter: PagingDataAdapter<Person, PersonPagingAdapter.PersonViewHolder>(
+class PersonPagingAdapter : PagingDataAdapter<Person, PersonPagingAdapter.PersonViewHolder>(
     PersonComparator
 ) {
     private var listener: OnPersonClicked? = null
 
-    class PersonViewHolder(binding: MoviePersonItemSearchBinding): RecyclerView.ViewHolder(binding.root) {
+    class PersonViewHolder(binding: MoviePersonItemSearchBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         val personPoster = binding.posterImage
         val content = binding.tvContent
         val layout = binding.flItem
@@ -36,7 +36,7 @@ class PersonPagingAdapter: PagingDataAdapter<Person, PersonPagingAdapter.PersonV
 
     override fun onBindViewHolder(holder: PersonViewHolder, position: Int) {
         val person = getItem(position)
-        if(person != null){
+        if (person != null) {
             val displayMetrics = holder.itemView.context.resources.displayMetrics
             val screenWidth = displayMetrics.widthPixels
             val itemWidth = (screenWidth * 0.2).toInt()

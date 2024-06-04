@@ -1,6 +1,5 @@
 package com.example.cineconnect.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.text.HtmlCompat
@@ -13,7 +12,8 @@ import com.example.cineconnect.model.MovieList
 import com.example.cineconnect.onClickInterface.OnMovieClicked
 import com.example.cineconnect.utils.Utils
 
-class MoviePagingAdapter : PagingDataAdapter<MovieList, MoviePagingAdapter.MovieViewHolder>(MovieComparator) {
+class MoviePagingAdapter :
+    PagingDataAdapter<MovieList, MoviePagingAdapter.MovieViewHolder>(MovieComparator) {
     private var listener: OnMovieClicked? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
@@ -24,7 +24,7 @@ class MoviePagingAdapter : PagingDataAdapter<MovieList, MoviePagingAdapter.Movie
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
         val movie = getItem(position)
-        if(movie != null){
+        if (movie != null) {
             val director = movie.directors?.get(0)
 
             val displayMetrics = holder.itemView.context.resources.displayMetrics
@@ -54,7 +54,8 @@ class MoviePagingAdapter : PagingDataAdapter<MovieList, MoviePagingAdapter.Movie
         }
     }
 
-    class MovieViewHolder(movieItemSearchBinding: MoviePersonItemSearchBinding) : RecyclerView.ViewHolder(movieItemSearchBinding.root) {
+    class MovieViewHolder(movieItemSearchBinding: MoviePersonItemSearchBinding) :
+        RecyclerView.ViewHolder(movieItemSearchBinding.root) {
         val posterImage = movieItemSearchBinding.posterImage
         val tvContent = movieItemSearchBinding.tvContent
         val layout = movieItemSearchBinding.flItem

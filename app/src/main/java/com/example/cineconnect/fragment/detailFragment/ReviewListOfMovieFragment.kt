@@ -1,4 +1,4 @@
-package com.example.cineconnect.fragment
+package com.example.cineconnect.fragment.detailFragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,30 +11,30 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.cineconnect.R
-import com.example.cineconnect.adapter.FavouritePagingAdapter
-import com.example.cineconnect.databinding.FragmentUserLikeFavouriteBinding
+import com.example.cineconnect.adapter.ReviewPagingAdapter
+import com.example.cineconnect.databinding.FragmentReviewListOfMovieBinding
 import com.example.cineconnect.network.BaseResponse
 import com.example.cineconnect.utils.Utils
-import com.example.cineconnect.viewmodel.UserViewModel
+import com.example.cineconnect.viewmodel.MovieViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class UserLikeFavouriteFragment : Fragment() {
-    private lateinit var fragmentUserLikeFavouriteBinding: FragmentUserLikeFavouriteBinding
-    private val favouriteAdapter = FavouritePagingAdapter()
-    private val userViewModel: UserViewModel by viewModels()
+
+class ReviewListOfMovieFragment : Fragment() {
+    private lateinit var fragmentReviewListOfMovieBinding: FragmentReviewListOfMovieBinding
     private var movieId: Int? = -1
     private var movieName: String? = ""
+    private val movieViewModel: MovieViewModel by viewModels()
     private lateinit var fragmentManager: FragmentManager
-
+    private val reviewAdapter = ReviewPagingAdapter()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): View? {
         // Inflate the layout for this fragment
-        fragmentUserLikeFavouriteBinding = DataBindingUtil.inflate(
+        fragmentReviewListOfMovieBinding = DataBindingUtil.inflate(
             inflater,
-            R.layout.fragment_user_like_favourite,
+            R.layout.fragment_review_list_of_movie,
             container,
             false
         )
@@ -43,25 +43,23 @@ class UserLikeFavouriteFragment : Fragment() {
             movieName = it.getString(Utils.MOVIE_NAME)
         }
         movieId?.let {
-            userViewModel.getUserFavourite(it)
+            movieViewModel.getReviewList(it)
         }
-        return fragmentUserLikeFavouriteBinding.root
+        return fragmentReviewListOfMovieBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         fragmentManager = requireActivity().supportFragmentManager
-
-        fragmentUserLikeFavouriteBinding.apply {
+        fragmentReviewListOfMovieBinding.apply {
             backBtn.setOnClickListener {
                 fragmentManager.popBackStack()
             }
             tvMovieName.text = movieName
-            rvFavourite.adapter = favouriteAdapter
+            rvReview.adapter = reviewAdapter
         }
-
         viewLifecycleOwner.lifecycleScope.launch {
-            userViewModel.userFavouriteState.collectLatest { state ->
+            movieViewModel.reviewState.collectLatest { state ->
                 when (state) {
                     is BaseResponse.Loading -> {
                         showLoading()
@@ -70,7 +68,7 @@ class UserLikeFavouriteFragment : Fragment() {
                     is BaseResponse.Success -> {
                         stopLoading()
                         state.data?.let { pagingData ->
-                            favouriteAdapter.submitData(pagingData)
+                            reviewAdapter.submitData(pagingData)
                         }
                     }
 
@@ -81,15 +79,14 @@ class UserLikeFavouriteFragment : Fragment() {
                 }
             }
         }
-
     }
 
     private fun showLoading() {
-        fragmentUserLikeFavouriteBinding.progressBarLayout.visibility = View.VISIBLE
+        fragmentReviewListOfMovieBinding.progressBarLayout.visibility = View.VISIBLE
     }
 
     private fun stopLoading() {
-        fragmentUserLikeFavouriteBinding.progressBarLayout.visibility = View.GONE
+        fragmentReviewListOfMovieBinding.progressBarLayout.visibility = View.GONE
     }
 
     private fun processError(msg: String?) {
@@ -99,5 +96,6 @@ class UserLikeFavouriteFragment : Fragment() {
     private fun showToast(msg: String) {
         Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
     }
+
 
 }

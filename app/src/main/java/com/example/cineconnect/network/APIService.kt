@@ -8,6 +8,7 @@ import com.example.cineconnect.model.PeopleListResponse
 import com.example.cineconnect.model.Person
 import com.example.cineconnect.model.RegisterRequest
 import com.example.cineconnect.model.RegisterResponse
+import com.example.cineconnect.model.ReviewListResponse
 import com.example.cineconnect.model.UserLikedMovieResponse
 import retrofit2.Response
 import retrofit2.http.Body
@@ -79,8 +80,22 @@ interface APIService {
         @Query("q") query: String,
     ): Response<PeopleListResponse>
 
+
+    @Headers(
+        "accept: application/json",
+    )
+    @GET("favourite/")
     suspend fun getListUserLikeMovie(
         @Query("page") page: Int,
         @Query("movie") movie: Int,
     ): Response<UserLikedMovieResponse>
+
+    @Headers(
+        "accept: application/json",
+    )
+    @GET("review/")
+    suspend fun getReviewList(
+        @Query("page") page: Int,
+        @Query("movie") movie: Int,
+    ): Response<ReviewListResponse>
 }

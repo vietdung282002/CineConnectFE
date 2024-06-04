@@ -12,7 +12,6 @@ import com.example.cineconnect.databinding.FragmentGenresListBinding
 import com.example.cineconnect.fragment.detailFragment.GenreDetailFragment
 import com.example.cineconnect.model.Genre
 import com.example.cineconnect.onClickInterface.OnGenreClicked
-import com.example.cineconnect.utils.DataSource
 import com.example.cineconnect.utils.Utils.Companion.GENRE_ID
 import com.example.cineconnect.utils.Utils.Companion.GENRE_NAME
 
@@ -33,8 +32,6 @@ class GenresListFragment(private val genresList: List<Genre>, private val parent
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val dataset = DataSource().loadGenre()
-
         genreListAdapters = GenreListAdapter()
         genreListAdapters.setOnGenreClicked(this)
         fragmentGenresListBinding.lifecycleOwner = viewLifecycleOwner

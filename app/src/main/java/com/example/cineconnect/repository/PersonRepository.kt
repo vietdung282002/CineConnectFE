@@ -10,7 +10,7 @@ class PersonRepository {
         return API.apiService.getPerson(id.toString())
     }
 
-    suspend fun getSearchPerson(page: Int,query: String): Response<PeopleListResponse> {
-        return API.apiService.getSearchPerson(page,query)
+    suspend fun getSearchPerson(page: Int, query: String): Response<PeopleListResponse> {
+        return API.apiService.getSearchPerson(page, query)
     }
 }

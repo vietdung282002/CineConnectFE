@@ -3,6 +3,7 @@ package com.example.cineconnect.fragment.mainFragment
 import android.app.AlertDialog
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,6 +25,7 @@ import com.example.cineconnect.model.MovieList
 import com.example.cineconnect.model.MovieListResponse
 import com.example.cineconnect.network.BaseResponse
 import com.example.cineconnect.onClickInterface.OnMovieClicked
+import com.example.cineconnect.utils.Utils.Companion.LOG_TAG_MAIN
 import com.example.cineconnect.utils.Utils.Companion.MOVIE_ID
 import com.example.cineconnect.viewmodel.MovieViewModel
 
@@ -69,6 +71,7 @@ class DiscoverFragment : Fragment(), OnMovieClicked {
 
                 is BaseResponse.Success -> {
                     stopLoading()
+                    Log.d(LOG_TAG_MAIN, "onViewCreated: ${it.data}")
                     updateUI(it.data)
                 }
 

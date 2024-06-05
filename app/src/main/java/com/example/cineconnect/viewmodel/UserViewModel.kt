@@ -11,8 +11,11 @@ import com.example.cineconnect.model.LoginRequest
 import com.example.cineconnect.model.LoginResponse
 import com.example.cineconnect.model.RegisterRequest
 import com.example.cineconnect.model.RegisterResponse
+import com.example.cineconnect.model.User
+import com.example.cineconnect.model.UserList
 import com.example.cineconnect.network.BaseResponse
 import com.example.cineconnect.paging.FavouriteUserPagingSource
+import com.example.cineconnect.paging.UserPagingSource
 import com.example.cineconnect.repository.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,12 +24,21 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class UserViewModel : ViewModel() {
+
     private val userRepo = UserRepository()
     val loginResult: MutableLiveData<BaseResponse<LoginResponse>> = MutableLiveData()
     val registerResult: MutableLiveData<BaseResponse<RegisterResponse>> = MutableLiveData()
+    val userResult: MutableLiveData<BaseResponse<User>> = MutableLiveData()
+
     private val _userFavouriteState =
         MutableStateFlow<BaseResponse<PagingData<FavouriteList>>>(BaseResponse.Loading())
     val userFavouriteState: StateFlow<BaseResponse<PagingData<FavouriteList>>> = _userFavouriteState
+
+    private val _userState =
+        MutableStateFlow<BaseResponse<PagingData<UserList>>>(BaseResponse.Loading())
+    val userState: StateFlow<BaseResponse<PagingData<UserList>>> = _userState
+
+
     fun login(usernameOrEmail: String, password: String) {
         loginResult.value = BaseResponse.Loading()
         viewModelScope.launch {
@@ -68,6 +80,24 @@ class UserViewModel : ViewModel() {
         }
     }
 
+    fun getUser(token: String?,userId:Int){
+        userResult.value = BaseResponse.Loading()
+
+        viewModelScope.launch {
+            try {
+                val response = userRepo.getUser(token,userId)
+                if (response.isSuccessful) {
+                    userResult.value = BaseResponse.Success(response.body())
+                } else {
+                    userResult.value = BaseResponse.Error(response.message())
+                }
+            }
+            catch (e:Exception){
+                userResult.value = BaseResponse.Error(e.message)
+            }
+        }
+    }
+
     fun getFavourite(movieId: Int) {
         _userFavouriteState.value = BaseResponse.Loading()
         viewModelScope.launch {
@@ -79,6 +109,19 @@ class UserViewModel : ViewModel() {
                     _userFavouriteState.value = BaseResponse.Success(pagingData)
                 }
 
+        }
+    }
+
+    fun getSearchUser(token: String?,query: String){
+        _userState.value = BaseResponse.Loading()
+
+        viewModelScope.launch {
+            Pager(PagingConfig(pageSize = 10, enablePlaceholders = true)) {
+                UserPagingSource(query, token)
+            }.flow.catch { e -> _userState.value = BaseResponse.Error(e.message) }
+                .collectLatest { pagingData ->
+                    _userState.value = BaseResponse.Success(pagingData)
+                }
         }
     }
 }

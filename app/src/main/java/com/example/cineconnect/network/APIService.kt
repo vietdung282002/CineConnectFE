@@ -8,11 +8,15 @@ import com.example.cineconnect.model.PeopleListResponse
 import com.example.cineconnect.model.Person
 import com.example.cineconnect.model.RegisterRequest
 import com.example.cineconnect.model.RegisterResponse
+import com.example.cineconnect.model.Review
 import com.example.cineconnect.model.ReviewListResponse
+import com.example.cineconnect.model.User
 import com.example.cineconnect.model.UserLikedMovieResponse
+import com.example.cineconnect.model.UserListResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -45,7 +49,10 @@ interface APIService {
         "accept: application/json",
     )
     @GET("movie/{id}/")
-    suspend fun getMovie(@Path("id") movieId: String): Response<Movie>
+    suspend fun getMovie(
+        @Header("Authorization") token: String?,
+        @Path("id") movieId: String
+    ): Response<Movie>
 
     @Headers(
         "accept: application/json",
@@ -98,4 +105,41 @@ interface APIService {
         @Query("page") page: Int,
         @Query("movie") movie: Int,
     ): Response<ReviewListResponse>
+
+
+    @Headers(
+        "accept: application/json",
+    )
+    @GET("review/search/")
+    suspend fun getSearchReviewList(
+        @Query("page") page: Int,
+        @Query("q") query: String,
+    ): Response<ReviewListResponse>
+
+    @Headers(
+        "accept: application/json",
+    )
+    @GET("review/{id}/")
+    suspend fun getReviewDetail(
+        @Path("id") reviewId: Int
+    ): Response<Review>
+
+    @Headers(
+        "accept: application/json",
+    )
+    @GET("user/{id}/")
+    suspend fun getUser(
+        @Header("Authorization") token: String?,
+        @Path("id") userId: Int
+    ): Response<User>
+
+    @Headers(
+        "accept: application/json",
+    )
+    @GET("user/search/")
+    suspend fun getSearchUser(
+        @Header("Authorization") token: String?,
+        @Query("page") page: Int,
+        @Query("q") query: String
+    ): Response<UserListResponse>
 }

@@ -24,8 +24,12 @@ data class MovieList(
     var id: Int,
     @SerializedName("original_title")
     var originalTitle: String,
+    @SerializedName("title")
+    var title: String,
     @SerializedName("poster_path")
     var posterPath: String,
+    @SerializedName("backdrop_path")
+    var backdropPath: String,
     @SerializedName("release_date")
     var releaseDate: String?,
     @SerializedName("directors")
@@ -84,8 +88,18 @@ data class UserList(
     var username: String,
     @SerializedName("profile_pic")
     var profilePic: String,
+    @SerializedName("is_following")
+    var isFollowing: Boolean?
 )
 
+data class UserListResponse(
+    @SerializedName("count") val count: Int,
+    @SerializedName("next") val next: String?,
+    @SerializedName("previous") val previous: String?,
+    @SerializedName("results") val userLists: List<UserList>,
+    @SerializedName("total_pages") val totalPages: Int,
+    @SerializedName("current_page") val currentPage: Int
+)
 data class ReviewListResponse(
     @SerializedName("count") val count: Int,
     @SerializedName("next") val next: String?,
@@ -100,5 +114,6 @@ data class ReviewList(
     @SerializedName("user") val user: UserList,
     @SerializedName("rating") val rating: Int,
     @SerializedName("favourite") val favourite: Boolean,
-    @SerializedName("content") val content: String
+    @SerializedName("content") val content: String,
+    @SerializedName("movie") val movie: MovieList
 )

@@ -2,18 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/fragmentHome"
-        android:title="@string/home"
-        android:icon="@drawable/baseline_home_24"/>
+        android:icon="@drawable/baseline_home_24"
+        android:title="@string/home" />
     <item
         android:id="@+id/fragmentDiscover"
-        android:title="@string/discover"
-        android:icon="@drawable/btn_1"/>
+        android:icon="@drawable/btn_1"
+        android:title="@string/discover" />
     <item
         android:id="@+id/fragmentSearch"
-        android:title="@string/search"
-        android:icon="@drawable/search"/>
+        android:icon="@drawable/search"
+        android:title="@string/search" />
     <item
         android:id="@+id/fragmentProfile"
-        android:title="@string/profile"
-        android:icon="@drawable/btn_4"/>
+        android:icon="@drawable/btn_4"
+        android:title="@string/profile" />
 </menu>

@@ -7,7 +7,11 @@ import com.example.cineconnect.network.API
 import retrofit2.HttpException
 import java.io.IOException
 
-class ReviewPagingSource(private val movie: Int) : PagingSource<Int, ReviewList>() {
+class ReviewPagingSource(
+    private val movie: Int?,
+    private val type: Int,
+    private val query: String?
+) : PagingSource<Int, ReviewList>() {
     override fun getRefreshKey(state: PagingState<Int, ReviewList>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
@@ -17,26 +21,51 @@ class ReviewPagingSource(private val movie: Int) : PagingSource<Int, ReviewList>
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ReviewList> {
         val page = params.key ?: 1
-        return try {
-            val response = API.apiService.getReviewList(page, movie)
-            if (response.isSuccessful) {
-                val reviewListResponse = response.body()
-                if (reviewListResponse != null) {
-                    LoadResult.Page(
-                        data = reviewListResponse.reviewLists,
-                        prevKey = if (page == 1) null else page - 1,
-                        nextKey = if (page == reviewListResponse.totalPages) null else page + 1
-                    )
+        if (type == 1) {
+            return try {
+                val response = API.apiService.getReviewList(page, movie!!)
+                if (response.isSuccessful) {
+                    val reviewListResponse = response.body()
+                    if (reviewListResponse != null) {
+                        LoadResult.Page(
+                            data = reviewListResponse.reviewLists,
+                            prevKey = if (page == 1) null else page - 1,
+                            nextKey = if (page == reviewListResponse.totalPages) null else page + 1
+                        )
+                    } else {
+                        LoadResult.Error(IOException("Response body is null"))
+                    }
                 } else {
-                    LoadResult.Error(IOException("Response body is null"))
+                    LoadResult.Error(HttpException(response))
                 }
-            } else {
-                LoadResult.Error(HttpException(response))
+            } catch (e: IOException) {
+                LoadResult.Error(e)
+            } catch (e: HttpException) {
+                LoadResult.Error(e)
             }
-        } catch (e: IOException) {
-            LoadResult.Error(e)
-        } catch (e: HttpException) {
-            LoadResult.Error(e)
+        } else {
+            return try {
+                val response = API.apiService.getSearchReviewList(page, query!!)
+                if (response.isSuccessful) {
+                    val reviewListResponse = response.body()
+                    if (reviewListResponse != null) {
+                        LoadResult.Page(
+                            data = reviewListResponse.reviewLists,
+                            prevKey = if (page == 1) null else page - 1,
+                            nextKey = if (page == reviewListResponse.totalPages) null else page + 1
+                        )
+                    } else {
+                        LoadResult.Error(IOException("Response body is null"))
+                    }
+                } else {
+                    LoadResult.Error(HttpException(response))
+                }
+            } catch (e: IOException) {
+                LoadResult.Error(e)
+            } catch (e: HttpException) {
+                LoadResult.Error(e)
+            }
         }
+
     }
 }

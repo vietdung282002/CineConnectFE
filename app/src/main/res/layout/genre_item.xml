@@ -5,28 +5,27 @@
         android:id="@+id/genre_detail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="20dp"
         android:background="@drawable/underline"
         android:clickable="true"
         android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground"
         android:onClick="onClick"
-        android:foreground="?android:attr/selectableItemBackground">
+        android:orientation="horizontal"
+        android:padding="20dp">
 
         <TextView
             android:id="@+id/genre_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:hint="Cast Name"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
-            android:textSize="20sp"
-            android:layout_weight="1"/>
+            android:textSize="20sp" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/baseline_arrow_forward_ios_24"
-            />
+            android:src="@drawable/baseline_arrow_forward_ios_24" />
     </LinearLayout>
 </layout>

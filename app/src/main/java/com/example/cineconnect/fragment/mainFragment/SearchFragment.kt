@@ -60,6 +60,7 @@ class SearchFragment : Fragment() {
                         cancelBtn.visibility = View.GONE
                         tabBar.visibility = View.GONE
                         viewPager.visibility = View.GONE
+                        searchTextInput.text?.clear()
                     }
                 }
 

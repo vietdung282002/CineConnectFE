@@ -11,8 +11,8 @@ class MovieRepository {
         return API.apiService.movieList(page)
     }
 
-    suspend fun getMovie(id: Int): Response<Movie> {
-        return API.apiService.getMovie(id.toString())
+    suspend fun getMovie(token: String?, id: Int): Response<Movie> {
+        return API.apiService.getMovie(token,id.toString())
     }
 
     suspend fun getMovieByGenre(page: Int, id: Int): Response<MovieListResponse> {

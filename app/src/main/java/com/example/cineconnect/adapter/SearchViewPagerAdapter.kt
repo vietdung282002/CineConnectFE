@@ -21,8 +21,9 @@ class SearchViewPagerAdapter(
         return when (position) {
             0 -> MovieSearchFragment(query, parentIds)
             1 -> PeopleSearchFragment(query, parentIds)
-            2 -> UserSearchFragment()
-            else -> ReviewSearchFragment()
+            2 -> UserSearchFragment(query, parentIds)
+            3 -> ReviewSearchFragment(query, parentIds)
+            else -> throw IllegalArgumentException("Invalid position: $position")
         }
     }
 

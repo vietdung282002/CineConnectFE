@@ -28,4 +28,10 @@
     <string name="movie_participate">Movie Participate</string>
     <string name="find_movies_reviews_people">Find movies,reviews,people</string>
     <string name="cancel">Cancel</string>
+    <string name="review">Review</string>
+    <string name="follow">FOLLOW</string>
+    <string name="following">FOLLOWING</string>
+    <string name="favourite">Favourite</string>
+    <string name="activity">Activity</string>
+    <string name="films">Films</string>
 </resources>

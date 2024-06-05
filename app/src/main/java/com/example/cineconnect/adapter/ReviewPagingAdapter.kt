@@ -9,10 +9,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.cineconnect.databinding.ReviewItemBinding
 import com.example.cineconnect.model.ReviewList
+import com.example.cineconnect.onClickInterface.OnReviewClicked
 import com.example.cineconnect.utils.Utils
 
 class ReviewPagingAdapter :
     PagingDataAdapter<ReviewList, ReviewPagingAdapter.ReviewViewHolder>(ReviewComparator) {
+    private var onReviewClicked: OnReviewClicked? = null
+
     class ReviewViewHolder(reviewItemBinding: ReviewItemBinding) :
         RecyclerView.ViewHolder(reviewItemBinding.root) {
         val layout = reviewItemBinding.layoutMain
@@ -38,7 +41,7 @@ class ReviewPagingAdapter :
         if (review != null) {
             val displayMetrics = holder.itemView.context.resources.displayMetrics
             val screenWidth = displayMetrics.widthPixels
-            val itemWidth = (screenWidth * 0.1).toInt()
+            val itemWidth = (screenWidth * 0.08).toInt()
 
             val layoutParams = holder.profileImage.layoutParams
 
@@ -59,7 +62,7 @@ class ReviewPagingAdapter :
             Glide.with(holder.itemView).load(Utils.PROFILE_LINK + review.user.profilePic)
                 .into(holder.profileImage)
             holder.layout.setOnClickListener {
-
+                onReviewClicked?.getOnReviewClicked(position, review.id)
             }
         }
     }
@@ -68,5 +71,9 @@ class ReviewPagingAdapter :
         val adapterLayout =
             ReviewItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ReviewViewHolder(adapterLayout)
+    }
+
+    fun setOnReviewListener(listener: OnReviewClicked) {
+        this.onReviewClicked = listener
     }
 }

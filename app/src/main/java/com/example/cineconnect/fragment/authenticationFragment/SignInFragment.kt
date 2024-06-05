@@ -2,6 +2,7 @@ package com.example.cineconnect.fragment.authenticationFragment
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -109,11 +110,12 @@ class SignInFragment : Fragment() {
         if (!loginResponse?.data?.token.isNullOrEmpty()) {
             loginResponse?.data?.token?.let {
                 SessionManager.saveAuthToken(requireContext(), it)
+                SessionManager.getToken(requireContext())?.let { it1 -> Log.d("LOG_TAG_MAIN", it1) }
             }
         }
         if (!loginResponse?.data?.id.isNullOrEmpty()) {
             loginResponse?.data?.id?.let {
-                SessionManager.saveUserId(requireContext(), it)
+                SessionManager.saveUserId(requireContext(), it.toInt())
             }
         }
         navigateToHome()

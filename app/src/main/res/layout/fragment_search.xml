@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragment.mainFragment.SearchFragment"
-    >
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".fragment.mainFragment.SearchFragment">
+
     <data>
 
         <variable
             name="viewModel"
             type="com.example.cineconnect.viewmodel.MovieViewModel" />
     </data>
+
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -17,37 +18,39 @@
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appbar"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:toolbarId="@+id/toolbar"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed"
                 app:contentScrim="@color/black2"
-                >
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                app:toolbarId="@+id/toolbar">
 
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/toolbar"
-                    android:layout_height="wrap_content"
                     android:layout_width="match_parent"
-                    app:layout_collapseMode="pin"
-                    android:background="@color/black2">
+                    android:layout_height="wrap_content"
+                    android:background="@color/black2"
+                    app:layout_collapseMode="pin">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_marginBottom="10dp">
+                        android:layout_marginBottom="10dp"
+                        android:orientation="vertical">
+
                         <TextView
                             android:id="@+id/search_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
+                            android:layout_margin="10dp"
                             android:text="@string/search"
                             android:textColor="@color/white"
-                            android:textSize="30sp"
-                            android:layout_margin="10dp"/>
+                            android:textSize="30sp" />
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -55,10 +58,10 @@
 
                             <com.google.android.material.textfield.TextInputLayout
                                 android:id="@+id/outlinedTextField"
-                                android:layout_width="0dp"
-                                android:layout_weight="1"
-                                android:layout_height="wrap_content"
                                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
                                 app:boxBackgroundColor="@color/white"
                                 app:boxCornerRadiusBottomEnd="30dp"
                                 app:boxCornerRadiusBottomStart="30dp"
@@ -73,14 +76,14 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="12dp"
                                     android:layout_marginEnd="12dp"
+                                    android:background="@color/main_color"
                                     android:hint="@string/find_movies_reviews_people"
-                                    android:text="@={viewModel.searchQuery}"
-                                    android:textColorHint="@color/grey"
-                                    android:textColor="@color/white"
-                                    android:textSize="15sp"
                                     android:paddingStart="49dp"
                                     android:paddingEnd="0dp"
-                                    android:background="@color/main_color"/>
+                                    android:text="@={viewModel.searchQuery}"
+                                    android:textColor="@color/white"
+                                    android:textColorHint="@color/grey"
+                                    android:textSize="15sp" />
 
 
                             </com.google.android.material.textfield.TextInputLayout>
@@ -89,29 +92,28 @@
                                 android:id="@+id/cancel_btn"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginEnd="10dp"
                                 android:clickable="true"
                                 android:focusable="true"
                                 android:onClick="onClick"
                                 android:text="@string/cancel"
-                                android:layout_marginEnd="10dp"
                                 android:textAppearance="@style/text_button"
                                 android:textColor="@color/white"
-                                android:layout_gravity="center"
-                                android:visibility="gone"
-                                />
+                                android:visibility="gone" />
                         </LinearLayout>
 
 
                     </LinearLayout>
                 </androidx.appcompat.widget.Toolbar>
             </com.google.android.material.appbar.CollapsingToolbarLayout>
+
             <com.example.cineconnect.customLayout.CustomTabBar
                 android:id="@+id/tab_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:entries="@array/searchTabs"
-                android:visibility="gone"
-                />
+                android:visibility="gone" />
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.core.widget.NestedScrollView
@@ -119,8 +121,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fillViewport="true"
-            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
-            >
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -134,15 +135,13 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
                     android:paddingBottom="10dp"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
             </LinearLayout>
-
 
 
         </androidx.core.widget.NestedScrollView>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
 
 
 </layout>

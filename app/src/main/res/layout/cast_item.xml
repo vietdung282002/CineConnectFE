@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <FrameLayout
         android:id="@+id/cast_detail_btn"
         android:layout_width="match_parent"
@@ -8,8 +9,8 @@
         android:background="@color/main_color"
         android:clickable="true"
         android:focusable="true"
-        android:onClick="onClick"
-        android:foreground="?android:attr/selectableItemBackground">
+        android:foreground="?android:attr/selectableItemBackground"
+        android:onClick="onClick">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -34,11 +35,11 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_weight="1"
-                android:padding="5dp"
                 android:layout_gravity="center"
-                android:background="@drawable/underline">
+                android:layout_weight="1"
+                android:background="@drawable/underline"
+                android:orientation="vertical"
+                android:padding="5dp">
 
                 <TextView
                     android:id="@+id/cast_name"
@@ -46,7 +47,7 @@
                     android:layout_height="wrap_content"
                     android:hint="Cast Name"
                     android:textColor="@color/white"
-                    android:textColorHint="@color/white"/>
+                    android:textColorHint="@color/white" />
 
                 <TextView
                     android:id="@+id/cast_role"
@@ -61,11 +62,10 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:scaleType="centerCrop"
-                android:src="@drawable/baseline_arrow_forward_ios_24"
-                android:padding="5dp"
                 android:layout_gravity="center"
-                />
+                android:padding="5dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/baseline_arrow_forward_ios_24" />
         </LinearLayout>
 
     </FrameLayout>

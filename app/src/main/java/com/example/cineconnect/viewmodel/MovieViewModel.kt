@@ -1,5 +1,6 @@
 package com.example.cineconnect.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,10 +10,8 @@ import androidx.paging.PagingData
 import com.example.cineconnect.model.Movie
 import com.example.cineconnect.model.MovieList
 import com.example.cineconnect.model.MovieListResponse
-import com.example.cineconnect.model.ReviewList
 import com.example.cineconnect.network.BaseResponse
 import com.example.cineconnect.paging.MoviePagingSource
-import com.example.cineconnect.paging.ReviewPagingSource
 import com.example.cineconnect.repository.MovieRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -29,9 +28,6 @@ class MovieViewModel : ViewModel() {
         MutableStateFlow<BaseResponse<PagingData<MovieList>>>(BaseResponse.Loading())
     val moviesState: StateFlow<BaseResponse<PagingData<MovieList>>> = _moviesState
 
-    private val _reviewState =
-        MutableStateFlow<BaseResponse<PagingData<ReviewList>>>(BaseResponse.Loading())
-    val reviewState: StateFlow<BaseResponse<PagingData<ReviewList>>> = _reviewState
 
     fun getMovieList(page: Int) {
         movieListResult.value = BaseResponse.Loading()
@@ -50,14 +46,15 @@ class MovieViewModel : ViewModel() {
         }
     }
 
-    fun getMovie(id: Int) {
+    fun getMovie(token:String?, id: Int) {
         movieResult.value = BaseResponse.Loading()
         viewModelScope.launch {
             try {
-                val response = movieRepository.getMovie(id)
+                val response = movieRepository.getMovie(token,id)
 
                 if (response.isSuccessful) {
                     movieResult.value = BaseResponse.Success(response.body())
+
                 } else {
                     movieResult.value = BaseResponse.Error(response.message())
                 }
@@ -97,15 +94,4 @@ class MovieViewModel : ViewModel() {
         }
     }
 
-    fun getReviewList(movieId: Int) {
-        _reviewState.value = BaseResponse.Loading()
-        viewModelScope.launch {
-            Pager(PagingConfig(pageSize = 12, enablePlaceholders = true)) {
-                ReviewPagingSource(movieId)
-            }.flow.catch { e -> _reviewState.value = BaseResponse.Error(e.message) }
-                .collectLatest { pagingData ->
-                    _reviewState.value = BaseResponse.Success(pagingData)
-                }
-        }
-    }
 }

@@ -14,17 +14,19 @@ import com.example.cineconnect.R
 import com.example.cineconnect.adapter.ReviewPagingAdapter
 import com.example.cineconnect.databinding.FragmentReviewListOfMovieBinding
 import com.example.cineconnect.network.BaseResponse
+import com.example.cineconnect.onClickInterface.OnReviewClicked
 import com.example.cineconnect.utils.Utils
-import com.example.cineconnect.viewmodel.MovieViewModel
+import com.example.cineconnect.utils.Utils.Companion.REVIEW_ID
+import com.example.cineconnect.viewmodel.ReviewViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 
-class ReviewListOfMovieFragment : Fragment() {
+class ReviewListOfMovieFragment : Fragment(), OnReviewClicked {
     private lateinit var fragmentReviewListOfMovieBinding: FragmentReviewListOfMovieBinding
     private var movieId: Int? = -1
     private var movieName: String? = ""
-    private val movieViewModel: MovieViewModel by viewModels()
+    private val reviewViewModel: ReviewViewModel by viewModels()
     private lateinit var fragmentManager: FragmentManager
     private val reviewAdapter = ReviewPagingAdapter()
     override fun onCreateView(
@@ -43,7 +45,7 @@ class ReviewListOfMovieFragment : Fragment() {
             movieName = it.getString(Utils.MOVIE_NAME)
         }
         movieId?.let {
-            movieViewModel.getReviewList(it)
+            reviewViewModel.getReviewList(it)
         }
         return fragmentReviewListOfMovieBinding.root
     }
@@ -51,6 +53,7 @@ class ReviewListOfMovieFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         fragmentManager = requireActivity().supportFragmentManager
+        reviewAdapter.setOnReviewListener(this)
         fragmentReviewListOfMovieBinding.apply {
             backBtn.setOnClickListener {
                 fragmentManager.popBackStack()
@@ -59,7 +62,7 @@ class ReviewListOfMovieFragment : Fragment() {
             rvReview.adapter = reviewAdapter
         }
         viewLifecycleOwner.lifecycleScope.launch {
-            movieViewModel.reviewState.collectLatest { state ->
+            reviewViewModel.reviewState.collectLatest { state ->
                 when (state) {
                     is BaseResponse.Loading -> {
                         showLoading()
@@ -95,6 +98,21 @@ class ReviewListOfMovieFragment : Fragment() {
 
     private fun showToast(msg: String) {
         Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun getOnReviewClicked(position: Int, reviewId: Int) {
+        val bundle = Bundle()
+        bundle.putInt(REVIEW_ID, reviewId)
+        val reviewDetailFragment = ReviewDetailFragment().apply {
+            arguments = bundle
+        }
+        val containerId = (view?.parent as? ViewGroup)?.id
+        if (containerId != null) {
+            fragmentManager.beginTransaction()
+                .add(containerId, reviewDetailFragment)
+                .addToBackStack(null)
+                .commit()
+        }
     }
 
 

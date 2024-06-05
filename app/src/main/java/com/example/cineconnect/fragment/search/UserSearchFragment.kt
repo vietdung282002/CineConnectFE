@@ -1,60 +1,113 @@
 package com.example.cineconnect.fragment.search
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.example.cineconnect.R
+import com.example.cineconnect.adapter.UserPagingAdapter
+import com.example.cineconnect.databinding.FragmentUserSearchBinding
+import com.example.cineconnect.fragment.detailFragment.MovieDetailFragment
+import com.example.cineconnect.fragment.mainFragment.ProfileFragment
+import com.example.cineconnect.network.BaseResponse
+import com.example.cineconnect.onClickInterface.OnUserClicked
+import com.example.cineconnect.utils.SessionManager
+import com.example.cineconnect.utils.Utils
+import com.example.cineconnect.viewmodel.UserViewModel
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [UserSearchFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class UserSearchFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+class UserSearchFragment(
+    private val query: String,
+    private val parentId: Int
+) : Fragment(),OnUserClicked {
+    private lateinit var fragmentUserSearchBinding: FragmentUserSearchBinding
+    private val userAdapter = UserPagingAdapter()
+    private val userViewModel: UserViewModel by viewModels()
+    private var token: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_user_search, container, false)
+        fragmentUserSearchBinding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_user_search, container, false)
+        token = "Token " + SessionManager.getToken(requireContext())
+        userViewModel.getSearchUser(token,query)
+        return fragmentUserSearchBinding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment UserSearchFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            UserSearchFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        userAdapter.setOnUserListener(this)
+        fragmentUserSearchBinding.rvUser.adapter = userAdapter
+        viewLifecycleOwner.lifecycleScope.launch {
+            userViewModel.userState.collectLatest { state ->
+                when (state) {
+                    is BaseResponse.Loading -> {
+                        showLoading()
+                    }
+
+                    is BaseResponse.Success -> {
+                        stopLoading()
+                        state.data?.let { pagingData ->
+                            userAdapter.submitData(pagingData)
+                        }
+                    }
+
+                    is BaseResponse.Error -> {
+                        stopLoading()
+                        processError(state.msg)
+                    }
                 }
             }
+        }
+
     }
+    private fun showLoading() {
+        fragmentUserSearchBinding.progressBarLayout.visibility = View.VISIBLE
+    }
+
+    private fun stopLoading() {
+        fragmentUserSearchBinding.progressBarLayout.visibility = View.GONE
+    }
+
+    private fun processError(msg: String?) {
+        showToast("Error: $msg")
+    }
+
+    private fun showToast(msg: String) {
+        Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun hideKeyboard() {
+        val imm =
+            requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view?.windowToken, 0)
+    }
+
+    override fun getOnUserClicked(position: Int, userId: Int) {
+        hideKeyboard()
+        val bundle = Bundle()
+        bundle.putInt(Utils.USER_ID, userId)
+
+        val userProfile =ProfileFragment().apply {
+            arguments = bundle
+        }
+        val fragmentManager = requireActivity().supportFragmentManager
+        fragmentManager.beginTransaction()
+            .add(parentId, userProfile)
+            .addToBackStack(null)
+            .commit()
+    }
+
+
 }

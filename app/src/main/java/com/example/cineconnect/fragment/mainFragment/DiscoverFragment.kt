@@ -171,7 +171,7 @@ class DiscoverFragment : Fragment(), OnMovieClicked {
     }
 
     private fun addButton(page: Int) {
-        var button = Button(requireContext())
+        val button = Button(requireContext())
         button.text = page.toString()
         button.layoutParams
         button.textSize = 12f  // Set text size to be smaller
@@ -193,7 +193,7 @@ class DiscoverFragment : Fragment(), OnMovieClicked {
         val displayMetrics = requireContext().resources.displayMetrics
         val screenWidth = displayMetrics.widthPixels
         val itemWidth = (screenWidth * 0.07).toInt()
-        val itemHeight = (itemWidth * (1)).toInt()
+        val itemHeight = (itemWidth * (1))
         params.height = itemHeight
         params.width = itemWidth
         params.setMargins(8, 0, 8, 0)
@@ -237,7 +237,7 @@ class DiscoverFragment : Fragment(), OnMovieClicked {
         val displayMetrics = requireContext().resources.displayMetrics
         val screenWidth = displayMetrics.widthPixels
         val itemWidth = (screenWidth * 0.07).toInt()
-        val itemHeight = (itemWidth * (1)).toInt()
+        val itemHeight = (itemWidth * (1))
         params.height = itemHeight
         params.width = itemWidth
         params.setMargins(8, 0, 8, 0)
@@ -271,7 +271,7 @@ class DiscoverFragment : Fragment(), OnMovieClicked {
         val displayMetrics = requireContext().resources.displayMetrics
         val screenWidth = displayMetrics.widthPixels
         val itemWidth = (screenWidth * 0.07).toInt()
-        val itemHeight = (itemWidth * (1)).toInt()
+        val itemHeight = (itemWidth * (1))
         params.height = itemHeight
         params.width = itemWidth
 

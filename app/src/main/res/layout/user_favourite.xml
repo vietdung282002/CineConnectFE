@@ -6,13 +6,13 @@
         android:id="@+id/fl_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"
         android:background="@color/main_color"
         android:clickable="true"
         android:focusable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        android:onClick="onClick"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp">
+        android:onClick="onClick">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -25,8 +25,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 app:civ_border_color="@color/white"
-                app:civ_border_width="1dp"
-                />
+                app:civ_border_width="1dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -59,15 +58,14 @@
                     android:rating="3.5"
                     android:secondaryProgressTint="@color/white"
                     android:stepSize="0.5"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
                 <ImageView
-                    android:layout_marginStart="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/baseline_favorite_24_red"
                     android:layout_gravity="center"
-                    />
+                    android:layout_marginStart="10dp"
+                    android:src="@drawable/baseline_favorite_24_red" />
 
 
             </LinearLayout>

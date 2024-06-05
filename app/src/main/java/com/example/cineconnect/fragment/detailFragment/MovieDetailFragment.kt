@@ -19,6 +19,7 @@ import com.example.cineconnect.databinding.FragmentMovieDetailBinding
 import com.example.cineconnect.model.Movie
 import com.example.cineconnect.model.Rating
 import com.example.cineconnect.network.BaseResponse
+import com.example.cineconnect.utils.SessionManager
 import com.example.cineconnect.utils.Utils
 import com.example.cineconnect.utils.Utils.Companion.BACKDROP_LINK
 import com.example.cineconnect.utils.Utils.Companion.LOG_TAG_MAIN
@@ -43,6 +44,8 @@ class MovieDetailFragment : Fragment() {
     private val movieViewmodel: MovieViewModel by viewModels()
     private var containerId = -1
     private lateinit var fragmentManager: FragmentManager
+    private var token: String? = null
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,10 +54,11 @@ class MovieDetailFragment : Fragment() {
         // Inflate the layout for this fragment
         fragmentMovieDetailBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_movie_detail, container, false)
+        token = "Token " + SessionManager.getToken(requireContext())
 
         arguments?.let {
             movieId = it.getInt(MOVIE_ID)
-            movieViewmodel.getMovie(movieId)
+            movieViewmodel.getMovie(token,movieId)
         }
 
         return fragmentMovieDetailBinding.root
@@ -169,7 +173,6 @@ class MovieDetailFragment : Fragment() {
                 text = movieObj.reviewCount.toString()
             }
 
-            Log.d(LOG_TAG_MAIN, ratingObj.toString())
             tvAvrRating.text = ratingObj.avr.rateAvg.toString()
 
             likedList.setOnClickListener {

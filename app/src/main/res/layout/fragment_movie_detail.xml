@@ -3,9 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".fragment.detailFragment.MovieDetailFragment">
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -102,12 +104,11 @@
                         android:id="@+id/bg_intro"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="@color/main_color"
                         android:clipChildren="false"
                         android:clipToPadding="false"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        android:background="@color/main_color"
-                        >
+                        app:layout_constraintTop_toTopOf="parent">
 
 
                         <androidx.constraintlayout.widget.ConstraintLayout
@@ -164,13 +165,13 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="15dp"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:onClick="onClick"
                                 android:textColor="@color/white"
                                 android:textColorHint="@color/white"
                                 android:textSize="17sp"
                                 android:textStyle="bold"
-                                android:clickable="true"
-                                android:focusable="true"
-                                android:onClick="onClick"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toBottomOf="@id/ll_release_date" />
 
@@ -210,8 +211,8 @@
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:orientation="vertical"
                                 android:layout_marginTop="10dp"
+                                android:orientation="vertical"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toBottomOf="@id/tv_tagline">
 
@@ -240,8 +241,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="60dp"
                                         android:layout_gravity="bottom"
-                                        android:background="@drawable/gradient_background"
-                                        />
+                                        android:background="@drawable/gradient_background" />
 
                                 </FrameLayout>
 
@@ -277,9 +277,9 @@
                                 android:layout_gravity="bottom"
                                 android:paddingBottom="20dp"
                                 android:src="@drawable/baseline_star_24"
-                                tools:ignore="ContentDescription"
+                                app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintBottom_toBottomOf="parent"/>
+                                tools:ignore="ContentDescription" />
 
                             <com.github.mikephil.charting.charts.BarChart
                                 android:id="@+id/BarChart"
@@ -298,8 +298,8 @@
                                 android:layout_height="match_parent"
                                 android:orientation="vertical"
                                 android:paddingBottom="20dp"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintBottom_toBottomOf="parent">
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent">
 
                                 <TextView
                                     android:id="@+id/tv_avr_rating"
@@ -315,8 +315,7 @@
                                 <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:orientation="horizontal"
-                                    >
+                                    android:orientation="horizontal">
 
                                     <ImageView
                                         android:layout_width="wrap_content"
@@ -410,8 +409,7 @@
                                     android:id="@+id/tv_number_of_likes"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:padding="3dp"
-                                    />
+                                    android:padding="3dp" />
 
 
                             </LinearLayout>
@@ -449,8 +447,7 @@
                                     android:id="@+id/tv_number_of_reviews"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:padding="3dp"
-                                    />
+                                    android:padding="3dp" />
 
 
                             </LinearLayout>
@@ -501,10 +498,10 @@
                 </FrameLayout>
 
 
-
             </androidx.core.widget.NestedScrollView>
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
         <FrameLayout
             android:id="@+id/progress_bar_layout"
             android:layout_width="match_parent"
@@ -512,19 +509,19 @@
             android:alpha="0.5"
             android:background="@color/black"
             android:visibility="gone">
+
             <ProgressBar
                 android:id="@+id/progress_bar"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:visibility="visible"
                 android:layout_gravity="center"
                 android:indeterminate="true"
                 android:indeterminateTint="@color/white"
+                android:visibility="visible"
 
                 />
         </FrameLayout>
     </FrameLayout>
-
 
 
 </layout>

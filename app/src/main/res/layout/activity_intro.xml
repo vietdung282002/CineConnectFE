@@ -3,106 +3,105 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/main_color"
+        tools:context=".activity.IntroActivity">
+
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/bg_intro"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/main"
-            tools:context=".activity.IntroActivity"
-            android:background="@color/main_color"
-            >
+            android:layout_height="0dp"
+            app:layout_constraintHeight_percent="0.55"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/bg_intro"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                app:layout_constraintHeight_percent="0.55"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <ImageView
-                            android:id="@+id/iv_intro_image"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/intro_pic"
-                            android:scaleType="center"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            android:contentDescription="@string/intro_image"/>
-
-
-                        <ImageView
-                            android:id="@+id/iv_intro_image2"
-                            android:layout_width="match_parent"
-                            android:layout_height="100dp"
-                            android:src="@drawable/gradient_background"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            android:contentDescription="@string/intro_image"
-
-                            />
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                </LinearLayout>
-
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginStart="24dp"
-                android:layout_marginEnd="24dp"
-                android:orientation="vertical"
-                app:layout_constraintTop_toBottomOf="@+id/bg_intro">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/welcome_to_cineconnect"
-                    android:textColor="@color/orange"
-                    android:textSize="27sp"/>
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-                <TextView
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/discover_your_favourite_movies_and_series"
-                    android:textColor="@color/white"
-                    android:textSize="20sp" />
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/iv_intro_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/intro_image"
+                        android:scaleType="center"
+                        android:src="@drawable/intro_pic"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/sign_up_btn"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/get_started" />
+                    <ImageView
+                        android:id="@+id/iv_intro_image2"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:contentDescription="@string/intro_image"
+                        android:src="@drawable/gradient_background"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
 
-                <TextView
-                    android:id="@+id/skip_btn"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/skip"
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginTop="8dp"/>
+                        />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
             </LinearLayout>
 
 
-
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="24dp"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@+id/bg_intro">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/welcome_to_cineconnect"
+                android:textColor="@color/orange"
+                android:textSize="27sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/discover_your_favourite_movies_and_series"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/sign_up_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/get_started" />
+
+            <TextView
+                android:id="@+id/skip_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:text="@string/skip"
+                android:textAlignment="center"
+                android:textColor="@color/white" />
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </layout>

@@ -36,7 +36,7 @@ class FavouritePagingAdapter :
         if (favourite != null) {
             val displayMetrics = holder.itemView.context.resources.displayMetrics
             val screenWidth = displayMetrics.widthPixels
-            val itemWidth = (screenWidth * 0.1).toInt()
+            val itemWidth = (screenWidth * 0.08).toInt()
 
             val layoutParams = holder.profileImage.layoutParams
 

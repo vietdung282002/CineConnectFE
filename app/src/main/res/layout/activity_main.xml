@@ -19,40 +19,38 @@
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/home_fragment"
+                android:name="com.example.cineconnect.fragment.mainFragment.HomeFragment"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:name="com.example.cineconnect.fragment.mainFragment.HomeFragment"
-                tools:layout="@layout/fragment_home"
-                />
+                tools:layout="@layout/fragment_home" />
+
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/discover_fragment"
+                android:name="com.example.cineconnect.fragment.mainFragment.DiscoverFragment"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:name="com.example.cineconnect.fragment.mainFragment.DiscoverFragment"
-                tools:layout="@layout/fragment_discover"
                 android:visibility="gone"
-                />
+                tools:layout="@layout/fragment_discover" />
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/search_fragment"
+                android:name="com.example.cineconnect.fragment.mainFragment.SearchFragment"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:name="com.example.cineconnect.fragment.mainFragment.SearchFragment"
-                tools:layout="@layout/fragment_search"
                 android:visibility="gone"
-                />
+                tools:layout="@layout/fragment_search" />
+
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/profile_fragment"
+                android:name="com.example.cineconnect.fragment.mainFragment.ProfileFragment"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:name="com.example.cineconnect.fragment.mainFragment.ProfileFragment"
-                tools:layout="@layout/fragment_profile"
                 android:visibility="gone"
-                />
+                tools:layout="@layout/fragment_profile" />
 
             <FrameLayout
                 android:id="@+id/main_activity_frame_layout"

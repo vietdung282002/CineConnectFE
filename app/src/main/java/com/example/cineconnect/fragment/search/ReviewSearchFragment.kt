@@ -1,60 +1,110 @@
 package com.example.cineconnect.fragment.search
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.example.cineconnect.R
+import com.example.cineconnect.adapter.ReviewPagingSearchAdapter
+import com.example.cineconnect.databinding.FragmentReviewSearchBinding
+import com.example.cineconnect.fragment.detailFragment.MovieDetailFragment
+import com.example.cineconnect.fragment.detailFragment.ReviewDetailFragment
+import com.example.cineconnect.network.BaseResponse
+import com.example.cineconnect.onClickInterface.OnReviewClicked
+import com.example.cineconnect.utils.Utils
+import com.example.cineconnect.viewmodel.ReviewViewModel
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [ReviewSearchFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class ReviewSearchFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
-
+class ReviewSearchFragment(
+    private val query: String,
+    private val parentId: Int
+) : Fragment(), OnReviewClicked {
+    private lateinit var fragmentReviewSarchBinding: FragmentReviewSearchBinding
+    private val reviewAdapter = ReviewPagingSearchAdapter()
+    private val reviewViewModel: ReviewViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_review_search, container, false)
+        fragmentReviewSarchBinding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_review_search, container, false)
+        reviewViewModel.getSearchReviewList(query)
+        return fragmentReviewSarchBinding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ReviewSearchFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ReviewSearchFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        reviewAdapter.setOnReviewListener(this)
+        fragmentReviewSarchBinding.rvReview.adapter = reviewAdapter
+        viewLifecycleOwner.lifecycleScope.launch {
+            reviewViewModel.reviewState.collectLatest { state ->
+                when (state) {
+                    is BaseResponse.Loading -> {
+                        showLoading()
+                    }
+
+                    is BaseResponse.Success -> {
+                        stopLoading()
+                        state.data?.let { pagingData ->
+                            reviewAdapter.submitData(pagingData)
+                        }
+                    }
+
+                    is BaseResponse.Error -> {
+                        stopLoading()
+                        processError(state.msg)
+                    }
                 }
             }
+        }
+    }
+
+    override fun getOnReviewClicked(position: Int, reviewId: Int) {
+        hideKeyboard()
+        val bundle = Bundle()
+        bundle.putInt(Utils.REVIEW_ID, reviewId)
+
+        val reviewDetailFragment = ReviewDetailFragment().apply {
+            arguments = bundle
+        }
+
+        val fragmentManager = requireActivity().supportFragmentManager
+        fragmentManager.beginTransaction()
+            .add(parentId, reviewDetailFragment)
+            .addToBackStack(null)
+            .commit()
+
+    }
+
+    private fun showLoading() {
+        fragmentReviewSarchBinding.progressBarLayout.visibility = View.VISIBLE
+    }
+
+    private fun stopLoading() {
+        fragmentReviewSarchBinding.progressBarLayout.visibility = View.GONE
+    }
+
+    private fun processError(msg: String?) {
+        showToast("Error: $msg")
+    }
+
+    private fun showToast(msg: String) {
+        Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun hideKeyboard() {
+        val imm =
+            requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view?.windowToken, 0)
     }
 }

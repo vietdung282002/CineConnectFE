@@ -4,6 +4,7 @@ import com.example.cineconnect.model.LoginRequest
 import com.example.cineconnect.model.LoginResponse
 import com.example.cineconnect.model.RegisterRequest
 import com.example.cineconnect.model.RegisterResponse
+import com.example.cineconnect.model.User
 import com.example.cineconnect.network.API
 import retrofit2.Response
 
@@ -14,6 +15,10 @@ class UserRepository {
 
     suspend fun registerUser(registerRequest: RegisterRequest): Response<RegisterResponse> {
         return API.apiService.registerUser(registerRequest = registerRequest)
+    }
+
+    suspend fun getUser(token: String?, userId: Int):Response<User>{
+        return API.apiService.getUser(token,userId)
     }
 
 }

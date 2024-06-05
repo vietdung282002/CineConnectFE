@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".activity.AuthenticationActivity">
 
@@ -12,12 +11,11 @@
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fragment_container_view"
+            android:name="com.example.cineconnect.fragment.authenticationFragment.SignInFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:name="com.example.cineconnect.fragment.authenticationFragment.SignInFragment"
             tools:layout="@layout/fragment_sign_in" />
     </FrameLayout>
-
 
 
 </layout>

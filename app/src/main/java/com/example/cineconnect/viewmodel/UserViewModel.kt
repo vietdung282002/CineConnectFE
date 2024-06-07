@@ -1,5 +1,7 @@
 package com.example.cineconnect.viewmodel
 
+import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -37,6 +39,9 @@ class UserViewModel : ViewModel() {
     private val _userState =
         MutableStateFlow<BaseResponse<PagingData<UserList>>>(BaseResponse.Loading())
     val userState: StateFlow<BaseResponse<PagingData<UserList>>> = _userState
+
+    private val _followStatus = MutableLiveData<Pair<Int, Boolean?>>()
+    val followStatus: LiveData<Pair<Int, Boolean?>> = _followStatus
 
 
     fun login(usernameOrEmail: String, password: String) {
@@ -86,6 +91,7 @@ class UserViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val response = userRepo.getUser(token,userId)
+                _followStatus.value = Pair(userId, response.body()!!.isFollowing)
                 if (response.isSuccessful) {
                     userResult.value = BaseResponse.Success(response.body())
                 } else {
@@ -117,11 +123,51 @@ class UserViewModel : ViewModel() {
 
         viewModelScope.launch {
             Pager(PagingConfig(pageSize = 10, enablePlaceholders = true)) {
-                UserPagingSource(query, token)
+                UserPagingSource(query, token, 1, null)
             }.flow.catch { e -> _userState.value = BaseResponse.Error(e.message) }
                 .collectLatest { pagingData ->
                     _userState.value = BaseResponse.Success(pagingData)
                 }
+        }
+    }
+
+    fun getFollowerUser(token: String?, userId: Int) {
+        _userState.value = BaseResponse.Loading()
+
+        viewModelScope.launch {
+            Pager(PagingConfig(pageSize = 10, enablePlaceholders = true)) {
+                UserPagingSource(null, token, 2, userId)
+            }.flow.catch { e -> _userState.value = BaseResponse.Error(e.message) }
+                .collectLatest { pagingData ->
+                    _userState.value = BaseResponse.Success(pagingData)
+                }
+        }
+    }
+
+    fun getFollowingUser(token: String?, userId: Int) {
+        _userState.value = BaseResponse.Loading()
+
+        viewModelScope.launch {
+            Pager(PagingConfig(pageSize = 10, enablePlaceholders = true)) {
+                UserPagingSource(null, token, 3, userId)
+            }.flow.catch { e -> _userState.value = BaseResponse.Error(e.message) }
+                .collectLatest { pagingData ->
+                    _userState.value = BaseResponse.Success(pagingData)
+                }
+        }
+    }
+
+    fun follow(token: String?, userId: Int) {
+        viewModelScope.launch {
+            try {
+                val response = userRepo.follow(token, userId)
+                if (response.isSuccessful) {
+                    Log.d("LOG_TAG_MAIN", response.body()!!.toString())
+                    _followStatus.value = Pair(userId, response.body()!!.result.user.isFollowing)
+                }
+            } catch (e: Exception) {
+                Log.d("LOG_TAG_MAIN", e.message.toString())
+            }
         }
     }
 }

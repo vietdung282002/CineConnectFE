@@ -80,5 +80,5 @@ dependencies {
     implementation("androidx.paging:paging-guava:$pagingVersion")
     implementation("androidx.paging:paging-compose:3.3.0")
     implementation("de.hdodenhof:circleimageview:3.1.0")
-//    implementation("com.iarcuschin:simpleratingbar:0.1.5")
+    implementation("me.zhanghai.android.materialratingbar:library:1.4.0")
 }

@@ -9,16 +9,16 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.cineconnect.R
-import com.example.cineconnect.databinding.UserFavouriteBinding
 import com.example.cineconnect.databinding.UserItemBinding
-import com.example.cineconnect.model.FavouriteList
 import com.example.cineconnect.model.UserList
-import com.example.cineconnect.onClickInterface.OnMovieClicked
+import com.example.cineconnect.onClickInterface.OnFollowButtonClicked
 import com.example.cineconnect.onClickInterface.OnUserClicked
 import com.example.cineconnect.utils.Utils
 
 class UserPagingAdapter: PagingDataAdapter<UserList, UserPagingAdapter.UserViewHolder>(UserComparator) {
-    private var listener:OnUserClicked? = null
+    private var onUserClicked: OnUserClicked? = null
+    private var onFollowButtonClicked: OnFollowButtonClicked? = null
+
     object UserComparator : DiffUtil.ItemCallback<UserList>() {
         override fun areItemsTheSame(oldItem: UserList, newItem: UserList): Boolean {
             return oldItem.id == newItem.id
@@ -56,14 +56,30 @@ class UserPagingAdapter: PagingDataAdapter<UserList, UserPagingAdapter.UserViewH
                 if(user.isFollowing!!){
                     holder.followBtn.text = "Following"
                     holder.followBtn.background = ContextCompat.getDrawable(holder.itemView.context, R.drawable.following_btn)
+                    holder.followBtn.setTextColor(
+                        ContextCompat.getColor(
+                            holder.itemView.context,
+                            R.color.green
+                        )
+                    )
+
                 }else{
                     holder.followBtn.text = "Follow"
                     holder.followBtn.background = ContextCompat.getDrawable(holder.itemView.context, R.drawable.follow_btn)
+                    holder.followBtn.setTextColor(
+                        ContextCompat.getColor(
+                            holder.itemView.context,
+                            R.color.white
+                        )
+                    )
 
                 }
             }
             holder.layout.setOnClickListener {
-                listener?.getOnUserClicked(position,user.id)
+                onUserClicked?.getOnUserClicked(position, user.id)
+            }
+            holder.followBtn.setOnClickListener {
+                onFollowButtonClicked?.getOnFollowButtonClicked(position, user.id)
             }
         }
     }
@@ -74,7 +90,11 @@ class UserPagingAdapter: PagingDataAdapter<UserList, UserPagingAdapter.UserViewH
         return UserViewHolder(adapterLayout)
     }
 
-    fun setOnUserListener(listener: OnUserClicked) {
-        this.listener = listener
+    fun setOnUserListener(onUserClicked: OnUserClicked) {
+        this.onUserClicked = onUserClicked
+    }
+
+    fun setOnFollowButtonListener(onFollowButtonClicked: OnFollowButtonClicked) {
+        this.onFollowButtonClicked = onFollowButtonClicked
     }
 }

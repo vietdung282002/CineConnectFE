@@ -14,3 +14,14 @@ data class Review(
     @SerializedName("is_liked") val isLiked: Boolean,
     @SerializedName("watched_day") val watchedDay: String
 )
+
+data class LikeResponse(
+    @SerializedName("status") val status: String,
+    @SerializedName("result") val result: Like
+)
+
+data class Like(
+    @SerializedName("review") val review: Int,
+    @SerializedName("like") val like: Boolean,
+    @SerializedName("number_of_like") val numberOfLike: Int
+)

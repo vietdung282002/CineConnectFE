@@ -6,12 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.example.cineconnect.R
 import com.example.cineconnect.databinding.FragmentProfileBinding
+import com.example.cineconnect.fragment.detailFragment.FollowerFragment
+import com.example.cineconnect.fragment.detailFragment.FollowingFragment
 import com.example.cineconnect.model.User
 import com.example.cineconnect.network.BaseResponse
 import com.example.cineconnect.utils.SessionManager
@@ -24,7 +27,7 @@ class ProfileFragment : Fragment() {
     private var userId: Int = -1
     private var currentUser: Int = -1
     private var token: String? = null
-
+//    private lateinit var settingFragment: SettingFragment
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -78,6 +81,11 @@ class ProfileFragment : Fragment() {
     }
 
     private fun updateUI(user: User) {
+
+        val containerId = (view?.parent as? ViewGroup)?.id
+
+        val fragmentManager = activity?.supportFragmentManager
+
         val displayMetrics = requireContext().resources.displayMetrics
         val screenHeight = displayMetrics.heightPixels
         val itemHeight = (screenHeight * (0.15)).toInt()
@@ -87,6 +95,9 @@ class ProfileFragment : Fragment() {
         layoutParams.width = itemHeight
 
         fragmentProfileBinding.profilePic.layoutParams = layoutParams
+
+        val userBundle = Bundle()
+        userBundle.putInt(Utils.USER_ID, user.id)
 
         fragmentProfileBinding.apply {
             tvUsername.text = user.username
@@ -99,8 +110,24 @@ class ProfileFragment : Fragment() {
             favouriteLayout.setOnClickListener {  }
             filmsLayout.setOnClickListener {  }
 
-            tvFollowers.setOnClickListener {  }
-            tvFollowing.setOnClickListener {  }
+            tvFollowers.setOnClickListener {
+                if (containerId != null) {
+                    val followerFragment = FollowerFragment().apply {
+                        arguments = userBundle
+                    }
+                    fragmentManager?.beginTransaction()?.add(containerId, followerFragment)
+                        ?.addToBackStack(null)?.commit()
+                }
+            }
+            tvFollowing.setOnClickListener {
+                if (containerId != null) {
+                    val followingFragment = FollowingFragment().apply {
+                        arguments = userBundle
+                    }
+                    fragmentManager?.beginTransaction()?.add(containerId, followingFragment)
+                        ?.addToBackStack(null)?.commit()
+                }
+            }
 
             favouriteCount.text = user.favouriteCount.toString()
             filmsCount.text = user.watchedCount.toString()
@@ -121,15 +148,45 @@ class ProfileFragment : Fragment() {
             if(userId != -1){
                 settingBtn.visibility = View.GONE
                 followBtn.visibility = View.VISIBLE
+                followBtn.setOnClickListener {
+                    userViewModel.follow(token, userId)
+                }
                 backBtn.visibility = View.VISIBLE
                 backBtn.setOnClickListener{
-                    val fragmentManager = activity?.supportFragmentManager
                     fragmentManager?.popBackStack()
+                }
+                userViewModel.followStatus.observe(viewLifecycleOwner) { (_, isFollowing) ->
+                    if (isFollowing == true) {
+                        followBtn.text = "Following"
+                        followBtn.background =
+                            ContextCompat.getDrawable(requireContext(), R.drawable.following_btn)
+                        followBtn.setTextColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.green
+                            )
+                        )
+
+                    } else {
+                        followBtn.text = "Follow"
+                        followBtn.background =
+                            ContextCompat.getDrawable(requireContext(), R.drawable.follow_btn)
+                        followBtn.setTextColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.white
+                            )
+                        )
+
+                    }
                 }
             }else{
                 settingBtn.visibility = View.VISIBLE
                 settingBtn.setOnClickListener{
-
+//                    settingFragment = SettingFragment()
+//                    if (fragmentManager != null) {
+//                        settingFragment.show(fragmentManager,settingFragment.tag)
+//                    }
                 }
                 followBtn.visibility = View.INVISIBLE
             }

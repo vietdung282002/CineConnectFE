@@ -16,6 +16,7 @@ import com.example.cineconnect.R
 import com.example.cineconnect.databinding.FragmentReviewDetailBinding
 import com.example.cineconnect.model.Review
 import com.example.cineconnect.network.BaseResponse
+import com.example.cineconnect.utils.SessionManager
 import com.example.cineconnect.utils.Utils
 import com.example.cineconnect.viewmodel.ReviewViewModel
 
@@ -25,6 +26,8 @@ class ReviewDetailFragment : Fragment() {
     private var reviewId: Int = -1
     private lateinit var fragmentManager: FragmentManager
     private var date: String = ""
+    private var token: String? = null
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,9 +36,12 @@ class ReviewDetailFragment : Fragment() {
         // Inflate the layout for this fragment
         fragmentReviewDetailBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_review_detail, container, false)
+        if (SessionManager.getToken(requireContext()) != null) {
+            token = "Token " + SessionManager.getToken(requireContext())
+        }
         arguments?.let {
             reviewId = it.getInt(Utils.REVIEW_ID)
-            reviewViewModel.getReview(reviewId)
+            reviewViewModel.getReview(token, reviewId)
         }
 
         return fragmentReviewDetailBinding.root
@@ -54,6 +60,20 @@ class ReviewDetailFragment : Fragment() {
         layoutParams.height = itemHeight
 
         fragmentReviewDetailBinding.ivBackdropImage.layoutParams = layoutParams
+
+        reviewViewModel.likeState.observe(viewLifecycleOwner) {
+            if (it != null) {
+                if (it) {
+                    fragmentReviewDetailBinding.likeBtn.setImageResource(R.drawable.baseline_favorite_24_red)
+                } else {
+                    fragmentReviewDetailBinding.likeBtn.setImageResource(R.drawable.baseline_favorite_border_24)
+                }
+            }
+        }
+
+        reviewViewModel.numberOfLike.observe(viewLifecycleOwner) {
+            fragmentReviewDetailBinding.tvNumberOfLike.text = it.toString()
+        }
 
         reviewViewModel.reviewResult.observe(viewLifecycleOwner) { response ->
             when (response) {
@@ -86,10 +106,6 @@ class ReviewDetailFragment : Fragment() {
             val movieBundle = Bundle()
             movieBundle.putInt(Utils.MOVIE_ID, review.movie.id)
 
-            val movieDetailFragment = MovieDetailFragment().apply {
-                arguments = movieBundle
-            }
-
             backBtn.setOnClickListener {
                 fragmentManager.popBackStack()
             }
@@ -104,9 +120,7 @@ class ReviewDetailFragment : Fragment() {
             llUser.setOnClickListener {
 
             }
-            Log.d("LOG_TAG_MAIN", review.toString())
-            var movieInfo = ""
-            movieInfo = if (review.movie.releaseDate != null) {
+            var movieInfo: String = if (review.movie.releaseDate != null) {
                 "<font color='#FFFFFFFF'><b>${review.movie.title} </b></font> <font color='#9F9A9A'>${
                     review.movie.releaseDate?.substring(
                         0,
@@ -119,6 +133,9 @@ class ReviewDetailFragment : Fragment() {
             tvMovieName.text = HtmlCompat.fromHtml(movieInfo, HtmlCompat.FROM_HTML_MODE_LEGACY)
             tvMovieName.setOnClickListener {
                 if (containerId != null) {
+                    val movieDetailFragment = MovieDetailFragment().apply {
+                        arguments = movieBundle
+                    }
                     fragmentManager.beginTransaction()
                         .add(containerId, movieDetailFragment)
                         .addToBackStack(null)
@@ -127,6 +144,9 @@ class ReviewDetailFragment : Fragment() {
             }
             posterImage.setOnClickListener {
                 if (containerId != null) {
+                    val movieDetailFragment = MovieDetailFragment().apply {
+                        arguments = movieBundle
+                    }
                     fragmentManager.beginTransaction()
                         .add(containerId, movieDetailFragment)
                         .addToBackStack(null)
@@ -143,10 +163,14 @@ class ReviewDetailFragment : Fragment() {
             }
             content.text = review.content
             tvNumberOfLike.text = review.likesCount.toString()
-            if (review.isLiked) {
-                likeBtn.setImageResource(R.drawable.baseline_favorite_24_red)
-            } else {
-                likeBtn.setImageResource(R.drawable.baseline_favorite_border_24)
+//            if (review.isLiked) {
+//                likeBtn.setImageResource(R.drawable.baseline_favorite_24_red)
+//            } else {
+//                likeBtn.setImageResource(R.drawable.baseline_favorite_border_24)
+//            }
+
+            likeBtn.setOnClickListener {
+                token?.let { it1 -> reviewViewModel.like(it1, review.id) }
             }
 
             watchedDay.text = date

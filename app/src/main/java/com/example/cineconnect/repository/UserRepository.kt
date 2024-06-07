@@ -1,5 +1,6 @@
 package com.example.cineconnect.repository
 
+import com.example.cineconnect.model.FollowResponse
 import com.example.cineconnect.model.LoginRequest
 import com.example.cineconnect.model.LoginResponse
 import com.example.cineconnect.model.RegisterRequest
@@ -19,6 +20,10 @@ class UserRepository {
 
     suspend fun getUser(token: String?, userId: Int):Response<User>{
         return API.apiService.getUser(token,userId)
+    }
+
+    suspend fun follow(token: String?, userId: Int): Response<FollowResponse> {
+        return API.apiService.follow(token, userId)
     }
 
 }

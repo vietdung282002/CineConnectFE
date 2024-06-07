@@ -1,5 +1,6 @@
 package com.example.cineconnect.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -23,14 +24,19 @@ class ReviewViewModel : ViewModel() {
     private val _reviewState =
         MutableStateFlow<BaseResponse<PagingData<ReviewList>>>(BaseResponse.Loading())
     val reviewState: StateFlow<BaseResponse<PagingData<ReviewList>>> = _reviewState
-    fun getReview(id: Int) {
+    val likeState: MutableLiveData<Boolean?> = MutableLiveData()
+    val numberOfLike: MutableLiveData<Int> = MutableLiveData()
+
+    fun getReview(token: String?, id: Int) {
         reviewResult.value = BaseResponse.Loading()
         viewModelScope.launch {
             try {
-                val response = reviewRepository.getReviews(id)
+                val response = reviewRepository.getReviews(token, id)
 
                 if (response.isSuccessful) {
                     reviewResult.value = BaseResponse.Success(response.body())
+                    likeState.value = response.body()?.isLiked
+                    numberOfLike.value = response.body()?.likesCount
                 } else {
                     reviewResult.value = BaseResponse.Error(response.message())
                 }
@@ -61,6 +67,16 @@ class ReviewViewModel : ViewModel() {
                 .collectLatest { pagingData ->
                     _reviewState.value = BaseResponse.Success(pagingData)
                 }
+        }
+    }
+
+    fun like(token: String, id: Int) {
+        viewModelScope.launch {
+            val response = reviewRepository.like(token, id)
+            if (response.isSuccessful) {
+                likeState.value = response.body()?.result?.like
+                numberOfLike.value = response.body()?.result?.numberOfLike
+            }
         }
     }
 

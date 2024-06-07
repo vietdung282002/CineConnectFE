@@ -1,5 +1,6 @@
 package com.example.cineconnect.repository
 
+import android.util.Log
 import com.example.cineconnect.model.Movie
 import com.example.cineconnect.model.MovieListResponse
 import com.example.cineconnect.network.API
@@ -12,6 +13,7 @@ class MovieRepository {
     }
 
     suspend fun getMovie(token: String?, id: Int): Response<Movie> {
+        Log.d("LOG_TAG_MAIN", token.toString())
         return API.apiService.getMovie(token,id.toString())
     }
 

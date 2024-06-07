@@ -88,6 +88,6 @@ class ReviewPagingSearchAdapter :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReviewViewHolder {
         val adapterLayout =
             ReviewSearchBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ReviewPagingSearchAdapter.ReviewViewHolder(adapterLayout)
+        return ReviewViewHolder(adapterLayout)
     }
 }

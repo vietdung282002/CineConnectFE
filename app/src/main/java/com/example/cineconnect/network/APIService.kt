@@ -1,5 +1,8 @@
 package com.example.cineconnect.network
 
+import com.example.cineconnect.model.FollowListResponse
+import com.example.cineconnect.model.FollowResponse
+import com.example.cineconnect.model.LikeResponse
 import com.example.cineconnect.model.LoginRequest
 import com.example.cineconnect.model.LoginResponse
 import com.example.cineconnect.model.Movie
@@ -121,6 +124,7 @@ interface APIService {
     )
     @GET("review/{id}/")
     suspend fun getReviewDetail(
+        @Header("Authorization") token: String?,
         @Path("id") reviewId: Int
     ): Response<Review>
 
@@ -142,4 +146,44 @@ interface APIService {
         @Query("page") page: Int,
         @Query("q") query: String
     ): Response<UserListResponse>
+
+
+    @Headers(
+        "accept: application/json",
+    )
+    @POST("review/reaction/like/")
+    suspend fun like(
+        @Header("Authorization") token: String?,
+        @Query("review") reviewId: Int
+    ): Response<LikeResponse>
+
+    @Headers(
+        "accept: application/json",
+    )
+    @POST("follow/toggle/")
+    suspend fun follow(
+        @Header("Authorization") token: String?,
+        @Query("user") reviewId: Int
+    ): Response<FollowResponse>
+
+    @Headers(
+        "accept: application/json",
+    )
+    @GET("follow/list_follower/")
+    suspend fun getFollowerUser(
+        @Header("Authorization") token: String?,
+        @Query("page") page: Int,
+        @Query("user") userId: Int
+    ): Response<FollowListResponse>
+
+    @Headers(
+        "accept: application/json",
+    )
+    @GET("follow/list_following/")
+    suspend fun getFollowingUser(
+        @Header("Authorization") token: String?,
+        @Query("page") page: Int,
+        @Query("user") reviewId: Int
+    ): Response<FollowListResponse>
+
 }

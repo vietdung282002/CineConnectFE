@@ -1,6 +1,9 @@
 package com.example.cineconnect.fragment.detailFragment
 
 import android.graphics.Color
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
+import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -54,10 +57,13 @@ class MovieDetailFragment : Fragment() {
         // Inflate the layout for this fragment
         fragmentMovieDetailBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_movie_detail, container, false)
-        token = "Token " + SessionManager.getToken(requireContext())
+        if (SessionManager.getToken(requireContext()) != null) {
+            token = "Token " + SessionManager.getToken(requireContext())
+        }
 
         arguments?.let {
             movieId = it.getInt(MOVIE_ID)
+
             movieViewmodel.getMovie(token,movieId)
         }
 
@@ -114,7 +120,8 @@ class MovieDetailFragment : Fragment() {
         val genreList = movieObj.genres.toList()
 
         fragmentMovieDetailBinding.apply {
-            collapsingToolbar.title = movieObj.title
+
+        collapsingToolbar.title = movieObj.title
 
             Glide.with(this@MovieDetailFragment).load(BACKDROP_LINK + movieObj.backdropPath)
                 .placeholder(R.drawable.loading_image)

@@ -49,8 +49,10 @@ class MovieViewModel : ViewModel() {
     fun getMovie(token:String?, id: Int) {
         movieResult.value = BaseResponse.Loading()
         viewModelScope.launch {
+            Log.d("LOG_TAG_MAIN", "getMovie: $id $token")
             try {
                 val response = movieRepository.getMovie(token,id)
+                Log.d("LOG_TAG_MAIN", response.toString())
 
                 if (response.isSuccessful) {
                     movieResult.value = BaseResponse.Success(response.body())

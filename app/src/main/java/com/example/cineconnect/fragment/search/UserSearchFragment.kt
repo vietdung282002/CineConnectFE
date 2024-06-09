@@ -14,7 +14,6 @@ import androidx.lifecycle.lifecycleScope
 import com.example.cineconnect.R
 import com.example.cineconnect.adapter.UserPagingAdapter
 import com.example.cineconnect.databinding.FragmentUserSearchBinding
-import com.example.cineconnect.fragment.detailFragment.MovieDetailFragment
 import com.example.cineconnect.fragment.mainFragment.ProfileFragment
 import com.example.cineconnect.network.BaseResponse
 import com.example.cineconnect.onClickInterface.OnFollowButtonClicked
@@ -121,6 +120,5 @@ class UserSearchFragment(
 
         }
     }
-
 
 }

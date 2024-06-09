@@ -1,7 +1,6 @@
 package com.example.cineconnect.fragment.detailFragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,18 +10,23 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.example.cineconnect.R
+import com.example.cineconnect.adapter.CommentPagingAdapter
 import com.example.cineconnect.databinding.FragmentReviewDetailBinding
 import com.example.cineconnect.model.Review
 import com.example.cineconnect.network.BaseResponse
 import com.example.cineconnect.utils.SessionManager
 import com.example.cineconnect.utils.Utils
 import com.example.cineconnect.viewmodel.ReviewViewModel
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class ReviewDetailFragment : Fragment() {
     private lateinit var fragmentReviewDetailBinding: FragmentReviewDetailBinding
     private val reviewViewModel: ReviewViewModel by viewModels()
+    private val commentAdapter = CommentPagingAdapter()
     private var reviewId: Int = -1
     private lateinit var fragmentManager: FragmentManager
     private var date: String = ""
@@ -42,6 +46,7 @@ class ReviewDetailFragment : Fragment() {
         arguments?.let {
             reviewId = it.getInt(Utils.REVIEW_ID)
             reviewViewModel.getReview(token, reviewId)
+            reviewViewModel.getReviewCommentList(reviewId)
         }
 
         return fragmentReviewDetailBinding.root
@@ -96,6 +101,28 @@ class ReviewDetailFragment : Fragment() {
                 }
             }
         }
+        fragmentReviewDetailBinding.rvComment.adapter = commentAdapter
+        viewLifecycleOwner.lifecycleScope.launch {
+            reviewViewModel.commentState.collectLatest { state ->
+                when (state) {
+                    is BaseResponse.Loading -> {
+                        showLoading()
+                    }
+
+                    is BaseResponse.Success -> {
+                        stopLoading()
+                        state.data?.let { pagingData ->
+                            commentAdapter.submitData(pagingData)
+                        }
+                    }
+
+                    is BaseResponse.Error -> {
+                        stopLoading()
+                        processError(state.msg)
+                    }
+                }
+            }
+        }
 
     }
 
@@ -120,7 +147,7 @@ class ReviewDetailFragment : Fragment() {
             llUser.setOnClickListener {
 
             }
-            var movieInfo: String = if (review.movie.releaseDate != null) {
+            val movieInfo: String = if (review.movie.releaseDate != null) {
                 "<font color='#FFFFFFFF'><b>${review.movie.title} </b></font> <font color='#9F9A9A'>${
                     review.movie.releaseDate?.substring(
                         0,
@@ -158,7 +185,7 @@ class ReviewDetailFragment : Fragment() {
                 ivFavorite.visibility = View.VISIBLE
             }
             if (review.rating != 0f) {
-                ratingBar.rating = review.rating.toFloat()
+                ratingBar.rating = review.rating
                 ratingBar.visibility = View.VISIBLE
             }
             content.text = review.content

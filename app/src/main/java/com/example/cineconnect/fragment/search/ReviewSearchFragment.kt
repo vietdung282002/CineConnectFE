@@ -17,6 +17,7 @@ import com.example.cineconnect.databinding.FragmentReviewSearchBinding
 import com.example.cineconnect.fragment.detailFragment.MovieDetailFragment
 import com.example.cineconnect.fragment.detailFragment.ReviewDetailFragment
 import com.example.cineconnect.network.BaseResponse
+import com.example.cineconnect.onClickInterface.OnMovieClicked
 import com.example.cineconnect.onClickInterface.OnReviewClicked
 import com.example.cineconnect.utils.Utils
 import com.example.cineconnect.viewmodel.ReviewViewModel
@@ -26,7 +27,7 @@ import kotlinx.coroutines.launch
 class ReviewSearchFragment(
     private val query: String,
     private val parentId: Int
-) : Fragment(), OnReviewClicked {
+) : Fragment(), OnReviewClicked, OnMovieClicked {
     private lateinit var fragmentReviewSarchBinding: FragmentReviewSearchBinding
     private val reviewAdapter = ReviewPagingSearchAdapter()
     private val reviewViewModel: ReviewViewModel by viewModels()
@@ -45,6 +46,7 @@ class ReviewSearchFragment(
         super.onViewCreated(view, savedInstanceState)
 
         reviewAdapter.setOnReviewListener(this)
+        reviewAdapter.setOnMovieListener(this)
         fragmentReviewSarchBinding.rvReview.adapter = reviewAdapter
         viewLifecycleOwner.lifecycleScope.launch {
             reviewViewModel.reviewState.collectLatest { state ->
@@ -86,6 +88,22 @@ class ReviewSearchFragment(
 
     }
 
+    override fun getOnMovieClicked(position: Int, movieId: Int) {
+        hideKeyboard()
+        val bundle = Bundle()
+        bundle.putInt(Utils.MOVIE_ID, movieId)
+
+        val movieDetailFragment = MovieDetailFragment().apply {
+            arguments = bundle
+        }
+
+        val fragmentManager = requireActivity().supportFragmentManager
+        fragmentManager.beginTransaction()
+            .add(parentId, movieDetailFragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
     private fun showLoading() {
         fragmentReviewSarchBinding.progressBarLayout.visibility = View.VISIBLE
     }
@@ -107,4 +125,6 @@ class ReviewSearchFragment(
             requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view?.windowToken, 0)
     }
+
+
 }

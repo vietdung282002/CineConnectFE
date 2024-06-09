@@ -1,7 +1,6 @@
 package com.example.cineconnect.fragment.mainFragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,25 +8,38 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.example.cineconnect.R
+import com.example.cineconnect.adapter.ReviewPagingSearchAdapter
 import com.example.cineconnect.databinding.FragmentProfileBinding
 import com.example.cineconnect.fragment.detailFragment.FollowerFragment
 import com.example.cineconnect.fragment.detailFragment.FollowingFragment
+import com.example.cineconnect.fragment.detailFragment.MovieDetailFragment
+import com.example.cineconnect.fragment.detailFragment.ReviewDetailFragment
 import com.example.cineconnect.model.User
 import com.example.cineconnect.network.BaseResponse
+import com.example.cineconnect.onClickInterface.OnMovieClicked
+import com.example.cineconnect.onClickInterface.OnReviewClicked
 import com.example.cineconnect.utils.SessionManager
 import com.example.cineconnect.utils.Utils
+import com.example.cineconnect.viewmodel.ReviewViewModel
 import com.example.cineconnect.viewmodel.UserViewModel
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
-class ProfileFragment : Fragment() {
+class ProfileFragment : Fragment(), OnReviewClicked, OnMovieClicked {
     private lateinit var fragmentProfileBinding: FragmentProfileBinding
     private val userViewModel: UserViewModel by viewModels()
+    private val reviewViewModel: ReviewViewModel by viewModels()
     private var userId: Int = -1
     private var currentUser: Int = -1
     private var token: String? = null
-//    private lateinit var settingFragment: SettingFragment
+    private val reviewAdapter = ReviewPagingSearchAdapter()
+    private lateinit var fragmentManager: FragmentManager
+    private var containerId: Int = -1
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,12 +52,14 @@ class ProfileFragment : Fragment() {
         }
         token = "Token " + SessionManager.getToken(requireContext())
 
-        if(userId != -1){
+        if (userId != -1 && userId != SessionManager.getUserId(requireContext())!!) {
             userViewModel.getUser(token,userId)
+            reviewViewModel.getReviewListByUser(userId)
         }else{
             currentUser = SessionManager.getUserId(requireContext())!!
             if (currentUser != -1) {
-                userViewModel.getUser(token,currentUser.toInt())
+                userViewModel.getUser(token, currentUser)
+                reviewViewModel.getReviewListByUser(currentUser)
             }
         }
         return fragmentProfileBinding.root
@@ -53,9 +67,12 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        fragmentManager = activity?.supportFragmentManager!!
+
+        containerId = (view.parent as? ViewGroup)?.id!!
+
 
         userViewModel.userResult.observe(viewLifecycleOwner){response ->
-            Log.d("LOG_TAG_MAIN", "user: $response")
 
             when (response) {
                 is BaseResponse.Loading -> {
@@ -78,13 +95,35 @@ class ProfileFragment : Fragment() {
             }
 
         }
+        fragmentProfileBinding.rvReview.adapter = reviewAdapter
+        reviewAdapter.setOnReviewListener(this)
+        reviewAdapter.setOnMovieListener(this)
+        viewLifecycleOwner.lifecycleScope.launch {
+            reviewViewModel.reviewState.collectLatest { state ->
+                when (state) {
+                    is BaseResponse.Loading -> {
+                        showLoading()
+                    }
+
+                    is BaseResponse.Success -> {
+                        stopLoading()
+                        state.data?.let { pagingData ->
+                            reviewAdapter.submitData(pagingData)
+                        }
+                    }
+
+                    is BaseResponse.Error -> {
+                        stopLoading()
+                        processError(state.msg)
+                    }
+                }
+            }
+        }
     }
 
     private fun updateUI(user: User) {
 
-        val containerId = (view?.parent as? ViewGroup)?.id
 
-        val fragmentManager = activity?.supportFragmentManager
 
         val displayMetrics = requireContext().resources.displayMetrics
         val screenHeight = displayMetrics.heightPixels
@@ -111,22 +150,18 @@ class ProfileFragment : Fragment() {
             filmsLayout.setOnClickListener {  }
 
             tvFollowers.setOnClickListener {
-                if (containerId != null) {
-                    val followerFragment = FollowerFragment().apply {
-                        arguments = userBundle
-                    }
-                    fragmentManager?.beginTransaction()?.add(containerId, followerFragment)
-                        ?.addToBackStack(null)?.commit()
+                val followerFragment = FollowerFragment().apply {
+                    arguments = userBundle
                 }
+                fragmentManager.beginTransaction().add(containerId, followerFragment)
+                    .addToBackStack(null).commit()
             }
             tvFollowing.setOnClickListener {
-                if (containerId != null) {
-                    val followingFragment = FollowingFragment().apply {
-                        arguments = userBundle
-                    }
-                    fragmentManager?.beginTransaction()?.add(containerId, followingFragment)
-                        ?.addToBackStack(null)?.commit()
+                val followingFragment = FollowingFragment().apply {
+                    arguments = userBundle
                 }
+                fragmentManager.beginTransaction().add(containerId, followingFragment)
+                    .addToBackStack(null).commit()
             }
 
             favouriteCount.text = user.favouriteCount.toString()
@@ -145,7 +180,7 @@ class ProfileFragment : Fragment() {
             }else{
                 tvBio.visibility = View.GONE
             }
-            if(userId != -1){
+            if (userId != -1 && userId != SessionManager.getUserId(requireContext())!!) {
                 settingBtn.visibility = View.GONE
                 followBtn.visibility = View.VISIBLE
                 followBtn.setOnClickListener {
@@ -153,7 +188,7 @@ class ProfileFragment : Fragment() {
                 }
                 backBtn.visibility = View.VISIBLE
                 backBtn.setOnClickListener{
-                    fragmentManager?.popBackStack()
+                    fragmentManager.popBackStack()
                 }
                 userViewModel.followStatus.observe(viewLifecycleOwner) { (_, isFollowing) ->
                     if (isFollowing == true) {
@@ -207,6 +242,36 @@ class ProfileFragment : Fragment() {
 
     private fun showToast(msg: String) {
         Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun getOnReviewClicked(position: Int, reviewId: Int) {
+        val bundle = Bundle()
+        bundle.putInt(Utils.REVIEW_ID, reviewId)
+
+        val reviewDetailFragment = ReviewDetailFragment().apply {
+            arguments = bundle
+        }
+
+        val fragmentManager = requireActivity().supportFragmentManager
+        fragmentManager.beginTransaction()
+            .add(containerId, reviewDetailFragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
+    override fun getOnMovieClicked(position: Int, movieId: Int) {
+        val bundle = Bundle()
+        bundle.putInt(Utils.MOVIE_ID, movieId)
+
+        val movieDetailFragment = MovieDetailFragment().apply {
+            arguments = bundle
+        }
+
+        val fragmentManager = requireActivity().supportFragmentManager
+        fragmentManager.beginTransaction()
+            .add(containerId, movieDetailFragment)
+            .addToBackStack(null)
+            .commit()
     }
 
 }

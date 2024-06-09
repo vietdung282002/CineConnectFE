@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.cineconnect.databinding.ReviewSearchBinding
 import com.example.cineconnect.model.ReviewList
+import com.example.cineconnect.onClickInterface.OnMovieClicked
 import com.example.cineconnect.onClickInterface.OnReviewClicked
 import com.example.cineconnect.utils.Utils
 
@@ -28,6 +29,7 @@ class ReviewPagingSearchAdapter :
     }
 
     private var onReviewClicked: OnReviewClicked? = null
+    private var onMovieClicked: OnMovieClicked? = null
 
 
     object ReviewComparator : DiffUtil.ItemCallback<ReviewList>() {
@@ -44,6 +46,9 @@ class ReviewPagingSearchAdapter :
         this.onReviewClicked = listener
     }
 
+    fun setOnMovieListener(listener: OnMovieClicked) {
+        this.onMovieClicked = listener
+    }
     override fun onBindViewHolder(holder: ReviewViewHolder, position: Int) {
         val review = getItem(position)
         if (review != null) {
@@ -81,6 +86,9 @@ class ReviewPagingSearchAdapter :
             holder.content.text = review.content
             holder.layout.setOnClickListener {
                 onReviewClicked?.getOnReviewClicked(position, review.id)
+            }
+            holder.poster.setOnClickListener {
+                onMovieClicked?.getOnMovieClicked(position, review.movie.id)
             }
         }
     }

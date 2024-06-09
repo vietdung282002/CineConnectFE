@@ -1,5 +1,6 @@
 package com.example.cineconnect.network
 
+import com.example.cineconnect.model.CommentResponse
 import com.example.cineconnect.model.FollowListResponse
 import com.example.cineconnect.model.FollowResponse
 import com.example.cineconnect.model.LikeResponse
@@ -109,6 +110,15 @@ interface APIService {
         @Query("movie") movie: Int,
     ): Response<ReviewListResponse>
 
+    @Headers(
+        "accept: application/json",
+    )
+    @GET("review/")
+    suspend fun getReviewListByUser(
+        @Query("page") page: Int,
+        @Query("user") user: Int,
+    ): Response<ReviewListResponse>
+
 
     @Headers(
         "accept: application/json",
@@ -118,6 +128,15 @@ interface APIService {
         @Query("page") page: Int,
         @Query("q") query: String,
     ): Response<ReviewListResponse>
+
+    @Headers(
+        "accept: application/json",
+    )
+    @GET("review/comment/")
+    suspend fun getReviewCommentList(
+        @Query("page") page: Int,
+        @Query("review") reviewId: Int,
+    ): Response<CommentResponse>
 
     @Headers(
         "accept: application/json",

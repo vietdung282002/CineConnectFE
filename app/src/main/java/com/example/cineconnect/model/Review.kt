@@ -12,7 +12,8 @@ data class Review(
     @SerializedName("likes_count") val likesCount: Int,
     @SerializedName("comment_count") val commentCount: Int,
     @SerializedName("is_liked") val isLiked: Boolean,
-    @SerializedName("watched_day") val watchedDay: String
+    @SerializedName("watched_day") val watchedDay: String,
+    @SerializedName("time_stamp") val timeStamp: String
 )
 
 data class LikeResponse(

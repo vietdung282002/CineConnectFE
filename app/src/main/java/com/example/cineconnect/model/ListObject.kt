@@ -115,5 +115,6 @@ data class ReviewList(
     @SerializedName("rating") val rating: Int,
     @SerializedName("favourite") val favourite: Boolean,
     @SerializedName("content") val content: String,
-    @SerializedName("movie") val movie: MovieList
+    @SerializedName("movie") val movie: MovieList,
+    @SerializedName("time_stamp") val createdAt: String,
 )

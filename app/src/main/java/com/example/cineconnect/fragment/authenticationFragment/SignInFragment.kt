@@ -66,6 +66,13 @@ class SignInFragment : Fragment() {
                 }
 
             }
+            forgotPasswordBtn.setOnClickListener {
+                fragmentManager.commit {
+                    setReorderingAllowed(true)
+                    replace<RequestResetPasswordFragment>(R.id.fragment_container_view)
+                    addToBackStack(null)
+                }
+            }
         }
 
 

@@ -1,5 +1,6 @@
 package com.example.cineconnect.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -56,7 +57,7 @@ class ReviewViewModel : ViewModel() {
         _reviewState.value = BaseResponse.Loading()
         viewModelScope.launch {
             Pager(PagingConfig(pageSize = 12, enablePlaceholders = true)) {
-                ReviewPagingSource(movieId, 1, null, null)
+                ReviewPagingSource(movieId, 1, null, null, null)
             }.flow.catch { e -> _reviewState.value = BaseResponse.Error(e.message) }
                 .collectLatest { pagingData ->
                     _reviewState.value = BaseResponse.Success(pagingData)
@@ -68,7 +69,7 @@ class ReviewViewModel : ViewModel() {
         _reviewState.value = BaseResponse.Loading()
         viewModelScope.launch {
             Pager(PagingConfig(pageSize = 12, enablePlaceholders = true)) {
-                ReviewPagingSource(null, 3, null, userId)
+                ReviewPagingSource(null, 3, null, userId, null)
             }.flow.catch { e -> _reviewState.value = BaseResponse.Error(e.message) }
                 .collectLatest { pagingData ->
                     _reviewState.value = BaseResponse.Success(pagingData)
@@ -80,7 +81,32 @@ class ReviewViewModel : ViewModel() {
         _reviewState.value = BaseResponse.Loading()
         viewModelScope.launch {
             Pager(PagingConfig(pageSize = 12, enablePlaceholders = true)) {
-                ReviewPagingSource(null, 2, query, null)
+                ReviewPagingSource(null, 2, query, null, null)
+            }.flow.catch { e -> _reviewState.value = BaseResponse.Error(e.message) }
+                .collectLatest { pagingData ->
+                    _reviewState.value = BaseResponse.Success(pagingData)
+                }
+        }
+    }
+
+    fun getNewsFeedReviewList(token: String) {
+        Log.d("LOG_TAG_MAIN", token)
+        _reviewState.value = BaseResponse.Loading()
+        viewModelScope.launch {
+            Pager(PagingConfig(pageSize = 12, enablePlaceholders = true)) {
+                ReviewPagingSource(null, 4, null, null, token)
+            }.flow.catch { e -> _reviewState.value = BaseResponse.Error(e.message) }
+                .collectLatest { pagingData ->
+                    _reviewState.value = BaseResponse.Success(pagingData)
+                }
+        }
+    }
+
+    fun getRecommendReviewList(token: String) {
+        _reviewState.value = BaseResponse.Loading()
+        viewModelScope.launch {
+            Pager(PagingConfig(pageSize = 12, enablePlaceholders = true)) {
+                ReviewPagingSource(null, 5, null, null, token)
             }.flow.catch { e -> _reviewState.value = BaseResponse.Error(e.message) }
                 .collectLatest { pagingData ->
                     _reviewState.value = BaseResponse.Success(pagingData)

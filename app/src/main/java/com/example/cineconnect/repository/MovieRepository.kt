@@ -21,7 +21,13 @@ class MovieRepository {
         return API.apiService.getMovieListByGenre(page, id.toString())
     }
 
-//    suspend fun getSearchMovie(page: Int, query: String): Response<MovieListResponse> {
-//        return API.apiService.getSearchMovie(page, query)
-//    }
+    suspend fun getUserFavoriteMovie(page: Int, id: Int): Response<MovieListResponse> {
+        return API.apiService.getUserFavoriteMovie(page, id)
+    }
+
+    suspend fun getUserWatchedMovie(page: Int, id: Int): Response<MovieListResponse> {
+        return API.apiService.getUserWatchedMovie(page, id)
+    }
+
+
 }

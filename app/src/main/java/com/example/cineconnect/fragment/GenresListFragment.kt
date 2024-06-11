@@ -9,11 +9,11 @@ import androidx.fragment.app.Fragment
 import com.example.cineconnect.R
 import com.example.cineconnect.adapter.GenreListAdapter
 import com.example.cineconnect.databinding.FragmentGenresListBinding
-import com.example.cineconnect.fragment.detailFragment.GenreDetailFragment
+import com.example.cineconnect.fragment.detailFragment.MovieListFragment
 import com.example.cineconnect.model.Genre
 import com.example.cineconnect.onClickInterface.OnGenreClicked
 import com.example.cineconnect.utils.Utils.Companion.GENRE_ID
-import com.example.cineconnect.utils.Utils.Companion.GENRE_NAME
+import com.example.cineconnect.utils.Utils.Companion.TITLE
 
 class GenresListFragment(private val genresList: List<Genre>, private val parentId: Int) :
     Fragment(), OnGenreClicked {
@@ -45,9 +45,9 @@ class GenresListFragment(private val genresList: List<Genre>, private val parent
     override fun getOnGenreClicked(position: Int, genreId: Int, genreName: String) {
         val bundle = Bundle()
         bundle.putInt(GENRE_ID, genreId)
-        bundle.putString(GENRE_NAME, genreName)
+        bundle.putString(TITLE, genreName)
 
-        val genreDetailFragment = GenreDetailFragment().apply {
+        val genreDetailFragment = MovieListFragment().apply {
             arguments = bundle
         }
 

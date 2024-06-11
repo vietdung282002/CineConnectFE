@@ -26,10 +26,10 @@ import com.example.cineconnect.onClickInterface.OnMovieClicked
 import com.example.cineconnect.utils.Utils
 import com.example.cineconnect.viewmodel.MovieViewModel
 
-class GenreDetailFragment : Fragment(), OnMovieClicked {
+class MovieListFragment : Fragment(), OnMovieClicked {
     private lateinit var fragmentGenreDetailBinding: FragmentGenreDetailBinding
     private var genreId: Int? = -1
-    private var genreName: String? = ""
+    private var title: String? = ""
     private val movieViewModel: MovieViewModel by viewModels()
     private lateinit var movieListAdapter: MovieListAdapter
     private lateinit var fragmentManager: FragmentManager
@@ -45,7 +45,7 @@ class GenreDetailFragment : Fragment(), OnMovieClicked {
             DataBindingUtil.inflate(inflater, R.layout.fragment_genre_detail, container, false)
         arguments?.let {
             genreId = it.getInt(Utils.GENRE_ID)
-            genreName = it.getString(Utils.GENRE_NAME)
+            title = it.getString(Utils.TITLE)
         }
         genreId?.let { movieViewModel.getMovieListByGenre(1, it) }
         return fragmentGenreDetailBinding.root
@@ -56,7 +56,7 @@ class GenreDetailFragment : Fragment(), OnMovieClicked {
 
         fragmentManager = requireActivity().supportFragmentManager
 
-        fragmentGenreDetailBinding.tvGenreName.text = genreName
+        fragmentGenreDetailBinding.tvGenreName.text = title
         fragmentGenreDetailBinding.backBtn.setOnClickListener {
             fragmentManager.popBackStack()
         }

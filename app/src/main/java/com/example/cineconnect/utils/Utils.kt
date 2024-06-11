@@ -23,6 +23,7 @@ class Utils {
         const val GENRE_NAME = "genre_name"
         const val MOVIE_NAME = "movie_name"
         const val REVIEW_ID = "review_id"
+        const val TITLE = "title"
 
 
         const val LOG_TAG_MAIN = "LOG_TAG_MAIN"

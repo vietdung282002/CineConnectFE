@@ -11,4 +11,9 @@
         <item>User</item>
         <item>Review</item>
     </array>
+
+    <array name="home">
+        <item>For you</item>
+        <item>Following</item>
+    </array>
 </resources>

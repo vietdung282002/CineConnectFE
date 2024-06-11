@@ -77,6 +77,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/main_color"
+                android:fillViewport="true"
                 app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -291,6 +292,61 @@
 
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutChatbox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/main_color"
+                        android:minHeight="48dp"
+                        android:orientation="horizontal"
+                        android:paddingBottom="10dp"
+                        app:layout_constraintBottom_toBottomOf="parent">
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/current_user_image"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_gravity="center"
+                            android:layout_marginEnd="10dp"
+                            app:civ_border_color="@color/white"
+                            app:civ_border_width="0.5dp" />
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/text_input"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            app:boxBackgroundColor="@color/main_color"
+                            app:boxCornerRadiusBottomEnd="30dp"
+                            app:boxCornerRadiusBottomStart="30dp"
+                            app:boxCornerRadiusTopEnd="30dp"
+                            app:boxCornerRadiusTopStart="30dp"
+                            app:endIconMode="custom"
+                            app:hintEnabled="false">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/editTextMessage"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="12dp"
+                                android:layout_marginTop="12dp"
+                                android:layout_marginEnd="12dp" />
+
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+
+                        <ImageButton
+                            android:id="@+id/send_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginEnd="10dp"
+                            android:background="@color/main_color"
+                            android:src="@drawable/sent_btn_inactive" />
+                    </LinearLayout>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.core.widget.NestedScrollView>

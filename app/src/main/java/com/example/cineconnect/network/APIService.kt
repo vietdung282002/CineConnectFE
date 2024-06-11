@@ -76,6 +76,25 @@ interface APIService {
     @Headers(
         "accept: application/json",
     )
+    @GET("movie/favourite")
+    suspend fun getUserFavoriteMovie(
+        @Query("page") page: Int,
+        @Query("q") userId: Int
+    ): Response<MovieListResponse>
+
+    @Headers(
+        "accept: application/json",
+    )
+    @GET("movie/watched")
+    suspend fun getUserWatchedMovie(
+        @Query("page") page: Int,
+        @Query("q") userId: Int
+    ): Response<MovieListResponse>
+
+
+    @Headers(
+        "accept: application/json",
+    )
     @GET("movie/search/")
     suspend fun getSearchMovie(
         @Query("page") page: Int,
@@ -118,6 +137,25 @@ interface APIService {
         @Query("page") page: Int,
         @Query("user") user: Int,
     ): Response<ReviewListResponse>
+
+    @Headers(
+        "accept: application/json",
+    )
+    @GET("review/newfeed/")
+    suspend fun getReviewNewFeed(
+        @Query("page") page: Int,
+        @Header("Authorization") token: String?,
+    ): Response<ReviewListResponse>
+
+    @Headers(
+        "accept: application/json",
+    )
+    @GET("review/recommend")
+    suspend fun getReviewRecommend(
+        @Query("page") page: Int,
+        @Header("Authorization") token: String?,
+    ): Response<ReviewListResponse>
+
 
 
     @Headers(

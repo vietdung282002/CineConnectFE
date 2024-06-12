@@ -18,7 +18,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import com.example.cineconnect.R
 import com.example.cineconnect.adapter.MovieListAdapter
-import com.example.cineconnect.databinding.FragmentGenreDetailBinding
+import com.example.cineconnect.databinding.FragmentMovieListBinding
 import com.example.cineconnect.model.MovieList
 import com.example.cineconnect.model.MovieListResponse
 import com.example.cineconnect.network.BaseResponse
@@ -27,9 +27,11 @@ import com.example.cineconnect.utils.Utils
 import com.example.cineconnect.viewmodel.MovieViewModel
 
 class MovieListFragment : Fragment(), OnMovieClicked {
-    private lateinit var fragmentGenreDetailBinding: FragmentGenreDetailBinding
+    private lateinit var fragmentMovieListBinding: FragmentMovieListBinding
     private var genreId: Int? = -1
+    private var type: Int? = -1
     private var title: String? = ""
+    private var userId: Int? = -1
     private val movieViewModel: MovieViewModel by viewModels()
     private lateinit var movieListAdapter: MovieListAdapter
     private lateinit var fragmentManager: FragmentManager
@@ -41,14 +43,29 @@ class MovieListFragment : Fragment(), OnMovieClicked {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        fragmentGenreDetailBinding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_genre_detail, container, false)
+        fragmentMovieListBinding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_movie_list, container, false)
         arguments?.let {
             genreId = it.getInt(Utils.GENRE_ID)
             title = it.getString(Utils.TITLE)
+            userId = it.getInt(Utils.USER_ID)
+            type = it.getInt(Utils.TYPE)
         }
-        genreId?.let { movieViewModel.getMovieListByGenre(1, it) }
-        return fragmentGenreDetailBinding.root
+        when (type) {
+            1 -> {
+                genreId?.let { movieViewModel.getMovieListByGenre(currentPage, it) }
+            }
+
+            2 -> {
+                userId?.let { movieViewModel.getUserFavoriteMovie(currentPage, it) }
+            }
+
+            else -> {
+                userId?.let { movieViewModel.getUserWatchedMovie(currentPage, it) }
+
+            }
+        }
+        return fragmentMovieListBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -56,15 +73,15 @@ class MovieListFragment : Fragment(), OnMovieClicked {
 
         fragmentManager = requireActivity().supportFragmentManager
 
-        fragmentGenreDetailBinding.tvGenreName.text = title
-        fragmentGenreDetailBinding.backBtn.setOnClickListener {
+        fragmentMovieListBinding.tvGenreName.text = title
+        fragmentMovieListBinding.backBtn.setOnClickListener {
             fragmentManager.popBackStack()
         }
 
         movieListAdapter = MovieListAdapter()
         movieListAdapter.setOnMovieListener(this)
 
-        fragmentGenreDetailBinding.rvMovie.adapter = movieListAdapter
+        fragmentMovieListBinding.rvMovie.adapter = movieListAdapter
         movieViewModel.movieListResult.observe(viewLifecycleOwner) {
             when (it) {
                 is BaseResponse.Loading -> {
@@ -107,11 +124,11 @@ class MovieListFragment : Fragment(), OnMovieClicked {
     }
 
     private fun showLoading() {
-        fragmentGenreDetailBinding.progressBarLayout.visibility = View.VISIBLE
+        fragmentMovieListBinding.progressBarLayout.visibility = View.VISIBLE
     }
 
     private fun stopLoading() {
-        fragmentGenreDetailBinding.progressBarLayout.visibility = View.GONE
+        fragmentMovieListBinding.progressBarLayout.visibility = View.GONE
     }
 
     private fun processError(msg: String?) {
@@ -130,7 +147,7 @@ class MovieListFragment : Fragment(), OnMovieClicked {
         movieList = response.movieLists
         movieListAdapter.submitList(movieList)
 
-        fragmentGenreDetailBinding.paginationLayout.removeAllViews()
+        fragmentMovieListBinding.paginationLayout.removeAllViews()
 
         addPrevButton()
 
@@ -169,7 +186,7 @@ class MovieListFragment : Fragment(), OnMovieClicked {
     }
 
     private fun addButton(page: Int) {
-        var button = Button(requireContext())
+        val button = Button(requireContext())
         button.text = page.toString()
         button.layoutParams
         button.textSize = 12f  // Set text size to be smaller
@@ -191,14 +208,14 @@ class MovieListFragment : Fragment(), OnMovieClicked {
         val displayMetrics = requireContext().resources.displayMetrics
         val screenWidth = displayMetrics.widthPixels
         val itemWidth = (screenWidth * 0.07).toInt()
-        val itemHeight = (itemWidth * (1)).toInt()
+        val itemHeight = (itemWidth * (1))
         params.height = itemHeight
         params.width = itemWidth
         params.setMargins(8, 0, 8, 0)
 
         button.layoutParams = params
 
-        fragmentGenreDetailBinding.paginationLayout.addView(button)
+        fragmentMovieListBinding.paginationLayout.addView(button)
     }
 
     private fun addEllipsis() {
@@ -209,7 +226,7 @@ class MovieListFragment : Fragment(), OnMovieClicked {
         }
         textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
         textView.setPadding(16, 0, 16, 0)
-        fragmentGenreDetailBinding.paginationLayout.addView(textView)
+        fragmentMovieListBinding.paginationLayout.addView(textView)
     }
 
     private fun addPrevButton() {
@@ -235,13 +252,13 @@ class MovieListFragment : Fragment(), OnMovieClicked {
         val displayMetrics = requireContext().resources.displayMetrics
         val screenWidth = displayMetrics.widthPixels
         val itemWidth = (screenWidth * 0.07).toInt()
-        val itemHeight = (itemWidth * (1)).toInt()
+        val itemHeight = (itemWidth * (1))
         params.height = itemHeight
         params.width = itemWidth
         params.setMargins(8, 0, 8, 0)
         button.layoutParams = params
 
-        fragmentGenreDetailBinding.paginationLayout.addView(button)
+        fragmentMovieListBinding.paginationLayout.addView(button)
     }
 
     private fun addNextButton() {
@@ -269,14 +286,14 @@ class MovieListFragment : Fragment(), OnMovieClicked {
         val displayMetrics = requireContext().resources.displayMetrics
         val screenWidth = displayMetrics.widthPixels
         val itemWidth = (screenWidth * 0.07).toInt()
-        val itemHeight = (itemWidth * (1)).toInt()
+        val itemHeight = (itemWidth * (1))
         params.height = itemHeight
         params.width = itemWidth
 
         params.setMargins(8, 0, 8, 0)
         button.layoutParams = params
 
-        fragmentGenreDetailBinding.paginationLayout.addView(button)
+        fragmentMovieListBinding.paginationLayout.addView(button)
     }
 
     private fun showGoToPageDialog() {

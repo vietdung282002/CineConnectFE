@@ -1,11 +1,7 @@
 package com.example.cineconnect.fragment.detailFragment
 
 import android.graphics.Color
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
-import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,7 +21,6 @@ import com.example.cineconnect.network.BaseResponse
 import com.example.cineconnect.utils.SessionManager
 import com.example.cineconnect.utils.Utils
 import com.example.cineconnect.utils.Utils.Companion.BACKDROP_LINK
-import com.example.cineconnect.utils.Utils.Companion.LOG_TAG_MAIN
 import com.example.cineconnect.utils.Utils.Companion.MOVIE_ID
 import com.example.cineconnect.utils.Utils.Companion.MOVIE_NAME
 import com.example.cineconnect.utils.Utils.Companion.POSTER_LINK
@@ -115,13 +110,31 @@ class MovieDetailFragment : Fragment() {
 
     private fun updateUI(movieObj: Movie) {
         val directorObj = movieObj.directors[0]
-        val ratingObj = movieObj.rating[0]
+        val ratingObj = movieObj.rating
         val castList = movieObj.casts.toList()
         val genreList = movieObj.genres.toList()
 
-        fragmentMovieDetailBinding.apply {
 
-        collapsingToolbar.title = movieObj.title
+
+        fragmentMovieDetailBinding.apply {
+            if (token == null) {
+                ratingBar.visibility = View.GONE
+            }
+            ratingBar.setOnRatingChangeListener { ratingBar, rating ->
+                movieViewmodel.rateMovie(token!!, rating, movieId)
+
+            }
+            movieViewmodel.rateState.observe(viewLifecycleOwner) {
+                if (it is BaseResponse.Success) {
+                    ratingBar.rating = it.data?.userRating!!
+                    val barEntriesList = createBarEntriesList(it.data)
+                    drawChart(barEntriesList)
+                    tvAvrRating.text = it.data.avr.rateAvg.toString()
+                } else if (it is BaseResponse.Error) {
+                    processError(it.msg)
+                }
+            }
+            collapsingToolbar.title = movieObj.title
 
             Glide.with(this@MovieDetailFragment).load(BACKDROP_LINK + movieObj.backdropPath)
                 .placeholder(R.drawable.loading_image)
@@ -170,8 +183,7 @@ class MovieDetailFragment : Fragment() {
                 isExpanded = !isExpanded
             }
 
-            val barEntriesList = createBarEntriesList(ratingObj)
-            drawChart(barEntriesList)
+
 
             tvNumberOfLikes.apply {
                 text = movieObj.favouriteCount.toString()
@@ -274,7 +286,6 @@ class MovieDetailFragment : Fragment() {
 
     private fun createBarEntriesList(rating: Rating): ArrayList<BarEntry> {
         val barEntriesList = ArrayList<BarEntry>()
-
         for ((ratingValue, count) in rating.rating) {
             val adjustedCount = if (count == 0) 0.01f else count.toFloat()
             barEntriesList.add(BarEntry(ratingValue.toFloat(), adjustedCount))

@@ -22,13 +22,14 @@ data class Movie(
     @SerializedName("directors") val directors: List<DirectorList>,
     @SerializedName("review_count") val reviewCount: Int,
     @SerializedName("favourite_count") val favouriteCount: Int,
-    @SerializedName("rating") val rating: List<Rating>,
+    @SerializedName("rating") val rating: Rating,
 )
 
 data class Rating(
     @SerializedName("avr") val avr: Avr,
     @SerializedName("total") val total: Int,
-    @SerializedName("rating") val rating: Map<String, Int>
+    @SerializedName("rating") val rating: Map<String, Int>,
+    @SerializedName("user_rating") var userRating: Float?,
 )
 
 data class Avr(

@@ -1,6 +1,5 @@
 package com.example.cineconnect.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,6 +9,8 @@ import androidx.paging.PagingData
 import com.example.cineconnect.model.Movie
 import com.example.cineconnect.model.MovieList
 import com.example.cineconnect.model.MovieListResponse
+import com.example.cineconnect.model.Rating
+import com.example.cineconnect.model.RatingRequest
 import com.example.cineconnect.network.BaseResponse
 import com.example.cineconnect.paging.MoviePagingSource
 import com.example.cineconnect.repository.MovieRepository
@@ -28,6 +29,7 @@ class MovieViewModel : ViewModel() {
         MutableStateFlow<BaseResponse<PagingData<MovieList>>>(BaseResponse.Loading())
     val moviesState: StateFlow<BaseResponse<PagingData<MovieList>>> = _moviesState
 
+    val rateState: MutableLiveData<BaseResponse<Rating>> = MutableLiveData()
 
     fun getMovieList(page: Int) {
         movieListResult.value = BaseResponse.Loading()
@@ -49,14 +51,12 @@ class MovieViewModel : ViewModel() {
     fun getMovie(token:String?, id: Int) {
         movieResult.value = BaseResponse.Loading()
         viewModelScope.launch {
-            Log.d("LOG_TAG_MAIN", "getMovie: $id $token")
             try {
                 val response = movieRepository.getMovie(token,id)
-                Log.d("LOG_TAG_MAIN", response.toString())
 
                 if (response.isSuccessful) {
                     movieResult.value = BaseResponse.Success(response.body())
-
+                    rateState.value = BaseResponse.Success(response.body()?.rating)
                 } else {
                     movieResult.value = BaseResponse.Error(response.message())
                 }
@@ -82,6 +82,37 @@ class MovieViewModel : ViewModel() {
         }
     }
 
+    fun getUserFavoriteMovie(page: Int, userId: Int) {
+        movieListResult.value = BaseResponse.Loading()
+        viewModelScope.launch {
+            try {
+                val response = movieRepository.getUserFavoriteMovie(page, userId)
+                if (response.isSuccessful) {
+                    movieListResult.value = BaseResponse.Success(response.body())
+                } else {
+                    movieListResult.value = BaseResponse.Error(response.message())
+                }
+            } catch (e: Exception) {
+                movieListResult.value = BaseResponse.Error(e.message)
+            }
+        }
+    }
+
+    fun getUserWatchedMovie(page: Int, userId: Int) {
+        movieListResult.value = BaseResponse.Loading()
+        viewModelScope.launch {
+            try {
+                val response = movieRepository.getUserWatchedMovie(page, userId)
+                if (response.isSuccessful) {
+                    movieListResult.value = BaseResponse.Success(response.body())
+                } else {
+                    movieListResult.value = BaseResponse.Error(response.message())
+                }
+            } catch (e: Exception) {
+                movieListResult.value = BaseResponse.Error(e.message)
+            }
+        }
+    }
 
     fun searchMovies(query: String) {
         _moviesState.value = BaseResponse.Loading()
@@ -93,6 +124,25 @@ class MovieViewModel : ViewModel() {
                 .collectLatest { pagingData ->
                     _moviesState.value = BaseResponse.Success(pagingData)
                 }
+        }
+    }
+
+    fun rateMovie(token: String, rating: Float, movieId: Int) {
+        viewModelScope.launch {
+            try {
+                val ratingRequest = RatingRequest(
+                    movieId = movieId,
+                    rating = rating
+                )
+                val response = movieRepository.rateMovie(token, ratingRequest = ratingRequest)
+                if (response.isSuccessful) {
+                    rateState.value = BaseResponse.Success(response.body()?.message?.rating)
+                } else {
+                    rateState.value = BaseResponse.Error(response.message())
+                }
+            } catch (e: Exception) {
+                rateState.value = BaseResponse.Error(e.message)
+            }
         }
     }
 

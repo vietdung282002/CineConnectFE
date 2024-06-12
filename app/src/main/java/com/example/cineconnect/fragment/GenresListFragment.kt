@@ -14,6 +14,7 @@ import com.example.cineconnect.model.Genre
 import com.example.cineconnect.onClickInterface.OnGenreClicked
 import com.example.cineconnect.utils.Utils.Companion.GENRE_ID
 import com.example.cineconnect.utils.Utils.Companion.TITLE
+import com.example.cineconnect.utils.Utils.Companion.TYPE
 
 class GenresListFragment(private val genresList: List<Genre>, private val parentId: Int) :
     Fragment(), OnGenreClicked {
@@ -46,6 +47,7 @@ class GenresListFragment(private val genresList: List<Genre>, private val parent
         val bundle = Bundle()
         bundle.putInt(GENRE_ID, genreId)
         bundle.putString(TITLE, genreName)
+        bundle.putInt(TYPE, 1)
 
         val genreDetailFragment = MovieListFragment().apply {
             arguments = bundle

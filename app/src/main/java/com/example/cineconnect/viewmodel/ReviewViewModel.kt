@@ -1,6 +1,5 @@
 package com.example.cineconnect.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -90,7 +89,6 @@ class ReviewViewModel : ViewModel() {
     }
 
     fun getNewsFeedReviewList(token: String) {
-        Log.d("LOG_TAG_MAIN", token)
         _reviewState.value = BaseResponse.Loading()
         viewModelScope.launch {
             Pager(PagingConfig(pageSize = 12, enablePlaceholders = true)) {

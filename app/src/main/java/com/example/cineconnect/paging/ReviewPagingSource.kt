@@ -24,7 +24,6 @@ class ReviewPagingSource(
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ReviewList> {
         val page = params.key ?: 1
-        Log.d("LOG_TAG_MAIN", "type: $type")
         when (type) {
             1 -> {
                 return try {

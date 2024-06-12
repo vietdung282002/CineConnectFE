@@ -1,6 +1,5 @@
 package com.example.cineconnect.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.text.HtmlCompat
@@ -35,7 +34,6 @@ class CommentPagingAdapter :
     override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {
         val comment = getItem(position)
         if (comment != null) {
-            Log.d("LOG_TAG_MAIN", comment.toString())
             val displayMetrics = holder.itemView.context.resources.displayMetrics
             val screenWidth = displayMetrics.widthPixels
             val itemWidth = (screenWidth * 0.08).toInt()
@@ -47,12 +45,13 @@ class CommentPagingAdapter :
 
             holder.profileImage.layoutParams = layoutParams
 
-            Glide.with(holder.itemView.context).load(Utils.PROFILE_LINK + comment.user.profilePic)
+            Glide.with(holder.itemView.context)
+                .load(Utils.USER_PROFILE_LINK + comment.user.profilePic)
                 .into(holder.profileImage)
             val htmlText =
                 "<font color='#FFFFFFFF'><b>${comment.user.username}</b></font>   <font color='#9F9A9A'>${
                     Utils.getRelativeTime(comment.timeStamp)
-                }"
+                }</font>"
             holder.username.text = HtmlCompat.fromHtml(htmlText, HtmlCompat.FROM_HTML_MODE_LEGACY)
             holder.comment.text = comment.comment
         }

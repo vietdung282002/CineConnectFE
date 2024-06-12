@@ -48,7 +48,8 @@ class UserPagingAdapter: PagingDataAdapter<UserList, UserPagingAdapter.UserViewH
             layoutParams.height = itemWidth
             holder.profilePic.layoutParams = layoutParams
 
-            Glide.with(holder.itemView.context).load(Utils.PROFILE_LINK + user.profilePic).into(holder.profilePic)
+            Glide.with(holder.itemView.context).load(Utils.USER_PROFILE_LINK + user.profilePic)
+                .into(holder.profilePic)
             holder.username.text = user.username
             if(user.isFollowing == null){
                 holder.followBtn.visibility = View.VISIBLE

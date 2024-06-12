@@ -1,7 +1,6 @@
 package com.example.cineconnect.fragment.authenticationFragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -47,7 +46,6 @@ class SignUpFragment : Fragment() {
         }
 
         userViewModel.registerResult.observe(viewLifecycleOwner) {
-            Log.d("TAG", "onViewCreated: $it")
             when (it) {
                 is BaseResponse.Success -> {
                     stopLoading()

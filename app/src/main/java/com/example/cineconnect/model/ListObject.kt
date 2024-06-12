@@ -112,7 +112,7 @@ data class ReviewListResponse(
 data class ReviewList(
     @SerializedName("id") val id: Int,
     @SerializedName("user") val user: UserList,
-    @SerializedName("rating") val rating: Int,
+    @SerializedName("rating") val rating: Float,
     @SerializedName("favourite") val favourite: Boolean,
     @SerializedName("content") val content: String,
     @SerializedName("movie") val movie: MovieList,

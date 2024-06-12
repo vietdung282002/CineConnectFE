@@ -59,7 +59,7 @@ class ReviewPagingAdapter :
                 holder.favourite.visibility = View.VISIBLE
             }
             holder.content.text = review.content
-            Glide.with(holder.itemView).load(Utils.PROFILE_LINK + review.user.profilePic)
+            Glide.with(holder.itemView).load(Utils.USER_PROFILE_LINK + review.user.profilePic)
                 .into(holder.profileImage)
             holder.layout.setOnClickListener {
                 onReviewClicked?.getOnReviewClicked(position, review.id)

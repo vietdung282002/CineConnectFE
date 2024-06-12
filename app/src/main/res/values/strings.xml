@@ -35,4 +35,8 @@
     <string name="activity">Activity</string>
     <string name="films">Films</string>
     <string name="cine_connect">CINE CONNECT</string>
+    <string name="take_photo_button">Take Photo</string>
+    <string name="choose_from_gallery_button">Choose from Gallery</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="choose_picture_title">Choose your profile picture</string>
 </resources>

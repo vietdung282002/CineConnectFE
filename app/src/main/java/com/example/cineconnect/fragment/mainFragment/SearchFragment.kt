@@ -47,6 +47,7 @@ class SearchFragment : Fragment() {
 
         fragmentSearchBinding.apply {
             viewModel = movieViewModel
+            lifecycleOwner = viewLifecycleOwner
             searchTextInput.onFocusChangeListener =
                 View.OnFocusChangeListener { _, hasFocus ->
                     if (hasFocus) {

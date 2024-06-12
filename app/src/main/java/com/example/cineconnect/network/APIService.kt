@@ -6,14 +6,20 @@ import com.example.cineconnect.model.FollowResponse
 import com.example.cineconnect.model.LikeResponse
 import com.example.cineconnect.model.LoginRequest
 import com.example.cineconnect.model.LoginResponse
+import com.example.cineconnect.model.LogoutResponse
 import com.example.cineconnect.model.Movie
 import com.example.cineconnect.model.MovieListResponse
 import com.example.cineconnect.model.PeopleListResponse
 import com.example.cineconnect.model.Person
+import com.example.cineconnect.model.RatingRequest
+import com.example.cineconnect.model.RatingResponse
 import com.example.cineconnect.model.RegisterRequest
 import com.example.cineconnect.model.RegisterResponse
 import com.example.cineconnect.model.Review
 import com.example.cineconnect.model.ReviewListResponse
+import com.example.cineconnect.model.UpdatePassword
+import com.example.cineconnect.model.UpdateResponse
+import com.example.cineconnect.model.UpdateUser
 import com.example.cineconnect.model.User
 import com.example.cineconnect.model.UserLikedMovieResponse
 import com.example.cineconnect.model.UserListResponse
@@ -23,6 +29,7 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Headers
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -40,6 +47,45 @@ interface APIService {
     )
     @POST("/authentication/register/")
     suspend fun registerUser(@Body registerRequest: RegisterRequest): Response<RegisterResponse>
+
+    @Headers(
+        "Content-Type: application/json",
+        "accept: application/json",
+    )
+    @POST("/authentication/logout/")
+    suspend fun logout(@Header("Authorization") token: String): Response<LogoutResponse>
+
+    @Headers(
+        "Content-Type: application/json",
+        "accept: application/json",
+    )
+    @PUT("/user/{id}/")
+    suspend fun updateProfile(
+        @Header("Authorization") token: String,
+        @Body updateUser: UpdateUser,
+        @Path("id") userId: Int
+    ): Response<UpdateUser>
+
+
+    @Headers(
+        "Content-Type: application/json",
+        "accept: application/json",
+    )
+    @PUT("/authentication/change_password")
+    suspend fun updatePassword(
+        @Header("Authorization") token: String,
+        @Body updatePassword: UpdatePassword
+    ): Response<UpdateResponse>
+
+    @Headers(
+        "Content-Type: application/json",
+        "accept: application/json",
+    )
+    @POST("/rate/")
+    suspend fun rateMovie(
+        @Header("Authorization") token: String,
+        @Body rateRequest: RatingRequest
+    ): Response<RatingResponse>
 
     @Headers(
         "accept: application/json",
@@ -76,7 +122,7 @@ interface APIService {
     @Headers(
         "accept: application/json",
     )
-    @GET("movie/favourite")
+    @GET("movie/favourite/")
     suspend fun getUserFavoriteMovie(
         @Query("page") page: Int,
         @Query("q") userId: Int
@@ -85,7 +131,7 @@ interface APIService {
     @Headers(
         "accept: application/json",
     )
-    @GET("movie/watched")
+    @GET("movie/watched/")
     suspend fun getUserWatchedMovie(
         @Query("page") page: Int,
         @Query("q") userId: Int
@@ -141,7 +187,7 @@ interface APIService {
     @Headers(
         "accept: application/json",
     )
-    @GET("review/newfeed/")
+    @GET("review/newsfeed/")
     suspend fun getReviewNewFeed(
         @Query("page") page: Int,
         @Header("Authorization") token: String?,

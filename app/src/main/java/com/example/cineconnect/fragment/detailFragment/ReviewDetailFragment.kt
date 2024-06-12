@@ -15,40 +15,45 @@ import com.bumptech.glide.Glide
 import com.example.cineconnect.R
 import com.example.cineconnect.adapter.CommentPagingAdapter
 import com.example.cineconnect.databinding.FragmentReviewDetailBinding
+import com.example.cineconnect.fragment.mainFragment.ProfileFragment
 import com.example.cineconnect.model.Review
 import com.example.cineconnect.network.BaseResponse
 import com.example.cineconnect.utils.SessionManager
 import com.example.cineconnect.utils.Utils
 import com.example.cineconnect.viewmodel.ReviewViewModel
+import com.example.cineconnect.viewmodel.UserViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class ReviewDetailFragment : Fragment() {
     private lateinit var fragmentReviewDetailBinding: FragmentReviewDetailBinding
     private val reviewViewModel: ReviewViewModel by viewModels()
+    private val userViewModel: UserViewModel by viewModels()
     private val commentAdapter = CommentPagingAdapter()
     private var reviewId: Int = -1
     private lateinit var fragmentManager: FragmentManager
     private var date: String = ""
     private var token: String? = null
+    private var userId: Int = -1
 
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View {
         // Inflate the layout for this fragment
         fragmentReviewDetailBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_review_detail, container, false)
         if (SessionManager.getToken(requireContext()) != null) {
             token = "Token " + SessionManager.getToken(requireContext())
         }
+        userId = SessionManager.getUserId(requireContext())!!
+        val arguments = arguments
         arguments?.let {
             reviewId = it.getInt(Utils.REVIEW_ID)
             reviewViewModel.getReview(token, reviewId)
             reviewViewModel.getReviewCommentList(reviewId)
         }
-
+        userViewModel.getUser(token, userId)
         return fragmentReviewDetailBinding.root
     }
 
@@ -59,12 +64,21 @@ class ReviewDetailFragment : Fragment() {
 
         val displayMetrics = requireContext().resources.displayMetrics
         val screenHeight = displayMetrics.heightPixels
+        val screenWidth = displayMetrics.widthPixels
+
         val itemHeight = (screenHeight * (0.3)).toInt()
+        val backdropLayoutParams = fragmentReviewDetailBinding.ivBackdropImage.layoutParams
+        backdropLayoutParams.height = itemHeight
 
-        val layoutParams = fragmentReviewDetailBinding.ivBackdropImage.layoutParams
-        layoutParams.height = itemHeight
+        fragmentReviewDetailBinding.ivBackdropImage.layoutParams = backdropLayoutParams
 
-        fragmentReviewDetailBinding.ivBackdropImage.layoutParams = layoutParams
+        val itemWidth = (screenWidth * (0.08)).toInt()
+        val userImageLayoutParams = fragmentReviewDetailBinding.currentUserImage.layoutParams
+        userImageLayoutParams.width = itemWidth
+        userImageLayoutParams.height = itemWidth
+
+        fragmentReviewDetailBinding.currentUserImage.layoutParams = userImageLayoutParams
+        fragmentReviewDetailBinding.userImage.layoutParams = userImageLayoutParams
 
         reviewViewModel.likeState.observe(viewLifecycleOwner) {
             if (it != null) {
@@ -75,6 +89,7 @@ class ReviewDetailFragment : Fragment() {
                 }
             }
         }
+
 
         reviewViewModel.numberOfLike.observe(viewLifecycleOwner) {
             fragmentReviewDetailBinding.tvNumberOfLike.text = it.toString()
@@ -124,6 +139,19 @@ class ReviewDetailFragment : Fragment() {
             }
         }
 
+        userViewModel.userResult.observe(viewLifecycleOwner) { response ->
+
+            if (response is BaseResponse.Success) {
+                response.data?.let { user ->
+                    Glide.with(requireContext()).load(Utils.PROFILE_LINK + user.profilePic)
+                        .placeholder(R.drawable.loading_image).error(R.drawable.try_later)
+                        .into(fragmentReviewDetailBinding.currentUserImage)
+                }
+
+            }
+
+        }
+
     }
 
     private fun updateUI(review: Review) {
@@ -143,15 +171,30 @@ class ReviewDetailFragment : Fragment() {
                 .placeholder(R.drawable.loading_image).error(R.drawable.try_later).into(posterImage)
             Glide.with(requireContext()).load(Utils.PROFILE_LINK + review.user.profilePic)
                 .placeholder(R.drawable.loading_image).error(R.drawable.try_later).into(userImage)
-            tvUserName.text = review.user.username
+            val htmlText =
+                "<font color='#FFFFFFFF'>${review.user.username} </font>  <font color='#9F9A9A'>${
+                    Utils.getRelativeTime(review.timeStamp)
+                }"
+            tvUserName.text = HtmlCompat.fromHtml(htmlText, HtmlCompat.FROM_HTML_MODE_LEGACY)
             llUser.setOnClickListener {
+                val bundle = Bundle()
+                bundle.putInt(Utils.USER_ID, userId)
 
+                val userProfile = ProfileFragment().apply {
+                    arguments = bundle
+                }
+                val fragmentManager = requireActivity().supportFragmentManager
+                if (containerId != null) {
+                    fragmentManager.beginTransaction()
+                        .add(containerId, userProfile)
+                        .addToBackStack(null)
+                        .commit()
+                }
             }
             val movieInfo: String = if (review.movie.releaseDate != null) {
                 "<font color='#FFFFFFFF'><b>${review.movie.title} </b></font> <font color='#9F9A9A'>${
                     review.movie.releaseDate?.substring(
-                        0,
-                        4
+                        0, 4
                     )
                 }"
             } else {
@@ -163,10 +206,8 @@ class ReviewDetailFragment : Fragment() {
                     val movieDetailFragment = MovieDetailFragment().apply {
                         arguments = movieBundle
                     }
-                    fragmentManager.beginTransaction()
-                        .add(containerId, movieDetailFragment)
-                        .addToBackStack(null)
-                        .commit()
+                    fragmentManager.beginTransaction().add(containerId, movieDetailFragment)
+                        .addToBackStack(null).commit()
                 }
             }
             posterImage.setOnClickListener {
@@ -174,10 +215,8 @@ class ReviewDetailFragment : Fragment() {
                     val movieDetailFragment = MovieDetailFragment().apply {
                         arguments = movieBundle
                     }
-                    fragmentManager.beginTransaction()
-                        .add(containerId, movieDetailFragment)
-                        .addToBackStack(null)
-                        .commit()
+                    fragmentManager.beginTransaction().add(containerId, movieDetailFragment)
+                        .addToBackStack(null).commit()
                 }
             }
 
@@ -190,11 +229,6 @@ class ReviewDetailFragment : Fragment() {
             }
             content.text = review.content
             tvNumberOfLike.text = review.likesCount.toString()
-//            if (review.isLiked) {
-//                likeBtn.setImageResource(R.drawable.baseline_favorite_24_red)
-//            } else {
-//                likeBtn.setImageResource(R.drawable.baseline_favorite_border_24)
-//            }
 
             likeBtn.setOnClickListener {
                 token?.let { it1 -> reviewViewModel.like(it1, review.id) }

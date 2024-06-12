@@ -13,6 +13,7 @@ import java.util.Locale
 
 class Utils {
     companion object {
+
         const val FIRST_TIME_LAUNCH = "first_time_launch"
         const val USER_TOKEN = "user_token"
         const val USER_ID = "user_id"
@@ -24,13 +25,19 @@ class Utils {
         const val MOVIE_NAME = "movie_name"
         const val REVIEW_ID = "review_id"
         const val TITLE = "title"
-
+        const val TYPE = "type"
 
         const val LOG_TAG_MAIN = "LOG_TAG_MAIN"
 
         const val PROFILE_LINK = "https://cineconnect.blob.core.windows.net/profile"
         const val POSTER_LINK = "https://cineconnect.blob.core.windows.net/poster"
         const val BACKDROP_LINK = "https://cineconnect.blob.core.windows.net/backdrop"
+        const val USER_PROFILE_LINK = "https://cineconnect.blob.core.windows.net/user-profile"
+
+        val connectionString = System.getenv("AZURE_BLOB_CONNECTION_STRING")
+        val containerName = System.getenv("AZURE_BLOB_ACCOUNT_NAME")
+        val blobName = System.getenv("AZURE_STORAGE_BLOB_NAME")
+
 
         fun convertTime(date: String): String {
             val formattedDate: String
@@ -42,7 +49,7 @@ class Utils {
                 formattedDate = SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(date)
             } else {
                 val instant = Instant.parse(date)
-                val formatter = SimpleDateFormat("dd MMMM yyyy")
+                val formatter = SimpleDateFormat("dd MMMM yyyy", Locale.US)
                 formattedDate = formatter.format(instant.toEpochMilli())
             }
             return formattedDate

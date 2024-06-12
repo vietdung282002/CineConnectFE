@@ -1,6 +1,7 @@
 package com.example.cineconnect.fragment.mainFragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,12 +16,15 @@ import com.bumptech.glide.Glide
 import com.example.cineconnect.R
 import com.example.cineconnect.adapter.ReviewPagingSearchAdapter
 import com.example.cineconnect.databinding.FragmentProfileBinding
+import com.example.cineconnect.fragment.bottomSheet.BottomSheetFragment
 import com.example.cineconnect.fragment.detailFragment.FollowerFragment
 import com.example.cineconnect.fragment.detailFragment.FollowingFragment
 import com.example.cineconnect.fragment.detailFragment.MovieDetailFragment
+import com.example.cineconnect.fragment.detailFragment.MovieListFragment
 import com.example.cineconnect.fragment.detailFragment.ReviewDetailFragment
 import com.example.cineconnect.model.User
 import com.example.cineconnect.network.BaseResponse
+import com.example.cineconnect.onClickInterface.BottomSheetListener
 import com.example.cineconnect.onClickInterface.OnMovieClicked
 import com.example.cineconnect.onClickInterface.OnReviewClicked
 import com.example.cineconnect.utils.SessionManager
@@ -30,17 +34,17 @@ import com.example.cineconnect.viewmodel.UserViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class ProfileFragment : Fragment(), OnReviewClicked, OnMovieClicked {
+class ProfileFragment : Fragment(), OnReviewClicked, OnMovieClicked, BottomSheetListener {
     private lateinit var fragmentProfileBinding: FragmentProfileBinding
     private val userViewModel: UserViewModel by viewModels()
     private val reviewViewModel: ReviewViewModel by viewModels()
     private var userId: Int = -1
-    private var currentUser: Int = -1
+    private var currentUserId: Int = -1
     private var token: String? = null
     private val reviewAdapter = ReviewPagingSearchAdapter()
     private lateinit var fragmentManager: FragmentManager
     private var containerId: Int = -1
-
+    private lateinit var settingFragment: BottomSheetFragment
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -56,10 +60,10 @@ class ProfileFragment : Fragment(), OnReviewClicked, OnMovieClicked {
             userViewModel.getUser(token,userId)
             reviewViewModel.getReviewListByUser(userId)
         }else{
-            currentUser = SessionManager.getUserId(requireContext())!!
-            if (currentUser != -1) {
-                userViewModel.getUser(token, currentUser)
-                reviewViewModel.getReviewListByUser(currentUser)
+            currentUserId = SessionManager.getUserId(requireContext())!!
+            if (currentUserId != -1) {
+                userViewModel.getUser(token, currentUserId)
+                reviewViewModel.getReviewListByUser(currentUserId)
             }
         }
         return fragmentProfileBinding.root
@@ -123,8 +127,6 @@ class ProfileFragment : Fragment(), OnReviewClicked, OnMovieClicked {
 
     private fun updateUI(user: User) {
 
-
-
         val displayMetrics = requireContext().resources.displayMetrics
         val screenHeight = displayMetrics.heightPixels
         val itemHeight = (screenHeight * (0.15)).toInt()
@@ -143,24 +145,53 @@ class ProfileFragment : Fragment(), OnReviewClicked, OnMovieClicked {
             tvFollowers.text = user.followerCount.toString() + " Followers"
             tvFollowing.text = user.followingCount.toString() + " Following"
 
-            Glide.with(requireContext()).load(Utils.PROFILE_LINK + user.profilePic).into(profilePic)
+            Glide.with(requireContext()).load(Utils.USER_PROFILE_LINK + user.profilePic)
+                .into(profilePic)
 
             activityLayout.setOnClickListener {  }
-            favouriteLayout.setOnClickListener {  }
-            filmsLayout.setOnClickListener {  }
+            favouriteLayout.setOnClickListener {
+                val bundle = Bundle()
+                bundle.putInt(Utils.USER_ID, user.id)
+                bundle.putString(Utils.TITLE, user.username + "'s Favourites")
+                bundle.putInt(Utils.TYPE, 2)
+
+                val genreDetailFragment = MovieListFragment().apply {
+                    arguments = bundle
+                }
+
+                fragmentManager.beginTransaction()
+                    .replace(containerId, genreDetailFragment)
+                    .addToBackStack(null)
+                    .commit()
+            }
+            filmsLayout.setOnClickListener {
+                val bundle = Bundle()
+                bundle.putInt(Utils.USER_ID, user.id)
+                bundle.putString(Utils.TITLE, user.username + "'s Watched")
+                bundle.putInt(Utils.TYPE, 3)
+
+                val genreDetailFragment = MovieListFragment().apply {
+                    arguments = bundle
+                }
+
+                fragmentManager.beginTransaction()
+                    .replace(containerId, genreDetailFragment)
+                    .addToBackStack(null)
+                    .commit()
+            }
 
             tvFollowers.setOnClickListener {
                 val followerFragment = FollowerFragment().apply {
                     arguments = userBundle
                 }
-                fragmentManager.beginTransaction().add(containerId, followerFragment)
+                fragmentManager.beginTransaction().replace(containerId, followerFragment)
                     .addToBackStack(null).commit()
             }
             tvFollowing.setOnClickListener {
                 val followingFragment = FollowingFragment().apply {
                     arguments = userBundle
                 }
-                fragmentManager.beginTransaction().add(containerId, followingFragment)
+                fragmentManager.beginTransaction().replace(containerId, followingFragment)
                     .addToBackStack(null).commit()
             }
 
@@ -218,10 +249,11 @@ class ProfileFragment : Fragment(), OnReviewClicked, OnMovieClicked {
             }else{
                 settingBtn.visibility = View.VISIBLE
                 settingBtn.setOnClickListener{
-//                    settingFragment = SettingFragment()
-//                    if (fragmentManager != null) {
-//                        settingFragment.show(fragmentManager,settingFragment.tag)
-//                    }
+
+
+                    settingFragment = BottomSheetFragment()
+                    settingFragment.setBottomSheetCloseListener(this@ProfileFragment)
+                    settingFragment.show(fragmentManager, settingFragment.tag)
                 }
                 followBtn.visibility = View.INVISIBLE
             }
@@ -274,4 +306,10 @@ class ProfileFragment : Fragment(), OnReviewClicked, OnMovieClicked {
             .commit()
     }
 
+
+    override fun onBottomSheetDismissed() {
+        Log.d("LOG_TAG_MAIN", "onBottomSheetDismissed: ")
+        userViewModel.getUser(token, currentUserId)
+        reviewViewModel.getReviewListByUser(currentUserId)
+    }
 }

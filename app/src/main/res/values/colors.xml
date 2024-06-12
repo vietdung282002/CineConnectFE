@@ -8,9 +8,10 @@
     <color name="green">#00FF0A</color>
     <color name="orange">#FF7427</color>
     <color name="yellow">#FFC107</color>
+    <color name="grey2">#7A7777</color>
     <color name="grey">#9F9A9A</color>
     <color name="checked">#4356B4</color>
     <color name="un_checked">#D2D2D2</color>
-    <color name="red">#F46A81</color>
+    <color name="red">#FF002B</color>
 
 </resources>

@@ -10,6 +10,9 @@ material = "1.12.0"
 activity = "1.9.0"
 constraintlayout = "2.1.4"
 fragment = "1.7.1"
+azureStorageBlob = "12.26.1"
+swiperefreshlayout = "1.2.0-alpha01"
+databindingRuntime = "8.6.0-alpha05"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -21,6 +24,9 @@ material = { group = "com.google.android.material", name = "material", version.r
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 androidx-fragment = { group = "androidx.fragment", name = "fragment", version.ref = "fragment" }
+azure-storage-blob = { group = "com.azure", name = "azure-storage-blob", version.ref = "azureStorageBlob" }
+androidx-swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swiperefreshlayout" }
+androidx-databinding-runtime = { group = "androidx.databinding", name = "databinding-runtime", version.ref = "databindingRuntime" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

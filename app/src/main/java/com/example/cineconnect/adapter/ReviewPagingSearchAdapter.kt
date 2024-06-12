@@ -64,7 +64,8 @@ class ReviewPagingSearchAdapter :
             holder.profile.layoutParams = layoutParams
 
             holder.username.text = review.user.username
-            Glide.with(holder.itemView.context).load(Utils.PROFILE_LINK + review.user.profilePic)
+            Glide.with(holder.itemView.context)
+                .load(Utils.USER_PROFILE_LINK + review.user.profilePic)
                 .into(holder.profile)
             Glide.with(holder.itemView.context).load(Utils.POSTER_LINK + review.movie.posterPath)
                 .into(holder.poster)

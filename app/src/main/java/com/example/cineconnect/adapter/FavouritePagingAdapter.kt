@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.cineconnect.databinding.UserFavouriteBinding
 import com.example.cineconnect.model.FavouriteList
-import com.example.cineconnect.utils.Utils.Companion.PROFILE_LINK
+import com.example.cineconnect.utils.Utils.Companion.USER_PROFILE_LINK
 
 class FavouritePagingAdapter :
     PagingDataAdapter<FavouriteList, FavouritePagingAdapter.FavouriteViewHolder>(FavouriteComparator) {
@@ -50,7 +50,7 @@ class FavouritePagingAdapter :
                 holder.userRating.rating = favourite.rate.toFloat()
                 holder.userRating.visibility = View.VISIBLE
             }
-            Glide.with(holder.itemView).load(PROFILE_LINK + favourite.user.profilePic)
+            Glide.with(holder.itemView).load(USER_PROFILE_LINK + favourite.user.profilePic)
                 .into(holder.profileImage)
             holder.layout.setOnClickListener {
 

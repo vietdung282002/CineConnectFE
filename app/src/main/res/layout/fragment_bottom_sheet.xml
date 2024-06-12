@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:orientation="vertical"
+        tools:context=".fragment.bottomSheet.BottomSheetFragment">
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/fragmentContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_rounded"
+
+
+            />
+        <!--        android:name="com.example.cineconnect.fragment.bottomSheet.SettingFragment"-->
+        <!--        tools:layout="@layout/fragment_setting"-->
+
+    </RelativeLayout>
+
+</layout>

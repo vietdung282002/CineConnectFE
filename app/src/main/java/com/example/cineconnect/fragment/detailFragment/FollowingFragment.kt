@@ -2,19 +2,18 @@ package com.example.cineconnect.fragment.detailFragment
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.cineconnect.R
 import com.example.cineconnect.adapter.UserPagingAdapter
 import com.example.cineconnect.databinding.FragmentFollowingBinding
-import com.example.cineconnect.fragment.mainFragment.ProfileFragment
 import com.example.cineconnect.network.BaseResponse
 import com.example.cineconnect.onClickInterface.OnFollowButtonClicked
 import com.example.cineconnect.onClickInterface.OnUserClicked
@@ -105,12 +104,12 @@ class FollowingFragment : Fragment(), OnUserClicked, OnFollowButtonClicked {
         val bundle = Bundle()
         bundle.putInt(Utils.USER_ID, userId)
 
-        val userProfile = ProfileFragment().apply {
+        val userDetailFragment = UserDetailFragment().apply {
             arguments = bundle
         }
         val fragmentManager = requireActivity().supportFragmentManager
         fragmentManager.beginTransaction()
-            .add(containerId, userProfile)
+            .add(containerId, userDetailFragment)
             .addToBackStack(null)
             .commit()
     }

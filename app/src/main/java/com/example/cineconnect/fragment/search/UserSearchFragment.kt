@@ -14,7 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.cineconnect.R
 import com.example.cineconnect.adapter.UserPagingAdapter
 import com.example.cineconnect.databinding.FragmentUserSearchBinding
-import com.example.cineconnect.fragment.mainFragment.ProfileFragment
+import com.example.cineconnect.fragment.detailFragment.UserDetailFragment
 import com.example.cineconnect.network.BaseResponse
 import com.example.cineconnect.onClickInterface.OnFollowButtonClicked
 import com.example.cineconnect.onClickInterface.OnUserClicked
@@ -100,12 +100,12 @@ class UserSearchFragment(
         val bundle = Bundle()
         bundle.putInt(Utils.USER_ID, userId)
 
-        val userProfile =ProfileFragment().apply {
+        val userDetailFragment = UserDetailFragment().apply {
             arguments = bundle
         }
         val fragmentManager = requireActivity().supportFragmentManager
         fragmentManager.beginTransaction()
-            .add(parentId, userProfile)
+            .add(parentId, userDetailFragment)
             .addToBackStack(null)
             .commit()
     }

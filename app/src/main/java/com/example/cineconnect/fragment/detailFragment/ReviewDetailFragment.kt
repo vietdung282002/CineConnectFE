@@ -15,7 +15,6 @@ import com.bumptech.glide.Glide
 import com.example.cineconnect.R
 import com.example.cineconnect.adapter.CommentPagingAdapter
 import com.example.cineconnect.databinding.FragmentReviewDetailBinding
-import com.example.cineconnect.fragment.mainFragment.ProfileFragment
 import com.example.cineconnect.model.Review
 import com.example.cineconnect.network.BaseResponse
 import com.example.cineconnect.utils.SessionManager
@@ -180,13 +179,13 @@ class ReviewDetailFragment : Fragment() {
                 val bundle = Bundle()
                 bundle.putInt(Utils.USER_ID, userId)
 
-                val userProfile = ProfileFragment().apply {
+                val userDetailFragment = UserDetailFragment().apply {
                     arguments = bundle
                 }
                 val fragmentManager = requireActivity().supportFragmentManager
                 if (containerId != null) {
                     fragmentManager.beginTransaction()
-                        .add(containerId, userProfile)
+                        .add(containerId, userDetailFragment)
                         .addToBackStack(null)
                         .commit()
                 }

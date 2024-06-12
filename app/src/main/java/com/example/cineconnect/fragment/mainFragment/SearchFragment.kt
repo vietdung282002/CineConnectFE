@@ -13,6 +13,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.cineconnect.R
 import com.example.cineconnect.adapter.SearchViewPagerAdapter
 import com.example.cineconnect.databinding.FragmentSearchBinding
+import com.example.cineconnect.utils.Utils
 import com.example.cineconnect.viewmodel.MovieViewModel
 
 
@@ -39,10 +40,20 @@ class SearchFragment : Fragment() {
 
         fragmentSearchBinding.cancelBtn.setOnClickListener {
             hideKeyboard()
-            fragmentSearchBinding.searchTextInput.apply {
-                clearFocus()
-                text?.clear()
+//            fragmentSearchBinding.searchTextInput.apply {
+//                clearFocus()
+//                text?.clear()
+//            }
+            val bundle = Bundle()
+            bundle.putInt(Utils.USER_ID, 3)
+
+            val userProfile = ProfileFragment().apply {
+                arguments = bundle
             }
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(containerId, userProfile)
+                .addToBackStack(null)
+                .commit()
         }
 
         fragmentSearchBinding.apply {

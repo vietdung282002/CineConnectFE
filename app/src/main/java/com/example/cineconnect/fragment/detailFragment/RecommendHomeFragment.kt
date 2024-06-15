@@ -50,9 +50,9 @@ class RecommendHomeFragment() : Fragment(), OnReviewClicked,
         reviewAdapter.setOnReviewListener(this)
         reviewAdapter.setOnMovieListener(this)
 
-        fragmentRecommendHomeBinding.container.setOnRefreshListener {
-            reviewViewModel.getRecommendReviewList(token!!)
-        }
+//        fragmentRecommendHomeBinding.container.setOnRefreshListener {
+//            reviewViewModel.getRecommendReviewList(token!!)
+//        }
 
         fragmentRecommendHomeBinding.rvReview.adapter = reviewAdapter
         viewLifecycleOwner.lifecycleScope.launch {
@@ -64,7 +64,7 @@ class RecommendHomeFragment() : Fragment(), OnReviewClicked,
 
                     is BaseResponse.Success -> {
                         stopLoading()
-                        fragmentRecommendHomeBinding.container.isRefreshing = false
+//                        fragmentRecommendHomeBinding.container.isRefreshing = false
 
                         state.data?.let { pagingData ->
                             reviewAdapter.submitData(pagingData)

@@ -140,19 +140,31 @@ class UserDetailFragment : Fragment(), OnReviewClicked, OnMovieClicked {
             Glide.with(requireContext()).load(Utils.USER_PROFILE_LINK + user.profilePic)
                 .into(profilePic)
 
-            activityLayout.setOnClickListener { }
+            activityLayout.setOnClickListener {
+                val bundle = Bundle()
+                bundle.putInt(Utils.USER_ID, user.id)
+
+                val activityListFragment = ActivityListFragment().apply {
+                    arguments = bundle
+                }
+
+                fragmentManager.beginTransaction()
+                    .replace(containerId, activityListFragment)
+                    .addToBackStack(null)
+                    .commit()
+            }
             favouriteLayout.setOnClickListener {
                 val bundle = Bundle()
                 bundle.putInt(Utils.USER_ID, user.id)
                 bundle.putString(Utils.TITLE, user.username + "'s Favourites")
                 bundle.putInt(Utils.TYPE, 2)
 
-                val genreDetailFragment = MovieListFragment().apply {
+                val favouriteFragment = MovieListFragment().apply {
                     arguments = bundle
                 }
 
                 fragmentManager.beginTransaction()
-                    .replace(containerId, genreDetailFragment)
+                    .replace(containerId, favouriteFragment)
                     .addToBackStack(null)
                     .commit()
             }
@@ -162,12 +174,12 @@ class UserDetailFragment : Fragment(), OnReviewClicked, OnMovieClicked {
                 bundle.putString(Utils.TITLE, user.username + "'s Watched")
                 bundle.putInt(Utils.TYPE, 3)
 
-                val genreDetailFragment = MovieListFragment().apply {
+                val watchedFragment = MovieListFragment().apply {
                     arguments = bundle
                 }
 
                 fragmentManager.beginTransaction()
-                    .replace(containerId, genreDetailFragment)
+                    .replace(containerId, watchedFragment)
                     .addToBackStack(null)
                     .commit()
             }

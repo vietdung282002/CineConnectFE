@@ -17,6 +17,7 @@ import com.example.cineconnect.R
 import com.example.cineconnect.adapter.ReviewPagingSearchAdapter
 import com.example.cineconnect.databinding.FragmentProfileBinding
 import com.example.cineconnect.fragment.bottomSheet.BottomSheetFragment
+import com.example.cineconnect.fragment.detailFragment.ActivityListFragment
 import com.example.cineconnect.fragment.detailFragment.FollowerFragment
 import com.example.cineconnect.fragment.detailFragment.FollowingFragment
 import com.example.cineconnect.fragment.detailFragment.MovieDetailFragment
@@ -165,19 +166,31 @@ class ProfileFragment : Fragment(), OnReviewClicked, OnMovieClicked, BottomSheet
             Glide.with(requireContext()).load(Utils.USER_PROFILE_LINK + user.profilePic)
                 .into(profilePic)
 
-            activityLayout.setOnClickListener {  }
+            activityLayout.setOnClickListener {
+                val bundle = Bundle()
+                bundle.putInt(Utils.USER_ID, user.id)
+
+                val activityListFragment = ActivityListFragment().apply {
+                    arguments = bundle
+                }
+
+                fragmentManager.beginTransaction()
+                    .replace(containerId, activityListFragment)
+                    .addToBackStack(null)
+                    .commit()
+            }
             favouriteLayout.setOnClickListener {
                 val bundle = Bundle()
                 bundle.putInt(Utils.USER_ID, user.id)
                 bundle.putString(Utils.TITLE, user.username + "'s Favourites")
                 bundle.putInt(Utils.TYPE, 2)
 
-                val genreDetailFragment = MovieListFragment().apply {
+                val favouriteFragment = MovieListFragment().apply {
                     arguments = bundle
                 }
 
                 fragmentManager.beginTransaction()
-                    .replace(containerId, genreDetailFragment)
+                    .replace(containerId, favouriteFragment)
                     .addToBackStack(null)
                     .commit()
             }
@@ -187,12 +200,12 @@ class ProfileFragment : Fragment(), OnReviewClicked, OnMovieClicked, BottomSheet
                 bundle.putString(Utils.TITLE, user.username + "'s Watched")
                 bundle.putInt(Utils.TYPE, 3)
 
-                val genreDetailFragment = MovieListFragment().apply {
+                val watchedFragment = MovieListFragment().apply {
                     arguments = bundle
                 }
 
                 fragmentManager.beginTransaction()
-                    .replace(containerId, genreDetailFragment)
+                    .replace(containerId, watchedFragment)
                     .addToBackStack(null)
                     .commit()
             }

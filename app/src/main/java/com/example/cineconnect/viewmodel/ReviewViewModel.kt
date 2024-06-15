@@ -26,7 +26,7 @@ class ReviewViewModel : ViewModel() {
     private val reviewRepository = ReviewRepository()
     val reviewResult: MutableLiveData<BaseResponse<Review>> = MutableLiveData()
     val editReviewResult: MutableLiveData<BaseResponse<Unit>> = MutableLiveData()
-    val getCommentResult: MutableLiveData<BaseResponse<Comment>> = MutableLiveData()
+    private val getCommentResult: MutableLiveData<BaseResponse<Comment>> = MutableLiveData()
     val editCommentResult: MutableLiveData<BaseResponse<Unit>> = MutableLiveData()
 
     private val _commentState =
@@ -44,7 +44,7 @@ class ReviewViewModel : ViewModel() {
 
     val reviewContent: MutableLiveData<String> = MutableLiveData()
     val editContent: MutableLiveData<String> = reviewContent
-    val commentContent: MutableLiveData<String> = MutableLiveData()
+    private val commentContent: MutableLiveData<String> = MutableLiveData()
     val editCommentContent: MutableLiveData<String> = commentContent
     val userDetail: MutableLiveData<String> = MutableLiveData()
     val movieId: MutableLiveData<Int> = MutableLiveData()

@@ -111,6 +111,13 @@ class SignInFragment : Fragment() {
     private fun stopLoading() {
         fragmentSignInBinding.progressBarLayout.visibility = View.GONE
     }
+    private fun processError(msg: String?) {
+        showToast("Error: $msg")
+    }
+
+    private fun showToast(msg: String) {
+        Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
+    }
 
     private fun processLogin(loginResponse: LoginResponse?) {
         if (!loginResponse?.data?.token.isNullOrEmpty()) {
@@ -134,12 +141,6 @@ class SignInFragment : Fragment() {
         activity?.finish()
     }
 
-    private fun processError(msg: String?) {
-        showToast("Error: $msg")
-    }
 
-    private fun showToast(msg: String) {
-        Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
-    }
 
 }

@@ -10,21 +10,27 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.azure.storage.blob.BlobClientBuilder
+import com.example.cineconnect.model.Activity
+import com.example.cineconnect.model.ConFirmPasscode
+import com.example.cineconnect.model.CustomResponse
 import com.example.cineconnect.model.FavouriteList
 import com.example.cineconnect.model.LoginRequest
 import com.example.cineconnect.model.LoginResponse
-import com.example.cineconnect.model.LogoutResponse
 import com.example.cineconnect.model.RegisterRequest
 import com.example.cineconnect.model.RegisterResponse
+import com.example.cineconnect.model.ResetPassword
+import com.example.cineconnect.model.ResetPasswordRequest
 import com.example.cineconnect.model.UpdatePassword
 import com.example.cineconnect.model.UpdateResponse
 import com.example.cineconnect.model.UpdateUser
 import com.example.cineconnect.model.User
 import com.example.cineconnect.model.UserList
 import com.example.cineconnect.network.BaseResponse
+import com.example.cineconnect.paging.ActivityPagingSource
 import com.example.cineconnect.paging.FavouriteUserPagingSource
 import com.example.cineconnect.paging.UserPagingSource
 import com.example.cineconnect.repository.UserRepository
+import com.example.cineconnect.utils.Utils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -38,10 +44,16 @@ class UserViewModel : ViewModel() {
     private val userRepo = UserRepository()
     val loginResult: MutableLiveData<BaseResponse<LoginResponse>> = MutableLiveData()
     val registerResult: MutableLiveData<BaseResponse<RegisterResponse>> = MutableLiveData()
-    val logoutResult: MutableLiveData<BaseResponse<LogoutResponse>> = MutableLiveData()
+    val logoutResult: MutableLiveData<BaseResponse<CustomResponse>> = MutableLiveData()
+    val resetPasswordRequestResult: MutableLiveData<BaseResponse<CustomResponse>> =
+        MutableLiveData()
+    val resetPasswordResult: MutableLiveData<BaseResponse<CustomResponse>> = MutableLiveData()
+    val confirmPasscodeResult: MutableLiveData<BaseResponse<CustomResponse>> = MutableLiveData()
     val userResult: MutableLiveData<BaseResponse<User>> = MutableLiveData()
     val updateUserResult: MutableLiveData<BaseResponse<UpdateUser>> = MutableLiveData()
     val updatePasswordResult: MutableLiveData<BaseResponse<UpdateResponse>> = MutableLiveData()
+
+    val userEmail = MutableLiveData<String>()
 
     private val _userFavouriteState =
         MutableStateFlow<BaseResponse<PagingData<FavouriteList>>>(BaseResponse.Loading())
@@ -53,6 +65,10 @@ class UserViewModel : ViewModel() {
 
     private val _followStatus = MutableLiveData<Pair<Int, Boolean?>>()
     val followStatus: LiveData<Pair<Int, Boolean?>> = _followStatus
+
+    private val _activityState =
+        MutableStateFlow<BaseResponse<PagingData<Activity>>>(BaseResponse.Loading())
+    val activityState: StateFlow<BaseResponse<PagingData<Activity>>> = _activityState
 
     val username = MutableLiveData<String>()
     val signInAS = MutableLiveData<String>()
@@ -71,8 +87,7 @@ class UserViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val loginRequest = LoginRequest(
-                    password = password,
-                    usernameOrEmail = usernameOrEmail
+                    password = password, usernameOrEmail = usernameOrEmail
                 )
                 val response = userRepo.loginUser(loginRequest = loginRequest)
                 if (response.isSuccessful) {
@@ -92,9 +107,7 @@ class UserViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val registerRequest = RegisterRequest(
-                    username = username,
-                    email = email,
-                    password = password
+                    username = username, email = email, password = password
                 )
                 val response = userRepo.registerUser(registerRequest = registerRequest)
                 if (response.isSuccessful) {
@@ -124,12 +137,72 @@ class UserViewModel : ViewModel() {
         }
     }
 
-    fun getUser(token: String?,userId:Int){
+    fun resetPasswordRequest() {
+        resetPasswordRequestResult.value = BaseResponse.Loading()
+        if (Utils.isValidEmail(userEmail.value.toString())) {
+            viewModelScope.launch {
+                try {
+                    val resetPasswordRequest = ResetPasswordRequest(email = userEmail.value!!)
+                    val response =
+                        userRepo.resetPasswordRequest(resetPasswordRequest = resetPasswordRequest)
+                    if (response.isSuccessful) {
+                        resetPasswordRequestResult.value = BaseResponse.Success(response.body())
+                    } else {
+                        resetPasswordRequestResult.value =
+                            BaseResponse.Error(response.body()?.message)
+                    }
+                } catch (e: Exception) {
+                    resetPasswordRequestResult.value = BaseResponse.Error(e.message)
+                }
+            }
+
+        } else {
+            resetPasswordRequestResult.value = BaseResponse.Error("Invalid Email")
+        }
+    }
+
+    fun confirmPasscode(passcode: String) {
+        confirmPasscodeResult.value = BaseResponse.Loading()
+        viewModelScope.launch {
+            try {
+                val conFirmPasscode = ConFirmPasscode(userEmail.value!!, passcode)
+
+                val response = userRepo.confirmPasscode(conFirmPasscode)
+                if (response.isSuccessful) {
+                    confirmPasscodeResult.value = BaseResponse.Success(response.body())
+                } else {
+                    confirmPasscodeResult.value = BaseResponse.Error(response.body()?.message)
+                }
+            } catch (e: Exception) {
+                confirmPasscodeResult.value = BaseResponse.Error(e.message)
+            }
+        }
+    }
+
+    fun resetPassword(password: String) {
+        resetPasswordResult.value = BaseResponse.Loading()
+        viewModelScope.launch {
+            try {
+                val resetPassword = ResetPassword(email = userEmail.value!!, password = password)
+                val response = userRepo.resetPassword(resetPassword)
+                if (response.isSuccessful) {
+                    resetPasswordResult.value = BaseResponse.Success(response.body())
+                } else {
+                    resetPasswordResult.value = BaseResponse.Error(response.body()?.message)
+                }
+            } catch (e: Exception) {
+                resetPasswordResult.value = BaseResponse.Error(e.message)
+            }
+        }
+
+    }
+
+    fun getUser(token: String?, userId: Int) {
         userResult.value = BaseResponse.Loading()
 
         viewModelScope.launch {
             try {
-                val response = userRepo.getUser(token,userId)
+                val response = userRepo.getUser(token, userId)
                 _followStatus.value = Pair(userId, response.body()!!.isFollowing)
                 if (response.isSuccessful) {
                     userResult.value = BaseResponse.Success(response.body())
@@ -144,8 +217,7 @@ class UserViewModel : ViewModel() {
                 } else {
                     userResult.value = BaseResponse.Error(response.message())
                 }
-            }
-            catch (e:Exception){
+            } catch (e: Exception) {
                 userResult.value = BaseResponse.Error(e.message)
             }
         }
@@ -156,8 +228,7 @@ class UserViewModel : ViewModel() {
         viewModelScope.launch {
             Pager(PagingConfig(pageSize = 10, enablePlaceholders = true)) {
                 FavouriteUserPagingSource(movieId)
-            }.flow
-                .catch { e -> _userFavouriteState.value = BaseResponse.Error(e.message) }
+            }.flow.catch { e -> _userFavouriteState.value = BaseResponse.Error(e.message) }
                 .collectLatest { pagingData ->
                     _userFavouriteState.value = BaseResponse.Success(pagingData)
                 }
@@ -165,7 +236,7 @@ class UserViewModel : ViewModel() {
         }
     }
 
-    fun getSearchUser(token: String?,query: String){
+    fun getSearchUser(token: String?, query: String) {
         _userState.value = BaseResponse.Loading()
 
         viewModelScope.launch {
@@ -230,9 +301,7 @@ class UserViewModel : ViewModel() {
                     username = username.value
                 )
                 val response = userRepo.updateUserProfile(
-                    token = token,
-                    userId = userId,
-                    updateUser = updateUser
+                    token = token, userId = userId, updateUser = updateUser
                 )
                 Log.d("LOG_TAG_MAIN", response.toString())
                 if (response.isSuccessful) {
@@ -261,12 +330,10 @@ class UserViewModel : ViewModel() {
             viewModelScope.launch {
                 try {
                     val updatePassword = UpdatePassword(
-                        currentPassword = currentPassword.value,
-                        newPassword = newPassword.value
+                        currentPassword = currentPassword.value, newPassword = newPassword.value
                     )
                     val response = userRepo.updatePassword(
-                        token = token,
-                        updatePassword = updatePassword
+                        token = token, updatePassword = updatePassword
                     )
                     Log.d("LOG_TAG_MAIN", response.toString())
                     if (response.isSuccessful) {
@@ -282,6 +349,18 @@ class UserViewModel : ViewModel() {
         }
     }
 
+    fun getActivityList(userId: Int) {
+        _activityState.value = BaseResponse.Loading()
+        viewModelScope.launch {
+            Pager(PagingConfig(pageSize = 12, enablePlaceholders = true)) {
+                ActivityPagingSource(userId)
+            }.flow.catch { e -> _activityState.value = BaseResponse.Error(e.message) }
+                .collectLatest { pagingData ->
+                    _activityState.value = BaseResponse.Success(pagingData)
+                }
+        }
+    }
+
 
     fun uploadImage(bitmap: Bitmap) {
 
@@ -290,11 +369,8 @@ class UserViewModel : ViewModel() {
         val imageData = outputStream.toByteArray()
 
 
-        val blobClient = BlobClientBuilder()
-            .connectionString("")
-            .containerName("user-profile")
-            .blobName("${System.currentTimeMillis()}.jpg")
-            .buildClient()
+        val blobClient = BlobClientBuilder().connectionString("").containerName("user-profile")
+            .blobName("${System.currentTimeMillis()}.jpg").buildClient()
 
 
         val inputStream = ByteArrayInputStream(imageData)

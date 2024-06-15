@@ -1,15 +1,17 @@
 package com.example.cineconnect.network
 
+import com.example.cineconnect.model.ActivityResponse
 import com.example.cineconnect.model.Comment
 import com.example.cineconnect.model.CommentRequest
 import com.example.cineconnect.model.CommentResponse
+import com.example.cineconnect.model.ConFirmPasscode
+import com.example.cineconnect.model.CustomResponse
 import com.example.cineconnect.model.FavouriteResponse
 import com.example.cineconnect.model.FollowListResponse
 import com.example.cineconnect.model.FollowResponse
 import com.example.cineconnect.model.LikeResponse
 import com.example.cineconnect.model.LoginRequest
 import com.example.cineconnect.model.LoginResponse
-import com.example.cineconnect.model.LogoutResponse
 import com.example.cineconnect.model.Movie
 import com.example.cineconnect.model.MovieListResponse
 import com.example.cineconnect.model.MovieRequest
@@ -20,6 +22,8 @@ import com.example.cineconnect.model.RatingResponse
 import com.example.cineconnect.model.Recommend
 import com.example.cineconnect.model.RegisterRequest
 import com.example.cineconnect.model.RegisterResponse
+import com.example.cineconnect.model.ResetPassword
+import com.example.cineconnect.model.ResetPasswordRequest
 import com.example.cineconnect.model.Review
 import com.example.cineconnect.model.ReviewListResponse
 import com.example.cineconnect.model.ReviewRequest
@@ -62,7 +66,7 @@ interface APIService {
         "accept: application/json",
     )
     @POST("/authentication/logout/")
-    suspend fun logout(@Header("Authorization") token: String): Response<LogoutResponse>
+    suspend fun logout(@Header("Authorization") token: String): Response<CustomResponse>
 
     @Headers(
         "Content-Type: application/json",
@@ -85,6 +89,34 @@ interface APIService {
         @Header("Authorization") token: String,
         @Body updatePassword: UpdatePassword
     ): Response<UpdateResponse>
+
+    @Headers(
+        "Content-Type: application/json",
+        "accept: application/json",
+    )
+    @POST("/authentication/request_password_update")
+    suspend fun resetPasswordRequest(
+        @Body resetPasswordRequest: ResetPasswordRequest
+    ): Response<CustomResponse>
+
+    @Headers(
+        "Content-Type: application/json",
+        "accept: application/json",
+    )
+    @POST("/authentication/confirm_user_passcode")
+    suspend fun confirmPasscode(
+        @Body conFirmPasscode: ConFirmPasscode
+    ): Response<CustomResponse>
+
+    @Headers(
+        "Content-Type: application/json",
+        "accept: application/json",
+    )
+    @PUT("/authentication/reset_password")
+    suspend fun resetPassword(
+        @Body resetPassword: ResetPassword
+    ): Response<CustomResponse>
+
 
     @Headers(
         "Content-Type: application/json",
@@ -136,6 +168,15 @@ interface APIService {
         @Query("page") page: Int,
         @Query("q") userId: Int
     ): Response<MovieListResponse>
+
+    @Headers(
+        "accept: application/json",
+    )
+    @GET("activity/")
+    suspend fun getActivity(
+        @Query("page") page: Int,
+        @Query("user") userId: Int
+    ): Response<ActivityResponse>
 
     @Headers(
         "accept: application/json",

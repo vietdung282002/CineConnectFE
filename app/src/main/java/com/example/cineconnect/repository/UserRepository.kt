@@ -1,11 +1,14 @@
 package com.example.cineconnect.repository
 
+import com.example.cineconnect.model.ConFirmPasscode
+import com.example.cineconnect.model.CustomResponse
 import com.example.cineconnect.model.FollowResponse
 import com.example.cineconnect.model.LoginRequest
 import com.example.cineconnect.model.LoginResponse
-import com.example.cineconnect.model.LogoutResponse
 import com.example.cineconnect.model.RegisterRequest
 import com.example.cineconnect.model.RegisterResponse
+import com.example.cineconnect.model.ResetPassword
+import com.example.cineconnect.model.ResetPasswordRequest
 import com.example.cineconnect.model.UpdatePassword
 import com.example.cineconnect.model.UpdateResponse
 import com.example.cineconnect.model.UpdateUser
@@ -30,7 +33,7 @@ class UserRepository {
         return API.apiService.follow(token, userId)
     }
 
-    suspend fun logout(token: String): Response<LogoutResponse> {
+    suspend fun logout(token: String): Response<CustomResponse> {
         return API.apiService.logout(token)
     }
 
@@ -49,5 +52,21 @@ class UserRepository {
         return API.apiService.updatePassword(token, updatePassword)
     }
 
+    suspend fun resetPasswordRequest(
+        resetPasswordRequest: ResetPasswordRequest
+    ): Response<CustomResponse> {
+        return API.apiService.resetPasswordRequest(resetPasswordRequest)
+    }
 
+    suspend fun confirmPasscode(
+        conFirmPasscode: ConFirmPasscode
+    ): Response<CustomResponse> {
+        return API.apiService.confirmPasscode(conFirmPasscode)
+    }
+
+    suspend fun resetPassword(
+        resetPassword: ResetPassword
+    ): Response<CustomResponse> {
+        return API.apiService.resetPassword(resetPassword)
+    }
 }

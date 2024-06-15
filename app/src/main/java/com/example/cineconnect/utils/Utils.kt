@@ -38,6 +38,13 @@ class Utils {
         const val USER_PROFILE_LINK = "https://cineconnect.blob.core.windows.net/user-profile"
 
 
+        private val emailRegex = Regex(
+            "^\\s*([a-zA-Z0-9.+_\\-]+)@([a-zA-Z0-9.\\-]+)\\.\\w{2,6}\\s*$"
+        )
+
+        fun isValidEmail(email: String): Boolean {
+            return emailRegex.matches(email)
+        }
 
         fun convertTime(date: String): String {
             val formattedDate: String

@@ -4,50 +4,44 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".fragment.detailFragment.FollowingHomeFragment">
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/container"
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_margin="5dp"
+        android:background="@color/main_color">
 
-        <androidx.core.widget.NestedScrollView
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fillViewport="true">
+            android:orientation="vertical">
+
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_review"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-            <!--            <FrameLayout-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="match_parent"-->
-            <!--                android:layout_margin="5dp"-->
-            <!--                android:background="@color/main_color">-->
+        <FrameLayout
+            android:id="@+id/progress_bar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.5"
+            android:visibility="gone">
 
-
-            <!--                <FrameLayout-->
-            <!--                    android:id="@+id/progress_bar_layout"-->
-            <!--                    android:layout_width="match_parent"-->
-            <!--                    android:layout_height="match_parent"-->
-            <!--                    android:alpha="0.5"-->
-            <!--                    android:visibility="gone">-->
-
-            <!--                    <ProgressBar-->
-            <!--                        android:id="@+id/progress_bar"-->
-            <!--                        android:layout_width="48dp"-->
-            <!--                        android:layout_height="48dp"-->
-            <!--                        android:layout_gravity="center"-->
-            <!--                        android:indeterminate="true"-->
-            <!--                        android:indeterminateTint="@color/white"-->
-            <!--                        android:visibility="visible" />-->
-            <!--                </FrameLayout>-->
-            <!--            </FrameLayout>-->
-
-        </androidx.core.widget.NestedScrollView>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:indeterminate="true"
+                android:indeterminateTint="@color/white"
+                android:visibility="visible" />
+        </FrameLayout>
+    </FrameLayout>
 
 
 </layout>

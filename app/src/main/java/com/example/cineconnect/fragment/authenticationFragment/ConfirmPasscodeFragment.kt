@@ -12,13 +12,13 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import com.example.cineconnect.R
-import com.example.cineconnect.databinding.FragmentRequestResetPasswordBinding
+import com.example.cineconnect.databinding.FragmentConfirmPasscodeBinding
 import com.example.cineconnect.network.BaseResponse
-import com.example.cineconnect.utils.Utils
 import com.example.cineconnect.viewmodel.UserViewModel
 
-class RequestResetPasswordFragment : Fragment() {
-    private lateinit var fragmentRequestResetPasswordBinding: FragmentRequestResetPasswordBinding
+
+class ConfirmPasscodeFragment : Fragment() {
+    private lateinit var fragmentConfirmPasscodeBinding: FragmentConfirmPasscodeBinding
     private val userViewModel: UserViewModel by activityViewModels()
     private lateinit var fragmentManager: FragmentManager
 
@@ -27,35 +27,39 @@ class RequestResetPasswordFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        fragmentRequestResetPasswordBinding = DataBindingUtil.inflate(
-            inflater,
-            R.layout.fragment_request_reset_password,
-            container,
-            false
-        )
-        return fragmentRequestResetPasswordBinding.root
+        fragmentConfirmPasscodeBinding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_confirm_passcode, container, false)
+        return fragmentConfirmPasscodeBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         fragmentManager = requireActivity().supportFragmentManager
 
-
-        fragmentRequestResetPasswordBinding.viewModel = userViewModel
-        fragmentRequestResetPasswordBinding.lifecycleOwner = viewLifecycleOwner
-
-        fragmentRequestResetPasswordBinding.apply {
-            btnContinue.setOnClickListener {
-                if (etEmail.text.toString() != "" && Utils.isValidEmail(etEmail.text.toString())) {
-                    userViewModel.resetPasswordRequest()
-                }
-            }
+        fragmentConfirmPasscodeBinding.apply {
             btnBack.setOnClickListener {
                 fragmentManager.popBackStack()
+                userViewModel.resetPasswordRequestResult.value = null
+            }
+
+            btnContinue.setOnClickListener {
+                userViewModel.confirmPasscode(etPasscode.text.toString())
+                goToResetPasswordFragment()
+            }
+
+            btnSendCodeAgain.setOnClickListener {
+                userViewModel.resetPasswordRequest()
             }
         }
 
         userViewModel.resetPasswordRequestResult.observe(viewLifecycleOwner) {
+            if (it is BaseResponse.Success) {
+                process("Send code successfully")
+            }
+        }
+
+        userViewModel.confirmPasscodeResult.observe(viewLifecycleOwner) {
             when (it) {
                 is BaseResponse.Loading -> {
                     showLoading()
@@ -63,7 +67,7 @@ class RequestResetPasswordFragment : Fragment() {
 
                 is BaseResponse.Success -> {
                     stopLoading()
-                    goToConfirmation()
+                    goToResetPasswordFragment()
                 }
 
                 is BaseResponse.Error -> {
@@ -80,25 +84,29 @@ class RequestResetPasswordFragment : Fragment() {
     }
 
     private fun showLoading() {
-        fragmentRequestResetPasswordBinding.progressBarLayout.visibility = View.VISIBLE
+        fragmentConfirmPasscodeBinding.progressBarLayout.visibility = View.VISIBLE
     }
 
     private fun stopLoading() {
-        fragmentRequestResetPasswordBinding.progressBarLayout.visibility = View.GONE
+        fragmentConfirmPasscodeBinding.progressBarLayout.visibility = View.GONE
     }
 
     private fun processError(msg: String?) {
         showToast("Error: $msg")
     }
 
+    private fun process(msg: String?) {
+        showToast("$msg")
+    }
+
     private fun showToast(msg: String) {
         Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
     }
 
-    private fun goToConfirmation() {
+    private fun goToResetPasswordFragment() {
         fragmentManager.commit {
             setReorderingAllowed(true)
-            replace<ConfirmPasscodeFragment>(R.id.fragment_container_view)
+            replace<ResetPasswordFragment>(R.id.fragment_container_view)
             addToBackStack(null)
         }
     }

@@ -48,9 +48,28 @@ data class RegisterResponse(
     )
 }
 
-data class LogoutResponse(
+data class CustomResponse(
     @SerializedName("status")
     var status: String,
     @SerializedName("message")
     var message: String,
+)
+
+data class ResetPasswordRequest(
+    @SerializedName("email")
+    var email: String,
+)
+
+data class ConFirmPasscode(
+    @SerializedName("email")
+    var email: String,
+    @SerializedName("passcode")
+    var passcode: String,
+)
+
+data class ResetPassword(
+    @SerializedName("newPassword")
+    var password: String,
+    @SerializedName("email")
+    var email: String,
 )

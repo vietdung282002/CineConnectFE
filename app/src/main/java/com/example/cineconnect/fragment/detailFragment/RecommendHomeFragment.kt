@@ -21,12 +21,13 @@ import com.example.cineconnect.viewmodel.ReviewViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class RecommendHomeFragment(private val parentId: Int) : Fragment(), OnReviewClicked,
+class RecommendHomeFragment() : Fragment(), OnReviewClicked,
     OnMovieClicked {
     private lateinit var fragmentRecommendHomeBinding: FragmentRecommendHomeBinding
     private val reviewViewModel: ReviewViewModel by viewModels()
     private val reviewAdapter = ReviewPagingSearchAdapter()
     private var token: String? = null
+    private var parentId = -1
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,6 +36,10 @@ class RecommendHomeFragment(private val parentId: Int) : Fragment(), OnReviewCli
         // Inflate the layout for this fragment
         fragmentRecommendHomeBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_recommend_home, container, false)
+        arguments?.let {
+            parentId = it.getInt(Utils.CONTAINER_ID)
+
+        }
         token = "Token " + SessionManager.getToken(requireContext())
         reviewViewModel.getRecommendReviewList(token!!)
         return fragmentRecommendHomeBinding.root
@@ -44,6 +49,11 @@ class RecommendHomeFragment(private val parentId: Int) : Fragment(), OnReviewCli
         super.onViewCreated(view, savedInstanceState)
         reviewAdapter.setOnReviewListener(this)
         reviewAdapter.setOnMovieListener(this)
+
+        fragmentRecommendHomeBinding.container.setOnRefreshListener {
+            reviewViewModel.getRecommendReviewList(token!!)
+        }
+
         fragmentRecommendHomeBinding.rvReview.adapter = reviewAdapter
         viewLifecycleOwner.lifecycleScope.launch {
             reviewViewModel.reviewState.collectLatest { state ->
@@ -54,6 +64,8 @@ class RecommendHomeFragment(private val parentId: Int) : Fragment(), OnReviewCli
 
                     is BaseResponse.Success -> {
                         stopLoading()
+                        fragmentRecommendHomeBinding.container.isRefreshing = false
+
                         state.data?.let { pagingData ->
                             reviewAdapter.submitData(pagingData)
                         }
@@ -78,7 +90,7 @@ class RecommendHomeFragment(private val parentId: Int) : Fragment(), OnReviewCli
 
         val fragmentManager = requireActivity().supportFragmentManager
         fragmentManager.beginTransaction()
-            .add(parentId, reviewDetailFragment)
+            .replace(parentId, reviewDetailFragment)
             .addToBackStack(null)
             .commit()
 
@@ -94,7 +106,7 @@ class RecommendHomeFragment(private val parentId: Int) : Fragment(), OnReviewCli
 
         val fragmentManager = requireActivity().supportFragmentManager
         fragmentManager.beginTransaction()
-            .add(parentId, movieDetailFragment)
+            .replace(parentId, movieDetailFragment)
             .addToBackStack(null)
             .commit()
     }

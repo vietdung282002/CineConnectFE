@@ -23,13 +23,12 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class PeopleSearchFragment(
-    private val query: String,
-    private val parentId: Int
 ) : Fragment(), OnPersonClicked {
     private lateinit var fragmentPeopleSearchBinding: FragmentPeopleSearchBinding
     private val personAdapter = PersonPagingAdapter()
     private val personViewModel: PersonViewModel by viewModels()
-
+    private var parentId = -1
+    private var query = ""
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -37,6 +36,10 @@ class PeopleSearchFragment(
         // Inflate the layout for this fragment
         fragmentPeopleSearchBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_people_search, container, false)
+        arguments?.let {
+            parentId = it.getInt(Utils.CONTAINER_ID)
+            query = it.getString(Utils.QUERY, "")
+        }
         personViewModel.searchPeople(query)
         return fragmentPeopleSearchBinding.root
     }

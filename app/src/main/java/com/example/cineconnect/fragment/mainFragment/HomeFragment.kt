@@ -8,8 +8,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.example.cineconnect.R
-import com.example.cineconnect.adapter.HomePagerAdapter
 import com.example.cineconnect.databinding.FragmentHomeBinding
+import com.example.cineconnect.pagerAdapter.HomePagerAdapter
 
 
 class HomeFragment : Fragment() {
@@ -32,7 +32,8 @@ class HomeFragment : Fragment() {
 
         container = (view.parent as ViewGroup).id
         viewPager = fragmentHomeBinding.viewPager
-        homePagerAdapter = activity?.let { HomePagerAdapter(it, container) }!!
+        homePagerAdapter =
+            activity?.let { HomePagerAdapter(childFragmentManager, lifecycle, container) }!!
         viewPager.adapter = homePagerAdapter
         val tabBar = fragmentHomeBinding.tabBar
         tabBar.attachTo(viewPager)

@@ -25,12 +25,13 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class ReviewSearchFragment(
-    private val query: String,
-    private val parentId: Int
+
 ) : Fragment(), OnReviewClicked, OnMovieClicked {
     private lateinit var fragmentReviewSarchBinding: FragmentReviewSearchBinding
     private val reviewAdapter = ReviewPagingSearchAdapter()
     private val reviewViewModel: ReviewViewModel by viewModels()
+    private var parentId = -1
+    private var query = ""
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -38,7 +39,12 @@ class ReviewSearchFragment(
         // Inflate the layout for this fragment
         fragmentReviewSarchBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_review_search, container, false)
+        arguments?.let {
+            parentId = it.getInt(Utils.CONTAINER_ID)
+            query = it.getString(Utils.QUERY, "")
+        }
         reviewViewModel.getSearchReviewList(query)
+
         return fragmentReviewSarchBinding.root
     }
 

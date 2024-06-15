@@ -1,5 +1,6 @@
 package com.example.cineconnect.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -7,8 +8,10 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.example.cineconnect.model.Comment
+import com.example.cineconnect.model.CommentRequest
 import com.example.cineconnect.model.Review
 import com.example.cineconnect.model.ReviewList
+import com.example.cineconnect.model.ReviewRequest
 import com.example.cineconnect.network.BaseResponse
 import com.example.cineconnect.paging.CommentPagingSource
 import com.example.cineconnect.paging.ReviewPagingSource
@@ -22,6 +25,10 @@ import kotlinx.coroutines.launch
 class ReviewViewModel : ViewModel() {
     private val reviewRepository = ReviewRepository()
     val reviewResult: MutableLiveData<BaseResponse<Review>> = MutableLiveData()
+    val editReviewResult: MutableLiveData<BaseResponse<Unit>> = MutableLiveData()
+    val getCommentResult: MutableLiveData<BaseResponse<Comment>> = MutableLiveData()
+    val editCommentResult: MutableLiveData<BaseResponse<Unit>> = MutableLiveData()
+
     private val _commentState =
         MutableStateFlow<BaseResponse<PagingData<Comment>>>(BaseResponse.Loading())
     val commentState: StateFlow<BaseResponse<PagingData<Comment>>> = _commentState
@@ -32,6 +39,16 @@ class ReviewViewModel : ViewModel() {
 
     val likeState: MutableLiveData<Boolean?> = MutableLiveData()
     val numberOfLike: MutableLiveData<Int> = MutableLiveData()
+    val comment: MutableLiveData<String> = MutableLiveData()
+    val commentResult: MutableLiveData<BaseResponse<Unit>> = MutableLiveData()
+
+    val reviewContent: MutableLiveData<String> = MutableLiveData()
+    val editContent: MutableLiveData<String> = reviewContent
+    val commentContent: MutableLiveData<String> = MutableLiveData()
+    val editCommentContent: MutableLiveData<String> = commentContent
+    val userDetail: MutableLiveData<String> = MutableLiveData()
+    val movieId: MutableLiveData<Int> = MutableLiveData()
+    val reviewId: MutableLiveData<Int> = MutableLiveData()
 
     fun getReview(token: String?, id: Int) {
         reviewResult.value = BaseResponse.Loading()
@@ -43,6 +60,27 @@ class ReviewViewModel : ViewModel() {
                     reviewResult.value = BaseResponse.Success(response.body())
                     likeState.value = response.body()?.isLiked
                     numberOfLike.value = response.body()?.likesCount
+                    reviewContent.value = response.body()?.content
+                    movieId.value = response.body()?.movie?.id
+                    reviewId.value = response.body()?.id
+                } else {
+                    reviewResult.value = BaseResponse.Error(response.message())
+                }
+            } catch (e: Exception) {
+                reviewResult.value = BaseResponse.Error(e.message)
+            }
+        }
+    }
+
+    fun getComment(id: Int) {
+        getCommentResult.value = BaseResponse.Loading()
+        viewModelScope.launch {
+            try {
+                val response = reviewRepository.getComment(id)
+
+                if (response.isSuccessful) {
+                    getCommentResult.value = BaseResponse.Success(response.body())
+                    commentContent.value = response.body()?.comment
                 } else {
                     reviewResult.value = BaseResponse.Error(response.message())
                 }
@@ -130,6 +168,101 @@ class ReviewViewModel : ViewModel() {
             if (response.isSuccessful) {
                 likeState.value = response.body()?.result?.like
                 numberOfLike.value = response.body()?.result?.numberOfLike
+            }
+        }
+    }
+
+    fun comment(token: String, reviewId: Int) {
+        viewModelScope.launch {
+            try {
+                val commentRequest = CommentRequest(
+                    review = reviewId, comment = comment.value.toString()
+                )
+                Log.d("LOG_TAG_MAIN", commentRequest.toString())
+                val response = reviewRepository.comment(token, commentRequest)
+                Log.d("LOG_TAG_MAIN", response.toString())
+                if (response.isSuccessful) {
+                    comment.value = ""
+                    commentResult.value = BaseResponse.Success(Unit)
+                } else {
+                    commentResult.value = BaseResponse.Error(response.message())
+                }
+            } catch (e: Exception) {
+                commentResult.value = BaseResponse.Error(e.message)
+            }
+
+        }
+    }
+
+    fun editReview(token: String, content: String) {
+        editReviewResult.value = BaseResponse.Loading()
+        viewModelScope.launch {
+            try {
+                val reviewRequest = ReviewRequest(
+                    movie = movieId.value!!, content = content
+                )
+                val response = reviewRepository.editReview(token, reviewId.value!!, reviewRequest)
+                if (response.isSuccessful) {
+                    editReviewResult.value = BaseResponse.Success()
+                } else {
+                    editReviewResult.value = BaseResponse.Error(response.message())
+                }
+            } catch (e: Exception) {
+                editReviewResult.value = BaseResponse.Error(e.message)
+            }
+        }
+    }
+
+    fun editComment(token: String, content: String, commentId: Int, reviewId: Int) {
+        editCommentResult.value = BaseResponse.Loading()
+        viewModelScope.launch {
+            Log.d("LOG_TAG_MAIN", commentId.toString())
+            val commentRequest = CommentRequest(
+                review = reviewId, comment = content
+            )
+            Log.d("LOG_TAG_MAIN", commentRequest.toString())
+            try {
+                val response = reviewRepository.editComment(token, commentRequest, commentId)
+                Log.d("LOG_TAG_MAIN", response.toString())
+                if (response.isSuccessful) {
+                    editCommentResult.value = BaseResponse.Success()
+                } else {
+                    editCommentResult.value = BaseResponse.Error(response.message())
+                }
+            } catch (e: Exception) {
+                editCommentResult.value = BaseResponse.Error(e.message)
+            }
+        }
+    }
+
+    fun deleteReview(token: String) {
+        editReviewResult.value = BaseResponse.Loading()
+        viewModelScope.launch {
+            try {
+                val response = reviewRepository.deleteReview(token, reviewId.value!!)
+                if (response.isSuccessful) {
+                    editReviewResult.value = BaseResponse.Success()
+                } else {
+                    editReviewResult.value = BaseResponse.Error(response.message())
+                }
+            } catch (e: Exception) {
+                editReviewResult.value = BaseResponse.Error(e.message)
+            }
+        }
+    }
+
+    fun deleteComment(token: String, commentId: Int) {
+        editCommentResult.value = BaseResponse.Loading()
+        viewModelScope.launch {
+            try {
+                val response = reviewRepository.deleteComment(token, commentId)
+                if (response.isSuccessful) {
+                    editCommentResult.value = BaseResponse.Success()
+                } else {
+                    editCommentResult.value = BaseResponse.Error(response.message())
+                }
+            } catch (e: Exception) {
+                editCommentResult.value = BaseResponse.Error(e.message)
             }
         }
     }

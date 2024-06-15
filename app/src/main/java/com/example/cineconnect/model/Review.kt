@@ -16,6 +16,16 @@ data class Review(
     @SerializedName("time_stamp") val timeStamp: String
 )
 
+data class ReviewRequest(
+    @SerializedName("movie") val movie: Int,
+    @SerializedName("content") val content: String,
+)
+
+data class ReviewResponse(
+    @SerializedName("status") val status: String,
+    @SerializedName("message") val message: ReviewRequest
+)
+
 data class LikeResponse(
     @SerializedName("status") val status: String,
     @SerializedName("result") val result: Like
@@ -26,3 +36,10 @@ data class Like(
     @SerializedName("like") val like: Boolean,
     @SerializedName("number_of_like") val numberOfLike: Int
 )
+
+
+data class CommentRequest(
+    @SerializedName("review") val review: Int,
+    @SerializedName("comment") val comment: String
+)
+

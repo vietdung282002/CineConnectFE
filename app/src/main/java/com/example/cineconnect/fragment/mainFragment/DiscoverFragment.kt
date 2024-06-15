@@ -47,8 +47,13 @@ class DiscoverFragment : Fragment(), OnMovieClicked {
             inflater,
             R.layout.fragment_discover, container, false
         )
-        movieViewmodel.getMovieList(currentPage)
         return fragmentDiscoverBinding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        movieViewmodel.getMovieList(currentPage)
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -60,6 +65,9 @@ class DiscoverFragment : Fragment(), OnMovieClicked {
         fragmentDiscoverBinding.rvMovie.adapter = movieListAdapter
         fragmentDiscoverBinding.rvMovie.setHasFixedSize(true)
 
+        fragmentDiscoverBinding.container.setOnRefreshListener {
+            movieViewmodel.getMovieList(currentPage)
+        }
 
         movieViewmodel.movieListResult.observe(viewLifecycleOwner) {
             when (it) {
@@ -68,6 +76,7 @@ class DiscoverFragment : Fragment(), OnMovieClicked {
                 }
 
                 is BaseResponse.Success -> {
+                    fragmentDiscoverBinding.container.isRefreshing = false
                     stopLoading()
                     updateUI(it.data)
                 }
@@ -99,7 +108,7 @@ class DiscoverFragment : Fragment(), OnMovieClicked {
         val containerId = (view?.parent as? ViewGroup)?.id
         if (containerId != null) {
             fragmentManager.beginTransaction()
-                .add(containerId, movieDetailFragment)
+                .replace(containerId, movieDetailFragment)
                 .addToBackStack(null)
                 .commit()
         }

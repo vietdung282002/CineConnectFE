@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.BundleCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.example.cineconnect.R
@@ -12,13 +13,36 @@ import com.example.cineconnect.databinding.FragmentCastListBinding
 import com.example.cineconnect.fragment.detailFragment.PersonDetailFragment
 import com.example.cineconnect.model.CastList
 import com.example.cineconnect.onClickInterface.OnPersonClicked
+import com.example.cineconnect.utils.Utils
+import com.example.cineconnect.utils.Utils.Companion.ARG_LIST
 import com.example.cineconnect.utils.Utils.Companion.PERSON_ID
 
-class CastListFragment(private val castList: List<CastList>, private val parentId: Int) :
+class CastListFragment() :
     Fragment(), OnPersonClicked {
     private lateinit var fragmentCastListBinding: FragmentCastListBinding
     private lateinit var castListAdapter: CastListAdapter
+    private var castList: ArrayList<CastList>? = null
+    private var parentId: Int = -1
 
+    companion object {
+
+        @JvmStatic
+        fun newInstance(parentIds: Int, list: ArrayList<CastList>) =
+            CastListFragment().apply {
+                arguments = Bundle().apply {
+                    putParcelableArrayList(ARG_LIST, list)
+                    putInt(Utils.CONTAINER_ID, parentIds)
+                }
+            }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            castList = BundleCompat.getParcelableArrayList(it, ARG_LIST, CastList::class.java)
+            parentId = it.getInt(Utils.CONTAINER_ID)
+        }
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -39,7 +63,7 @@ class CastListFragment(private val castList: List<CastList>, private val parentI
         fragmentCastListBinding.rvCastList.adapter = castListAdapter
         fragmentCastListBinding.rvCastList.setHasFixedSize(true)
 
-        castListAdapter.submitList(castList)
+        castListAdapter.submitList(castList?.toList())
     }
 
     override fun getOnPersonClicked(position: Int, personId: Int) {

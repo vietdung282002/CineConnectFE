@@ -13,11 +13,12 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.example.cineconnect.R
-import com.example.cineconnect.adapter.ViewPagerAdapter
 import com.example.cineconnect.databinding.FragmentMovieDetailBinding
+import com.example.cineconnect.fragment.bottomSheet.MovieDetailBottomSheetFragment
 import com.example.cineconnect.model.Movie
 import com.example.cineconnect.model.Rating
 import com.example.cineconnect.network.BaseResponse
+import com.example.cineconnect.pagerAdapter.ViewPagerAdapter
 import com.example.cineconnect.utils.SessionManager
 import com.example.cineconnect.utils.Utils
 import com.example.cineconnect.utils.Utils.Companion.BACKDROP_LINK
@@ -43,7 +44,7 @@ class MovieDetailFragment : Fragment() {
     private var containerId = -1
     private lateinit var fragmentManager: FragmentManager
     private var token: String? = null
-
+    private lateinit var bottomSheetFragment: MovieDetailBottomSheetFragment
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -83,6 +84,9 @@ class MovieDetailFragment : Fragment() {
 
         fragmentManager = activity?.supportFragmentManager!!
 
+        fragmentMovieDetailBinding.viewModel = movieViewmodel
+        fragmentMovieDetailBinding.lifecycleOwner = viewLifecycleOwner
+
 
         movieViewmodel.movieResult.observe(viewLifecycleOwner) { response ->
             when (response) {
@@ -106,6 +110,7 @@ class MovieDetailFragment : Fragment() {
             }
         }
 
+
     }
 
     private fun updateUI(movieObj: Movie) {
@@ -113,8 +118,6 @@ class MovieDetailFragment : Fragment() {
         val ratingObj = movieObj.rating
         val castList = movieObj.casts.toList()
         val genreList = movieObj.genres.toList()
-
-
 
         fragmentMovieDetailBinding.apply {
             if (token == null) {
@@ -143,10 +146,9 @@ class MovieDetailFragment : Fragment() {
                 fragmentManager.popBackStack()
             }
             moreBtn.setOnClickListener {
-
+                bottomSheetFragment = MovieDetailBottomSheetFragment()
+                bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
             }
-            tvReleaseDate.text = movieObj.releaseDate.take(4)
-            tvDirectorName.text = directorObj.name
             tvDirectorName.setOnClickListener {
                 val bundle = Bundle()
                 bundle.putInt(Utils.PERSON_ID, directorObj.id)
@@ -158,20 +160,17 @@ class MovieDetailFragment : Fragment() {
                 val containerId = (view?.parent as? ViewGroup)?.id
                 if (containerId != null) {
                     fragmentManager.beginTransaction()
-                        .add(containerId, personDetailFragment)
+                        .replace(containerId, personDetailFragment)
                         .addToBackStack(null)
                         .commit()
                 }
 
             }
-            tvRuntime.text = movieObj.runtime.toString() + " mins"
             Glide.with(this@MovieDetailFragment)
                 .load(POSTER_LINK + movieObj.posterPath)
                 .placeholder(R.drawable.loading_image)
                 .error(R.drawable.try_later)
                 .into(moviePoster)
-            tvTagline.text = movieObj.tagline
-            overviewText.text = movieObj.overview
             overviewText.setOnClickListener {
                 if (isExpanded) {
                     overviewText.maxLines = 3
@@ -185,15 +184,6 @@ class MovieDetailFragment : Fragment() {
 
 
 
-            tvNumberOfLikes.apply {
-                text = movieObj.favouriteCount.toString()
-            }
-            tvNumberOfReviews.apply {
-                text = movieObj.reviewCount.toString()
-            }
-
-            tvAvrRating.text = ratingObj.avr.rateAvg.toString()
-
             likedList.setOnClickListener {
                 val bundle = Bundle()
                 bundle.putInt(MOVIE_ID, movieObj.id)
@@ -203,7 +193,7 @@ class MovieDetailFragment : Fragment() {
                     arguments = bundle
                 }
                 fragmentManager.beginTransaction()
-                    .add(containerId, favouriteListFragment)
+                    .replace(containerId, favouriteListFragment)
                     .addToBackStack(null)
                     .commit()
             }
@@ -217,14 +207,22 @@ class MovieDetailFragment : Fragment() {
                     arguments = bundle
                 }
                 fragmentManager.beginTransaction()
-                    .add(containerId, reviewListOfMovieFragment)
+                    .replace(containerId, reviewListOfMovieFragment)
                     .addToBackStack(null)
                     .commit()
             }
 
 
         }
-        vpAdapter = activity?.let { ViewPagerAdapter(it, castList, genreList, containerId) }!!
+        vpAdapter = activity?.let {
+            ViewPagerAdapter(
+                childFragmentManager,
+                lifecycle,
+                castList,
+                genreList,
+                containerId
+            )
+        }!!
 
         val viewPager = fragmentMovieDetailBinding.viewPager
         viewPager.adapter = vpAdapter

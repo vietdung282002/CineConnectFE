@@ -19,7 +19,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 class ChangePasswordFragment : Fragment() {
     private lateinit var fragmentChangePasswordBinding: FragmentChangePasswordBinding
     private val userViewModel: UserViewModel by viewModels(
-        { requireParentFragment() }
+        { requireParentFragment().requireParentFragment() }
     )
     private var token: String? = null
 

@@ -68,6 +68,7 @@ class MovieListFragment : Fragment(), OnMovieClicked {
         return fragmentMovieListBinding.root
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -117,7 +118,7 @@ class MovieListFragment : Fragment(), OnMovieClicked {
         val containerId = (view?.parent as? ViewGroup)?.id
         if (containerId != null) {
             fragmentManager.beginTransaction()
-                .add(containerId, movieDetailFragment)
+                .replace(containerId, movieDetailFragment)
                 .addToBackStack(null)
                 .commit()
         }
@@ -193,7 +194,20 @@ class MovieListFragment : Fragment(), OnMovieClicked {
         button.setPadding(0, 0, 0, 0)
         button.setOnClickListener {
             currentPage = page
-            genreId?.let { it1 -> movieViewModel.getMovieListByGenre(currentPage, it1) }
+            when (type) {
+                1 -> {
+                    genreId?.let { movieViewModel.getMovieListByGenre(currentPage, it) }
+                }
+
+                2 -> {
+                    userId?.let { movieViewModel.getUserFavoriteMovie(currentPage, it) }
+                }
+
+                else -> {
+                    userId?.let { movieViewModel.getUserWatchedMovie(currentPage, it) }
+
+                }
+            }
         }
         if (page == currentPage) {
             button.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.checked))
@@ -237,7 +251,20 @@ class MovieListFragment : Fragment(), OnMovieClicked {
         button.setOnClickListener {
             if (currentPage > 1) {
                 currentPage -= 1
-                genreId?.let { it1 -> movieViewModel.getMovieListByGenre(currentPage, it1) }
+                when (type) {
+                    1 -> {
+                        genreId?.let { movieViewModel.getMovieListByGenre(currentPage, it) }
+                    }
+
+                    2 -> {
+                        userId?.let { movieViewModel.getUserFavoriteMovie(currentPage, it) }
+                    }
+
+                    else -> {
+                        userId?.let { movieViewModel.getUserWatchedMovie(currentPage, it) }
+
+                    }
+                }
             }
         }
 
@@ -270,7 +297,20 @@ class MovieListFragment : Fragment(), OnMovieClicked {
         button.setOnClickListener {
             if (currentPage < totalPages) {
                 currentPage += 1
-                genreId?.let { it1 -> movieViewModel.getMovieListByGenre(currentPage, it1) }
+                when (type) {
+                    1 -> {
+                        genreId?.let { movieViewModel.getMovieListByGenre(currentPage, it) }
+                    }
+
+                    2 -> {
+                        userId?.let { movieViewModel.getUserFavoriteMovie(currentPage, it) }
+                    }
+
+                    else -> {
+                        userId?.let { movieViewModel.getUserWatchedMovie(currentPage, it) }
+
+                    }
+                }
             }
         }
 

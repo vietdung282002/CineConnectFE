@@ -1,7 +1,10 @@
 package com.example.cineconnect.model
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class CastList(
     @SerializedName("id") val id: Int,
     @SerializedName("adult") val adult: Boolean,
@@ -12,7 +15,7 @@ data class CastList(
     @SerializedName("profile_path") val profilePath: String?,
     @SerializedName("character") val character: String,
     @SerializedName("order") val order: Int
-)
+) : Parcelable
 
 data class DirectorList(
     @SerializedName("id") val id: Int,

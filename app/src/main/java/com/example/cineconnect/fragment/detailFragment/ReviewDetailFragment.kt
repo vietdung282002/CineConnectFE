@@ -1,5 +1,6 @@
 package com.example.cineconnect.fragment.detailFragment
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,8 +16,12 @@ import com.bumptech.glide.Glide
 import com.example.cineconnect.R
 import com.example.cineconnect.adapter.CommentPagingAdapter
 import com.example.cineconnect.databinding.FragmentReviewDetailBinding
+import com.example.cineconnect.fragment.bottomSheet.EditCommentFragment
+import com.example.cineconnect.fragment.bottomSheet.ReviewOptionFragment
 import com.example.cineconnect.model.Review
 import com.example.cineconnect.network.BaseResponse
+import com.example.cineconnect.onClickInterface.DeleteReviewListener
+import com.example.cineconnect.onClickInterface.OptionsMenuClickListener
 import com.example.cineconnect.utils.SessionManager
 import com.example.cineconnect.utils.Utils
 import com.example.cineconnect.viewmodel.ReviewViewModel
@@ -24,7 +29,7 @@ import com.example.cineconnect.viewmodel.UserViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class ReviewDetailFragment : Fragment() {
+class ReviewDetailFragment : Fragment(), DeleteReviewListener, OptionsMenuClickListener {
     private lateinit var fragmentReviewDetailBinding: FragmentReviewDetailBinding
     private val reviewViewModel: ReviewViewModel by viewModels()
     private val userViewModel: UserViewModel by viewModels()
@@ -34,6 +39,8 @@ class ReviewDetailFragment : Fragment() {
     private var date: String = ""
     private var token: String? = null
     private var userId: Int = -1
+    private lateinit var reviewOptionFragment: ReviewOptionFragment
+    private lateinit var editCommentFragment: EditCommentFragment
 
 
     override fun onCreateView(
@@ -61,6 +68,9 @@ class ReviewDetailFragment : Fragment() {
 
         fragmentManager = activity?.supportFragmentManager!!
 
+        fragmentReviewDetailBinding.viewModel = reviewViewModel
+        fragmentReviewDetailBinding.lifecycleOwner = viewLifecycleOwner
+
         val displayMetrics = requireContext().resources.displayMetrics
         val screenHeight = displayMetrics.heightPixels
         val screenWidth = displayMetrics.widthPixels
@@ -82,9 +92,9 @@ class ReviewDetailFragment : Fragment() {
         reviewViewModel.likeState.observe(viewLifecycleOwner) {
             if (it != null) {
                 if (it) {
-                    fragmentReviewDetailBinding.likeBtn.setImageResource(R.drawable.baseline_favorite_24_red)
+                    fragmentReviewDetailBinding.likeBtn.setImageResource(R.drawable.baseline_thumb_up_alt_24)
                 } else {
-                    fragmentReviewDetailBinding.likeBtn.setImageResource(R.drawable.baseline_favorite_border_24)
+                    fragmentReviewDetailBinding.likeBtn.setImageResource(R.drawable.baseline_thumb_up_off_alt_24)
                 }
             }
         }
@@ -93,6 +103,7 @@ class ReviewDetailFragment : Fragment() {
         reviewViewModel.numberOfLike.observe(viewLifecycleOwner) {
             fragmentReviewDetailBinding.tvNumberOfLike.text = it.toString()
         }
+
 
         reviewViewModel.reviewResult.observe(viewLifecycleOwner) { response ->
             when (response) {
@@ -116,6 +127,7 @@ class ReviewDetailFragment : Fragment() {
             }
         }
         fragmentReviewDetailBinding.rvComment.adapter = commentAdapter
+        commentAdapter.setOptionsMenuClickListener(this)
         viewLifecycleOwner.lifecycleScope.launch {
             reviewViewModel.commentState.collectLatest { state ->
                 when (state) {
@@ -134,22 +146,41 @@ class ReviewDetailFragment : Fragment() {
                         stopLoading()
                         processError(state.msg)
                     }
+
                 }
             }
         }
 
-        userViewModel.userResult.observe(viewLifecycleOwner) { response ->
 
-            if (response is BaseResponse.Success) {
-                response.data?.let { user ->
-                    Glide.with(requireContext()).load(Utils.PROFILE_LINK + user.profilePic)
-                        .placeholder(R.drawable.loading_image).error(R.drawable.try_later)
-                        .into(fragmentReviewDetailBinding.currentUserImage)
-                }
-
+        reviewViewModel.comment.observe(viewLifecycleOwner) {
+            if (it.isNotEmpty()) {
+                fragmentReviewDetailBinding.sendBtn.visibility = View.VISIBLE
+            } else {
+                fragmentReviewDetailBinding.sendBtn.visibility = View.GONE
             }
-
         }
+
+        reviewViewModel.commentResult.observe(viewLifecycleOwner) {
+            if (it is BaseResponse.Success) {
+                reviewViewModel.getReviewCommentList(reviewId)
+            } else if (it is BaseResponse.Error) {
+                processError(it.msg)
+            }
+        }
+
+        fragmentReviewDetailBinding.sendBtn.setOnClickListener {
+            if (fragmentReviewDetailBinding.sendBtn.isClickable) {
+                token?.let { token -> reviewViewModel.comment(token, reviewId) }
+            }
+        }
+
+        userViewModel.profilePicture.observe(viewLifecycleOwner) {
+            Glide.with(requireContext()).load(Utils.USER_PROFILE_LINK + it)
+                .placeholder(R.drawable.loading_image).error(R.drawable.try_later)
+                .into(fragmentReviewDetailBinding.currentUserImage)
+        }
+
+        reviewOptionFragment = ReviewOptionFragment()
 
     }
 
@@ -168,7 +199,7 @@ class ReviewDetailFragment : Fragment() {
                 .into(ivBackdropImage)
             Glide.with(requireContext()).load(Utils.POSTER_LINK + review.movie.posterPath)
                 .placeholder(R.drawable.loading_image).error(R.drawable.try_later).into(posterImage)
-            Glide.with(requireContext()).load(Utils.PROFILE_LINK + review.user.profilePic)
+            Glide.with(requireContext()).load(Utils.USER_PROFILE_LINK + review.user.profilePic)
                 .placeholder(R.drawable.loading_image).error(R.drawable.try_later).into(userImage)
             val htmlText =
                 "<font color='#FFFFFFFF'>${review.user.username} </font>  <font color='#9F9A9A'>${
@@ -185,7 +216,7 @@ class ReviewDetailFragment : Fragment() {
                 val fragmentManager = requireActivity().supportFragmentManager
                 if (containerId != null) {
                     fragmentManager.beginTransaction()
-                        .add(containerId, userDetailFragment)
+                        .replace(containerId, userDetailFragment)
                         .addToBackStack(null)
                         .commit()
                 }
@@ -205,7 +236,7 @@ class ReviewDetailFragment : Fragment() {
                     val movieDetailFragment = MovieDetailFragment().apply {
                         arguments = movieBundle
                     }
-                    fragmentManager.beginTransaction().add(containerId, movieDetailFragment)
+                    fragmentManager.beginTransaction().replace(containerId, movieDetailFragment)
                         .addToBackStack(null).commit()
                 }
             }
@@ -214,7 +245,7 @@ class ReviewDetailFragment : Fragment() {
                     val movieDetailFragment = MovieDetailFragment().apply {
                         arguments = movieBundle
                     }
-                    fragmentManager.beginTransaction().add(containerId, movieDetailFragment)
+                    fragmentManager.beginTransaction().replace(containerId, movieDetailFragment)
                         .addToBackStack(null).commit()
                 }
             }
@@ -226,7 +257,6 @@ class ReviewDetailFragment : Fragment() {
                 ratingBar.rating = review.rating
                 ratingBar.visibility = View.VISIBLE
             }
-            content.text = review.content
             tvNumberOfLike.text = review.likesCount.toString()
 
             likeBtn.setOnClickListener {
@@ -234,6 +264,13 @@ class ReviewDetailFragment : Fragment() {
             }
 
             watchedDay.text = date
+            if (review.user.id == userId) {
+                moreBtn.visibility = View.VISIBLE
+                moreBtn.setOnClickListener {
+                    reviewOptionFragment.setDeleteReviewListener(this@ReviewDetailFragment)
+                    reviewOptionFragment.show(childFragmentManager, reviewOptionFragment.tag)
+                }
+            }
         }
     }
 
@@ -252,4 +289,59 @@ class ReviewDetailFragment : Fragment() {
     private fun showToast(msg: String) {
         Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
     }
+
+    override fun onDeleted() {
+        fragmentManager.popBackStack()
+    }
+
+    override fun onDeleteClicked(position: Int, commentId: Int) {
+        token?.let { reviewViewModel.deleteComment(it, commentId) }
+        val inflater = requireActivity().layoutInflater
+        val dialogView = inflater.inflate(R.layout.dialog_progress, null)
+        val progressDialogBuilder = AlertDialog.Builder(requireContext())
+        progressDialogBuilder.setView(dialogView)
+        progressDialogBuilder.setCancelable(false)
+
+        val progressDialog = progressDialogBuilder.create()
+        progressDialog.show()
+
+        reviewViewModel.editCommentResult.observe(viewLifecycleOwner) { response ->
+            when (response) {
+                is BaseResponse.Loading -> {
+                    progressDialog.show()
+                }
+
+                is BaseResponse.Success -> {
+                    progressDialog.dismiss()
+                    AlertDialog.Builder(requireContext())
+                        .setTitle("Success")
+                        .setMessage("comment deleted successfully.")
+                        .setPositiveButton("OK") { _, _ -> }
+                        .show()
+
+                    reviewViewModel.getReviewCommentList(reviewId)
+
+                }
+
+                else -> {
+                    progressDialog.dismiss()
+                    AlertDialog.Builder(requireContext())
+                        .setTitle("Error")
+                        .setMessage("Failed to delete comment.")
+                        .setPositiveButton("OK") { _, _ -> }
+                        .show()
+                }
+            }
+        }
+    }
+
+    override fun onEditClicked(position: Int, commentId: Int) {
+        editCommentFragment = EditCommentFragment()
+        val bundle = Bundle()
+        bundle.putInt(Utils.COMMENT_ID, commentId)
+        bundle.putInt(Utils.REVIEW_ID, reviewId)
+        editCommentFragment.arguments = bundle
+        editCommentFragment.show(childFragmentManager, editCommentFragment.tag)
+    }
+
 }

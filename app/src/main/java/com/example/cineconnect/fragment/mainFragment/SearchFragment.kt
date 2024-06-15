@@ -11,9 +11,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.example.cineconnect.R
-import com.example.cineconnect.adapter.SearchViewPagerAdapter
+import com.example.cineconnect.customLayout.CustomTabBar
 import com.example.cineconnect.databinding.FragmentSearchBinding
-import com.example.cineconnect.utils.Utils
+import com.example.cineconnect.pagerAdapter.SearchViewPagerAdapter
 import com.example.cineconnect.viewmodel.MovieViewModel
 
 
@@ -23,6 +23,7 @@ class SearchFragment : Fragment() {
     private val movieViewModel: MovieViewModel by viewModels()
     private var containerId = -1
     private lateinit var viewPager: ViewPager2
+    private lateinit var tabBar: CustomTabBar
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,26 +35,21 @@ class SearchFragment : Fragment() {
         return fragmentSearchBinding.root
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         containerId = (view.parent as? ViewGroup)?.id!!
 
         fragmentSearchBinding.cancelBtn.setOnClickListener {
             hideKeyboard()
-//            fragmentSearchBinding.searchTextInput.apply {
-//                clearFocus()
-//                text?.clear()
-//            }
-            val bundle = Bundle()
-            bundle.putInt(Utils.USER_ID, 3)
-
-            val userProfile = ProfileFragment().apply {
-                arguments = bundle
+            fragmentSearchBinding.searchTextInput.apply {
+                clearFocus()
+                text?.clear()
             }
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(containerId, userProfile)
-                .addToBackStack(null)
-                .commit()
+            fragmentSearchBinding.cancelBtn.visibility = View.GONE
+            fragmentSearchBinding.tabBar.visibility = View.GONE
+            fragmentSearchBinding.viewPager.visibility = View.GONE
+            fragmentSearchBinding.searchTextInput.text?.clear()
         }
 
         fragmentSearchBinding.apply {
@@ -78,9 +74,10 @@ class SearchFragment : Fragment() {
 
         }
         viewPager = fragmentSearchBinding.viewPager
-        searchViewPagerAdapter = activity?.let { SearchViewPagerAdapter(it) }!!
+        searchViewPagerAdapter =
+            activity?.let { SearchViewPagerAdapter(childFragmentManager, lifecycle) }!!
         viewPager.adapter = searchViewPagerAdapter
-        val tabBar = fragmentSearchBinding.tabBar
+        tabBar = fragmentSearchBinding.tabBar
         tabBar.attachTo(viewPager)
     }
 

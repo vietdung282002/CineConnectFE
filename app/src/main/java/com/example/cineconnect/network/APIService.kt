@@ -1,6 +1,9 @@
 package com.example.cineconnect.network
 
+import com.example.cineconnect.model.Comment
+import com.example.cineconnect.model.CommentRequest
 import com.example.cineconnect.model.CommentResponse
+import com.example.cineconnect.model.FavouriteResponse
 import com.example.cineconnect.model.FollowListResponse
 import com.example.cineconnect.model.FollowResponse
 import com.example.cineconnect.model.LikeResponse
@@ -9,22 +12,28 @@ import com.example.cineconnect.model.LoginResponse
 import com.example.cineconnect.model.LogoutResponse
 import com.example.cineconnect.model.Movie
 import com.example.cineconnect.model.MovieListResponse
+import com.example.cineconnect.model.MovieRequest
 import com.example.cineconnect.model.PeopleListResponse
 import com.example.cineconnect.model.Person
 import com.example.cineconnect.model.RatingRequest
 import com.example.cineconnect.model.RatingResponse
+import com.example.cineconnect.model.Recommend
 import com.example.cineconnect.model.RegisterRequest
 import com.example.cineconnect.model.RegisterResponse
 import com.example.cineconnect.model.Review
 import com.example.cineconnect.model.ReviewListResponse
+import com.example.cineconnect.model.ReviewRequest
+import com.example.cineconnect.model.ReviewResponse
 import com.example.cineconnect.model.UpdatePassword
 import com.example.cineconnect.model.UpdateResponse
 import com.example.cineconnect.model.UpdateUser
 import com.example.cineconnect.model.User
 import com.example.cineconnect.model.UserLikedMovieResponse
 import com.example.cineconnect.model.UserListResponse
+import com.example.cineconnect.model.WatchResponse
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Headers
@@ -288,5 +297,103 @@ interface APIService {
         @Query("page") page: Int,
         @Query("user") reviewId: Int
     ): Response<FollowListResponse>
+
+    @Headers(
+        "accept: application/json",
+    )
+    @POST("review/comment/")
+    suspend fun comment(
+        @Header("Authorization") token: String,
+        @Body commentRequest: CommentRequest
+    ): Response<UpdateResponse>
+
+    @Headers(
+        "Content-Type: application/json",
+        "accept: application/json",
+    )
+    @POST("watched/")
+    suspend fun watch(
+        @Header("Authorization") token: String,
+        @Body movieRequest: MovieRequest
+    ): Response<WatchResponse>
+
+    @Headers(
+        "Content-Type: application/json",
+        "accept: application/json",
+    )
+    @POST("favourite/")
+    suspend fun favourite(
+        @Header("Authorization") token: String,
+        @Body movieRequest: MovieRequest
+    ): Response<FavouriteResponse>
+
+    @Headers(
+        "Content-Type: application/json",
+        "accept: application/json",
+    )
+    @POST("review/")
+    suspend fun addReview(
+        @Header("Authorization") token: String,
+        @Body reviewRequest: ReviewRequest
+    ): Response<ReviewResponse>
+
+    @Headers(
+        "Content-Type: application/json",
+        "accept: application/json",
+    )
+    @PUT("review/{id}/")
+    suspend fun editReview(
+        @Header("Authorization") token: String,
+        @Body reviewRequest: ReviewRequest,
+        @Path("id") reviewId: Int
+    ): Response<ReviewRequest>
+
+    @Headers(
+        "accept: */*",
+    )
+    @DELETE("review/{id}/")
+    suspend fun deleteReview(
+        @Header("Authorization") token: String,
+        @Path("id") reviewId: Int
+    ): Response<Unit>
+
+    @Headers(
+        "accept: application/json",
+    )
+    @GET("review/comment/{id}/")
+    suspend fun getComment(
+        @Path("id") commentId: Int
+    ): Response<Comment>
+
+    @Headers(
+        "Content-Type: application/json",
+        "accept: application/json",
+    )
+    @PUT("review/comment/{id}/")
+    suspend fun editComment(
+        @Header("Authorization") token: String,
+        @Body commentRequest: CommentRequest,
+        @Path("id") commentId: Int
+    ): Response<CommentRequest>
+
+    @Headers(
+        "accept: */*",
+    )
+    @DELETE("review/comment/{id}/")
+    suspend fun deleteComment(
+        @Header("Authorization") token: String,
+        @Path("id") commentId: Int
+    ): Response<Unit>
+
+    @Headers(
+        "Content-Type: application/json",
+        "accept: application/json",
+    )
+    @POST("recommend/add/")
+    suspend fun addRecommend(
+        @Header("Authorization") token: String,
+        @Body recommend: Recommend,
+    ): Response<Unit>
+
 
 }

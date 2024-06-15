@@ -1,7 +1,6 @@
 package com.example.cineconnect.fragment.mainFragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.example.cineconnect.R
@@ -36,7 +36,9 @@ import kotlinx.coroutines.launch
 
 class ProfileFragment : Fragment(), OnReviewClicked, OnMovieClicked, BottomSheetListener {
     private lateinit var fragmentProfileBinding: FragmentProfileBinding
-    private val userViewModel: UserViewModel by viewModels()
+
+    //    private val userViewModel: UserViewModel by viewModels()
+    private lateinit var userViewModel: UserViewModel
     private val reviewViewModel: ReviewViewModel by viewModels()
     private var userId: Int = -1
     private var currentUserId: Int = -1
@@ -44,13 +46,14 @@ class ProfileFragment : Fragment(), OnReviewClicked, OnMovieClicked, BottomSheet
     private val reviewAdapter = ReviewPagingSearchAdapter()
     private lateinit var fragmentManager: FragmentManager
     private var containerId: Int = -1
-    private lateinit var settingFragment: BottomSheetFragment
+    private lateinit var bottomSheetFragment: BottomSheetFragment
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         fragmentProfileBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false)
+        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
         arguments?.let {
             userId = it.getInt(Utils.USER_ID)
         }
@@ -84,6 +87,7 @@ class ProfileFragment : Fragment(), OnReviewClicked, OnMovieClicked, BottomSheet
                 }
 
                 is BaseResponse.Success -> {
+                    fragmentProfileBinding.container.isRefreshing = false
                     stopLoading()
                     response.data?.let { user -> updateUI(user) }
                 }
@@ -99,6 +103,18 @@ class ProfileFragment : Fragment(), OnReviewClicked, OnMovieClicked, BottomSheet
             }
 
         }
+        fragmentProfileBinding.container.setOnRefreshListener {
+            if (userId != -1 && userId != SessionManager.getUserId(requireContext())!!) {
+                userViewModel.getUser(token, userId)
+                reviewViewModel.getReviewListByUser(userId)
+            } else {
+                currentUserId = SessionManager.getUserId(requireContext())!!
+                if (currentUserId != -1) {
+                    userViewModel.getUser(token, currentUserId)
+                    reviewViewModel.getReviewListByUser(currentUserId)
+                }
+            }
+        }
         fragmentProfileBinding.rvReview.adapter = reviewAdapter
         reviewAdapter.setOnReviewListener(this)
         reviewAdapter.setOnMovieListener(this)
@@ -110,6 +126,7 @@ class ProfileFragment : Fragment(), OnReviewClicked, OnMovieClicked, BottomSheet
                     }
 
                     is BaseResponse.Success -> {
+                        fragmentProfileBinding.container.isRefreshing = false
                         stopLoading()
                         state.data?.let { pagingData ->
                             reviewAdapter.submitData(pagingData)
@@ -251,9 +268,9 @@ class ProfileFragment : Fragment(), OnReviewClicked, OnMovieClicked, BottomSheet
                 settingBtn.setOnClickListener{
 
 
-                    settingFragment = BottomSheetFragment()
-                    settingFragment.setBottomSheetCloseListener(this@ProfileFragment)
-                    settingFragment.show(fragmentManager, settingFragment.tag)
+                    bottomSheetFragment = BottomSheetFragment()
+                    bottomSheetFragment.setBottomSheetCloseListener(this@ProfileFragment)
+                    bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
                 }
                 followBtn.visibility = View.INVISIBLE
             }
@@ -286,7 +303,7 @@ class ProfileFragment : Fragment(), OnReviewClicked, OnMovieClicked, BottomSheet
 
         val fragmentManager = requireActivity().supportFragmentManager
         fragmentManager.beginTransaction()
-            .add(containerId, reviewDetailFragment)
+            .replace(containerId, reviewDetailFragment)
             .addToBackStack(null)
             .commit()
     }
@@ -301,14 +318,13 @@ class ProfileFragment : Fragment(), OnReviewClicked, OnMovieClicked, BottomSheet
 
         val fragmentManager = requireActivity().supportFragmentManager
         fragmentManager.beginTransaction()
-            .add(containerId, movieDetailFragment)
+            .replace(containerId, movieDetailFragment)
             .addToBackStack(null)
             .commit()
     }
 
 
     override fun onBottomSheetDismissed() {
-        Log.d("LOG_TAG_MAIN", "onBottomSheetDismissed: ")
         userViewModel.getUser(token, currentUserId)
         reviewViewModel.getReviewListByUser(currentUserId)
     }

@@ -139,7 +139,7 @@ class PersonDetailFragment : Fragment(), OnMovieClicked {
         val containerId = (view?.parent as? ViewGroup)?.id
         if (containerId != null) {
             fragmentManager.beginTransaction()
-                .add(containerId, movieDetailFragment)
+                .replace(containerId, movieDetailFragment)
                 .addToBackStack(null)
                 .commit()
         }

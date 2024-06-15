@@ -61,6 +61,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="end"
                             android:layout_marginEnd="10dp"
+                            android:visibility="invisible"
                             android:background="@android:color/transparent"
                             android:src="@drawable/baseline_more_horiz_24"
                             tools:ignore="ContentDescription,TouchTargetSizeCheck,SpeakableTextPresentCheck" />
@@ -87,7 +88,7 @@
                 <FrameLayout
                     android:id="@+id/rv_fl"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
@@ -134,7 +135,9 @@
                     android:paddingTop="16dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"></LinearLayout>
+                    app:layout_constraintTop_toBottomOf="@id/rv_fl">
+
+                </LinearLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

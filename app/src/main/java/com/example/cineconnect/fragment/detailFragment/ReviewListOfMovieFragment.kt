@@ -109,7 +109,7 @@ class ReviewListOfMovieFragment : Fragment(), OnReviewClicked {
         val containerId = (view?.parent as? ViewGroup)?.id
         if (containerId != null) {
             fragmentManager.beginTransaction()
-                .add(containerId, reviewDetailFragment)
+                .replace(containerId, reviewDetailFragment)
                 .addToBackStack(null)
                 .commit()
         }

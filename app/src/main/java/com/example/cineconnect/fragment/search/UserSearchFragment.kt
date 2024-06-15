@@ -25,14 +25,13 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class UserSearchFragment(
-    private val query: String,
-    private val parentId: Int
 ) : Fragment(), OnUserClicked, OnFollowButtonClicked {
     private lateinit var fragmentUserSearchBinding: FragmentUserSearchBinding
     private val userAdapter = UserPagingAdapter()
     private val userViewModel: UserViewModel by viewModels()
     private var token: String? = null
-
+    private var parentId = -1
+    private var query = ""
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -41,7 +40,12 @@ class UserSearchFragment(
         fragmentUserSearchBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_user_search, container, false)
         token = "Token " + SessionManager.getToken(requireContext())
+        arguments?.let {
+            parentId = it.getInt(Utils.CONTAINER_ID)
+            query = it.getString(Utils.QUERY, "")
+        }
         userViewModel.getSearchUser(token,query)
+
         return fragmentUserSearchBinding.root
     }
 

@@ -13,7 +13,10 @@ import java.util.Locale
 
 class Utils {
     companion object {
-
+        const val COMMENT_ID = "comment_id"
+        const val ARG_LIST = "argList"
+        const val QUERY = "query"
+        const val CONTAINER_ID = "container_id"
         const val FIRST_TIME_LAUNCH = "first_time_launch"
         const val USER_TOKEN = "user_token"
         const val USER_ID = "user_id"
@@ -34,9 +37,6 @@ class Utils {
         const val BACKDROP_LINK = "https://cineconnect.blob.core.windows.net/backdrop"
         const val USER_PROFILE_LINK = "https://cineconnect.blob.core.windows.net/user-profile"
 
-        val connectionString = System.getenv("AZURE_BLOB_CONNECTION_STRING")
-        val containerName = System.getenv("AZURE_BLOB_ACCOUNT_NAME")
-        val blobName = System.getenv("AZURE_STORAGE_BLOB_NAME")
 
 
         fun convertTime(date: String): String {

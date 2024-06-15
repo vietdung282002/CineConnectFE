@@ -23,12 +23,13 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class MovieSearchFragment(
-    private val query: String,
-    private val parentId: Int
 ) : Fragment(), OnMovieClicked {
     private lateinit var fragmentMovieSearchBinding: FragmentMovieSearchBinding
     private val movieAdapter = MoviePagingAdapter()
     private val movieViewModel: MovieViewModel by viewModels()
+    private var parentId = -1
+    private var query = ""
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,6 +38,10 @@ class MovieSearchFragment(
         // Inflate the layout for this fragment
         fragmentMovieSearchBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_movie_search, container, false)
+        arguments?.let {
+            parentId = it.getInt(Utils.CONTAINER_ID)
+            query = it.getString(Utils.QUERY, "")
+        }
         movieViewModel.searchMovies(query)
         return fragmentMovieSearchBinding.root
     }

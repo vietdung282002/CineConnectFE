@@ -20,5 +20,4 @@ data class UpdatePassword(
 data class UpdateResponse(
     @SerializedName("status") val status: String,
     @SerializedName("message") val message: String,
-
-    )
+)

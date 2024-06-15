@@ -31,5 +31,9 @@
         <item name="cornerSize">6dp</item>
     </style>
 
+    <style name="BottomSheetStyle" parent="ThemeOverlay.MaterialComponents.BottomSheetDialog">
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
 
 </resources>

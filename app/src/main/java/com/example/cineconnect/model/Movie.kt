@@ -23,6 +23,8 @@ data class Movie(
     @SerializedName("review_count") val reviewCount: Int,
     @SerializedName("favourite_count") val favouriteCount: Int,
     @SerializedName("rating") val rating: Rating,
+    @SerializedName("is_watched") val isWatched: Boolean,
+    @SerializedName("is_favourite") val isFavourite: Boolean
 )
 
 data class Rating(
@@ -35,4 +37,41 @@ data class Rating(
 data class Avr(
     @SerializedName("avg_rate") val rateAvg: Float
 )
+
+data class MovieRequest(
+    @SerializedName("movie") val movieId: Int,
+)
+
+data class WatchResponse(
+    @SerializedName("status")
+    var status: String,
+    @SerializedName("message")
+    var message: Message,
+) {
+    data class Message(
+        @SerializedName("movie")
+        var movie: Int,
+        @SerializedName("user")
+        var user: Int,
+        @SerializedName("watched")
+        var watched: Boolean,
+    )
+}
+
+data class FavouriteResponse(
+    @SerializedName("status")
+    var status: String,
+    @SerializedName("message")
+    var message: Message,
+) {
+    data class Message(
+        @SerializedName("movie")
+        var movie: Int,
+        @SerializedName("user")
+        var user: Int,
+        @SerializedName("favourite")
+        var favourite: Boolean,
+    )
+}
+
 

@@ -38,7 +38,7 @@ class SettingFragment : Fragment() {
 
     private lateinit var fragmentSettingBinding: FragmentSettingBinding
     private val userViewModel: UserViewModel by viewModels(
-        { requireParentFragment() }
+        { requireParentFragment().requireParentFragment() }
     )
     private var currentUserId: Int = -1
     private var token: String? = null

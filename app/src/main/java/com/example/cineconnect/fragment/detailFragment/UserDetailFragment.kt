@@ -278,7 +278,7 @@ class UserDetailFragment : Fragment(), OnReviewClicked, OnMovieClicked {
 
         val fragmentManager = requireActivity().supportFragmentManager
         fragmentManager.beginTransaction()
-            .add(containerId, reviewDetailFragment)
+            .replace(containerId, reviewDetailFragment)
             .addToBackStack(null)
             .commit()
     }
@@ -293,7 +293,7 @@ class UserDetailFragment : Fragment(), OnReviewClicked, OnMovieClicked {
 
         val fragmentManager = requireActivity().supportFragmentManager
         fragmentManager.beginTransaction()
-            .add(containerId, movieDetailFragment)
+            .replace(containerId, movieDetailFragment)
             .addToBackStack(null)
             .commit()
     }

@@ -4,6 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".fragment.detailFragment.MovieDetailFragment">
 
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.example.cineconnect.viewmodel.MovieViewModel" />
+    </data>
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -138,6 +145,7 @@
                                     android:layout_height="wrap_content"
                                     android:textColor="@color/grey"
                                     android:textColorHint="@color/grey"
+                                    android:text="@={viewModel.releaseYear}"
                                     android:textSize="15sp" />
 
                                 <ImageView
@@ -173,6 +181,7 @@
                                 android:textSize="17sp"
                                 android:textStyle="bold"
                                 app:layout_constraintStart_toStartOf="parent"
+                                android:text="@={viewModel.director}"
                                 app:layout_constraintTop_toBottomOf="@id/ll_release_date" />
 
                             <TextView
@@ -183,6 +192,7 @@
                                 android:textColor="@color/grey"
                                 android:textColorHint="@color/grey"
                                 android:textSize="12sp"
+                                android:text="@={viewModel.runtime}"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toBottomOf="@id/tv_director_name" />
 
@@ -205,6 +215,7 @@
                                 android:textColor="@color/grey"
                                 android:textColorHint="@color/grey"
                                 android:textSize="18sp"
+                                android:text="@={viewModel.tagline}"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toBottomOf="@id/movie_poster" />
 
@@ -234,6 +245,7 @@
                                         android:textColor="@color/grey"
                                         android:textColorHint="@color/grey"
                                         android:textSize="14sp"
+                                        android:text="@={viewModel.overview}"
                                         tools:ignore="VisualLintOverlap,TextContrastCheck,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
                                     <View
@@ -310,6 +322,7 @@
                                     android:gravity="bottom"
                                     android:textColor="@color/green"
                                     android:textColorHint="@color/green"
+                                    android:text="@={viewModel.avr}"
                                     android:textSize="25sp" />
 
                                 <LinearLayout
@@ -444,7 +457,8 @@
                                     android:id="@+id/tv_number_of_likes"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:padding="3dp" />
+                                    android:padding="3dp"
+                                    android:text="@={viewModel.numberOfLikes}" />
 
 
                             </LinearLayout>
@@ -482,7 +496,8 @@
                                     android:id="@+id/tv_number_of_reviews"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:padding="3dp" />
+                                    android:padding="3dp"
+                                    android:text="@={viewModel.numberOfReviews}" />
 
 
                             </LinearLayout>

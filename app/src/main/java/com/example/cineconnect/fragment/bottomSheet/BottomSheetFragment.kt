@@ -9,19 +9,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.commit
-import androidx.fragment.app.viewModels
 import com.example.cineconnect.R
 import com.example.cineconnect.databinding.FragmentBottomSheetBinding
 import com.example.cineconnect.onClickInterface.BottomSheetListener
 import com.example.cineconnect.utils.SessionManager
-import com.example.cineconnect.viewmodel.UserViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class BottomSheetFragment : BottomSheetDialogFragment() {
     private lateinit var fragmentBottomSheetBinding: FragmentBottomSheetBinding
-    private val userViewModel: UserViewModel by viewModels()
     private var currentUserId: Int = -1
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
@@ -70,16 +66,13 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
             DataBindingUtil.inflate(inflater, R.layout.fragment_bottom_sheet, container, false)
         token = "Token " + SessionManager.getToken(requireContext())
         currentUserId = SessionManager.getUserId(requireContext())!!
-        userViewModel.getUser(token, currentUserId)
+
         return fragmentBottomSheetBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val fragmentContainerView = fragmentBottomSheetBinding.fragmentContainer
-        childFragmentManager.commit {
-            replace(R.id.fragmentContainer, SettingFragment())
-        }
+
     }
 
 

@@ -4,18 +4,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".fragment.detailFragment.RecommendHomeFragment">
 
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="5dp"
         android:background="@color/main_color">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_review"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:nestedScrollingEnabled="true"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+            android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_review"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:nestedScrollingEnabled="true"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 
         <FrameLayout
             android:id="@+id/progress_bar_layout"
@@ -34,5 +43,6 @@
                 android:visibility="visible" />
         </FrameLayout>
     </FrameLayout>
+
 </layout>
 

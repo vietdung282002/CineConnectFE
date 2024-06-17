@@ -53,9 +53,9 @@ class FollowingHomeFragment() : Fragment(), OnReviewClicked,
         reviewAdapter.setOnMovieListener(this)
         fragmentFollowingHomeBinding.rvReview.adapter = reviewAdapter
 
-//        fragmentFollowingHomeBinding.container.setOnRefreshListener {
-//            reviewViewModel.getNewsFeedReviewList(token!!)
-//        }
+        fragmentFollowingHomeBinding.container.setOnRefreshListener {
+            reviewViewModel.getNewsFeedReviewList(token!!)
+        }
         viewLifecycleOwner.lifecycleScope.launch {
             reviewViewModel.reviewState.collectLatest { state ->
                 when (state) {
@@ -70,7 +70,7 @@ class FollowingHomeFragment() : Fragment(), OnReviewClicked,
                         state.data?.let { pagingData ->
                             reviewAdapter.submitData(pagingData)
                         }
-//                        fragmentFollowingHomeBinding.container.isRefreshing = false
+                        fragmentFollowingHomeBinding.container.isRefreshing = false
 
                     }
 
@@ -93,7 +93,7 @@ class FollowingHomeFragment() : Fragment(), OnReviewClicked,
 
         val fragmentManager = requireActivity().supportFragmentManager
         fragmentManager.beginTransaction()
-            .replace(parentId, reviewDetailFragment)
+            .add(parentId, reviewDetailFragment)
             .addToBackStack(null)
             .commit()
 

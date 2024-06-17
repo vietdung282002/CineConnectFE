@@ -71,6 +71,10 @@ class ReviewDetailFragment : Fragment(), DeleteReviewListener, OptionsMenuClickL
         fragmentReviewDetailBinding.viewModel = reviewViewModel
         fragmentReviewDetailBinding.lifecycleOwner = viewLifecycleOwner
 
+        fragmentReviewDetailBinding.container.setOnRefreshListener {
+            reviewViewModel.getReview(token, reviewId)
+            reviewViewModel.getReviewCommentList(reviewId)
+        }
         val displayMetrics = requireContext().resources.displayMetrics
         val screenHeight = displayMetrics.heightPixels
         val screenWidth = displayMetrics.widthPixels
@@ -105,6 +109,7 @@ class ReviewDetailFragment : Fragment(), DeleteReviewListener, OptionsMenuClickL
         }
 
 
+
         reviewViewModel.reviewResult.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is BaseResponse.Loading -> {
@@ -114,6 +119,8 @@ class ReviewDetailFragment : Fragment(), DeleteReviewListener, OptionsMenuClickL
                 is BaseResponse.Success -> {
                     stopLoading()
                     response.data?.let { review -> updateUI(review) }
+                    fragmentReviewDetailBinding.container.isRefreshing = false
+
                 }
 
                 is BaseResponse.Error -> {
@@ -186,7 +193,12 @@ class ReviewDetailFragment : Fragment(), DeleteReviewListener, OptionsMenuClickL
 
     private fun updateUI(review: Review) {
         val containerId = (view?.parent as? ViewGroup)?.id
-        date = "Watched ${Utils.convertTime(review.watchedDay)}"
+        date = "Watched on ${Utils.convertTime(review.watchedDay)}"
+
+        if (token == null) {
+            fragmentReviewDetailBinding.layoutComment.visibility = View.GONE
+            fragmentReviewDetailBinding.likeBtn.isClickable = false
+        }
         fragmentReviewDetailBinding.apply {
             val movieBundle = Bundle()
             movieBundle.putInt(Utils.MOVIE_ID, review.movie.id)

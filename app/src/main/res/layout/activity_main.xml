@@ -52,6 +52,15 @@
                 android:visibility="gone"
                 tools:layout="@layout/fragment_profile" />
 
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/guess_profile_fragment"
+                android:name="com.example.cineconnect.fragment.mainFragment.GuessProfileFragment"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:visibility="gone"
+                tools:layout="@layout/fragment_guess_profile" />
+
             <FrameLayout
                 android:id="@+id/main_activity_frame_layout"
                 android:layout_width="match_parent"

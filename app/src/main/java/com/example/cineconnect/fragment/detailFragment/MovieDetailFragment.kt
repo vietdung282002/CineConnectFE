@@ -119,6 +119,11 @@ class MovieDetailFragment : Fragment() {
         val castList = movieObj.casts.toList()
         val genreList = movieObj.genres.toList()
 
+        if (token == null) {
+            fragmentMovieDetailBinding.ratingBar.visibility = View.GONE
+            fragmentMovieDetailBinding.moreBtn.visibility = View.GONE
+        }
+
         fragmentMovieDetailBinding.apply {
             if (token == null) {
                 ratingBar.visibility = View.GONE
@@ -127,14 +132,16 @@ class MovieDetailFragment : Fragment() {
                 movieViewmodel.rateMovie(token!!, rating, movieId)
 
             }
-            movieViewmodel.rateState.observe(viewLifecycleOwner) {
-                if (it is BaseResponse.Success) {
-                    ratingBar.rating = it.data?.userRating!!
-                    val barEntriesList = createBarEntriesList(it.data)
-                    drawChart(barEntriesList)
-                    tvAvrRating.text = it.data.avr.rateAvg.toString()
-                } else if (it is BaseResponse.Error) {
-                    processError(it.msg)
+            if (token != null) {
+                movieViewmodel.rateState.observe(viewLifecycleOwner) {
+                    if (it is BaseResponse.Success) {
+                        ratingBar.rating = it.data?.userRating!!
+                        val barEntriesList = createBarEntriesList(it.data)
+                        drawChart(barEntriesList)
+                        tvAvrRating.text = it.data.avr.rateAvg.toString()
+                    } else if (it is BaseResponse.Error) {
+                        processError(it.msg)
+                    }
                 }
             }
             collapsingToolbar.title = movieObj.title
@@ -182,7 +189,9 @@ class MovieDetailFragment : Fragment() {
                 isExpanded = !isExpanded
             }
 
-
+            val barEntriesList = createBarEntriesList(ratingObj)
+            drawChart(barEntriesList)
+            tvAvrRating.text = ratingObj.avr.rateAvg.toString()
 
             likedList.setOnClickListener {
                 val bundle = Bundle()

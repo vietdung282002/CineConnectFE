@@ -40,11 +40,12 @@ class MovieListAdapter :
         parent: ViewGroup,
         viewType: Int
     ): MovieViewHolder {
+
         val adapterLayout =
             MovieItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return MovieViewHolder(adapterLayout)
-
     }
+
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
         val movie = getItem(position)

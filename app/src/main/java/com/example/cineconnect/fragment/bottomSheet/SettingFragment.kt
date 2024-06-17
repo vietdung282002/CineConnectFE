@@ -23,7 +23,7 @@ import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.example.cineconnect.R
-import com.example.cineconnect.activity.AuthenticationActivity
+import com.example.cineconnect.activity.IntroActivity
 import com.example.cineconnect.databinding.FragmentSettingBinding
 import com.example.cineconnect.model.User
 import com.example.cineconnect.network.BaseResponse
@@ -130,7 +130,7 @@ class SettingFragment : Fragment() {
 
     private fun logout() {
         SessionManager.clearData(requireContext())
-        val intent = Intent(activity, AuthenticationActivity::class.java)
+        val intent = Intent(activity, IntroActivity::class.java)
         startActivity(intent)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)

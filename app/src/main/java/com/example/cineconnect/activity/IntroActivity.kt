@@ -6,6 +6,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.cineconnect.MainActivity
 import com.example.cineconnect.databinding.ActivityIntroBinding
 import com.example.cineconnect.utils.SessionManager
 import com.example.cineconnect.utils.Utils
@@ -19,7 +20,7 @@ class IntroActivity : AppCompatActivity() {
         binding = ActivityIntroBinding.inflate(layoutInflater)
         val hasSeenIntro = SessionManager.getBoolean(this, Utils.FIRST_TIME_LAUNCH)
         if(hasSeenIntro == true){
-            val intent = Intent(this, AuthenticationActivity::class.java)
+            val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
         }
@@ -35,6 +36,11 @@ class IntroActivity : AppCompatActivity() {
 
         binding.signUpBtn.setOnClickListener {
             val intent = Intent(this, AuthenticationActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.skipBtn.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
         }

@@ -72,6 +72,9 @@ class SignInFragment : Fragment() {
                     addToBackStack(null)
                 }
             }
+            btnBack.setOnClickListener {
+                activity?.finish()
+            }
         }
 
 
@@ -138,7 +141,7 @@ class SignInFragment : Fragment() {
         startActivity(intent)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
-        activity?.finish()
+        activity?.finishAffinity()
     }
 
 

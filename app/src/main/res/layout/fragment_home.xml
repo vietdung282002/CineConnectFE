@@ -4,22 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".fragment.mainFragment.HomeFragment">
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/main_color">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/appbar"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <com.google.android.material.appbar.CollapsingToolbarLayout
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/appbar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:contentScrim="@color/black2"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed"
-                app:toolbarId="@+id/toolbar">
+                android:layout_height="wrap_content">
 
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/toolbar"
@@ -46,25 +44,17 @@
 
                     </FrameLayout>
                 </androidx.appcompat.widget.Toolbar>
-            </com.google.android.material.appbar.CollapsingToolbarLayout>
 
-            <com.example.cineconnect.customLayout.CustomTabBar
-                android:id="@+id/tab_bar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:entries="@array/home" />
-        </com.google.android.material.appbar.AppBarLayout>
-
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/nsv"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true"
-            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
-
+                <com.example.cineconnect.customLayout.CustomTabBar
+                    android:id="@+id/tab_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/home" />
+            </com.google.android.material.appbar.AppBarLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:orientation="vertical">
 
                 <androidx.viewpager2.widget.ViewPager2
@@ -75,9 +65,25 @@
                     android:layout_marginBottom="10dp"
                     android:paddingBottom="10dp" />
             </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
 
 
-        </androidx.core.widget.NestedScrollView>
+    <!--    <androidx.coordinatorlayout.widget.CoordinatorLayout-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="match_parent"-->
+    <!--        android:background="@color/main_color">-->
 
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <!--        <androidx.core.widget.NestedScrollView-->
+    <!--            android:id="@+id/nsv"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="match_parent"-->
+    <!--            android:fillViewport="true"-->
+    <!--            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">-->
+
+
+    <!--        </androidx.core.widget.NestedScrollView>-->
+
+    <!--    </androidx.coordinatorlayout.widget.CoordinatorLayout>-->
 </layout>

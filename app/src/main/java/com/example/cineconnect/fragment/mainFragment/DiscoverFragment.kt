@@ -3,6 +3,7 @@ package com.example.cineconnect.fragment.mainFragment
 import android.app.AlertDialog
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -47,6 +48,7 @@ class DiscoverFragment : Fragment(), OnMovieClicked {
             inflater,
             R.layout.fragment_discover, container, false
         )
+        movieViewmodel.getMovieList(currentPage)
         return fragmentDiscoverBinding.root
     }
 
@@ -63,7 +65,7 @@ class DiscoverFragment : Fragment(), OnMovieClicked {
         movieListAdapter.setOnMovieListener(this)
         fragmentDiscoverBinding.lifecycleOwner = viewLifecycleOwner
         fragmentDiscoverBinding.rvMovie.adapter = movieListAdapter
-        fragmentDiscoverBinding.rvMovie.setHasFixedSize(true)
+//        fragmentDiscoverBinding.rvMovie.setHasFixedSize(true)
 
         fragmentDiscoverBinding.container.setOnRefreshListener {
             movieViewmodel.getMovieList(currentPage)
@@ -78,6 +80,7 @@ class DiscoverFragment : Fragment(), OnMovieClicked {
                 is BaseResponse.Success -> {
                     fragmentDiscoverBinding.container.isRefreshing = false
                     stopLoading()
+                    Log.d("TAG", "onViewCreated: ${it.data}")
                     updateUI(it.data)
                 }
 

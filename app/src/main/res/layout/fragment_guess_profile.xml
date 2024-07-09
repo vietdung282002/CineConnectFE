@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/main_color"
-        tools:context=".fragment.mainFragment.GuessProfileFragment">
+        tools:context=".view.fragment.mainFragment.GuessProfileFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/bg_intro"

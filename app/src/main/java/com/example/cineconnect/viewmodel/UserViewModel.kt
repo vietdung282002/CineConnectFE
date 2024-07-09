@@ -1,7 +1,6 @@
 package com.example.cineconnect.viewmodel
 
 import android.graphics.Bitmap
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,27 +9,28 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.azure.storage.blob.BlobClientBuilder
-import com.example.cineconnect.model.Activity
-import com.example.cineconnect.model.ConFirmPasscode
-import com.example.cineconnect.model.CustomResponse
-import com.example.cineconnect.model.FavouriteList
-import com.example.cineconnect.model.LoginRequest
-import com.example.cineconnect.model.LoginResponse
-import com.example.cineconnect.model.RegisterRequest
-import com.example.cineconnect.model.RegisterResponse
-import com.example.cineconnect.model.ResetPassword
-import com.example.cineconnect.model.ResetPasswordRequest
-import com.example.cineconnect.model.UpdatePassword
-import com.example.cineconnect.model.UpdateResponse
-import com.example.cineconnect.model.UpdateUser
-import com.example.cineconnect.model.User
-import com.example.cineconnect.model.UserList
-import com.example.cineconnect.network.BaseResponse
-import com.example.cineconnect.paging.ActivityPagingSource
-import com.example.cineconnect.paging.FavouriteUserPagingSource
-import com.example.cineconnect.paging.UserPagingSource
-import com.example.cineconnect.repository.UserRepository
+import com.example.cineconnect.model.entities.Activity
+import com.example.cineconnect.model.entities.ConFirmPasscode
+import com.example.cineconnect.model.entities.CustomResponse
+import com.example.cineconnect.model.entities.FavouriteList
+import com.example.cineconnect.model.entities.LoginRequest
+import com.example.cineconnect.model.entities.LoginResponse
+import com.example.cineconnect.model.entities.RegisterRequest
+import com.example.cineconnect.model.entities.RegisterResponse
+import com.example.cineconnect.model.entities.ResetPassword
+import com.example.cineconnect.model.entities.ResetPasswordRequest
+import com.example.cineconnect.model.entities.UpdatePassword
+import com.example.cineconnect.model.entities.UpdateResponse
+import com.example.cineconnect.model.entities.UpdateUser
+import com.example.cineconnect.model.entities.User
+import com.example.cineconnect.model.entities.UserList
+import com.example.cineconnect.model.network.BaseResponse
+import com.example.cineconnect.model.paging.ActivityPagingSource
+import com.example.cineconnect.model.paging.FavouriteUserPagingSource
+import com.example.cineconnect.model.paging.UserPagingSource
+import com.example.cineconnect.model.repository.UserRepository
 import com.example.cineconnect.utils.Utils
+import com.google.gson.Gson
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -50,7 +50,7 @@ class UserViewModel : ViewModel() {
     val resetPasswordResult: MutableLiveData<BaseResponse<CustomResponse>> = MutableLiveData()
     val confirmPasscodeResult: MutableLiveData<BaseResponse<CustomResponse>> = MutableLiveData()
     val userResult: MutableLiveData<BaseResponse<User>> = MutableLiveData()
-    val updateUserResult: MutableLiveData<BaseResponse<UpdateUser>> = MutableLiveData()
+    var updateUserResult: MutableLiveData<BaseResponse<UpdateUser>> = MutableLiveData()
     val updatePasswordResult: MutableLiveData<BaseResponse<UpdateResponse>> = MutableLiveData()
 
     val userEmail = MutableLiveData<String>()
@@ -93,7 +93,12 @@ class UserViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     loginResult.value = BaseResponse.Success(response.body())
                 } else {
-                    loginResult.value = BaseResponse.Error(response.message())
+                    val errorBody = response.errorBody()?.string()
+                    errorBody?.let {
+                        val gson = Gson()
+                        val errorResponse = gson.fromJson(it, CustomResponse::class.java)
+                        loginResult.value = BaseResponse.Error(errorResponse.message)
+                    }
                 }
             } catch (e: Exception) {
                 loginResult.value = BaseResponse.Error(e.message)
@@ -113,7 +118,12 @@ class UserViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     registerResult.value = BaseResponse.Success(response.body())
                 } else {
-                    registerResult.value = BaseResponse.Error(response.message())
+                    val errorBody = response.errorBody()?.string()
+                    errorBody?.let {
+                        val gson = Gson()
+                        val errorResponse = gson.fromJson(it, CustomResponse::class.java)
+                        registerResult.value = BaseResponse.Error(errorResponse.message)
+                    }
                 }
             } catch (e: Exception) {
                 registerResult.value = BaseResponse.Error(e.message)
@@ -148,8 +158,13 @@ class UserViewModel : ViewModel() {
                     if (response.isSuccessful) {
                         resetPasswordRequestResult.value = BaseResponse.Success(response.body())
                     } else {
-                        resetPasswordRequestResult.value =
-                            BaseResponse.Error(response.body()?.message)
+                        val errorBody = response.errorBody()?.string()
+                        errorBody?.let {
+                            val gson = Gson()
+                            val errorResponse = gson.fromJson(it, CustomResponse::class.java)
+                            resetPasswordRequestResult.value =
+                                BaseResponse.Error(errorResponse.message)
+                        }
                     }
                 } catch (e: Exception) {
                     resetPasswordRequestResult.value = BaseResponse.Error(e.message)
@@ -171,7 +186,12 @@ class UserViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     confirmPasscodeResult.value = BaseResponse.Success(response.body())
                 } else {
-                    confirmPasscodeResult.value = BaseResponse.Error(response.body()?.message)
+                    val errorBody = response.errorBody()?.string()
+                    errorBody?.let {
+                        val gson = Gson()
+                        val errorResponse = gson.fromJson(it, CustomResponse::class.java)
+                        confirmPasscodeResult.value = BaseResponse.Error(errorResponse.message)
+                    }
                 }
             } catch (e: Exception) {
                 confirmPasscodeResult.value = BaseResponse.Error(e.message)
@@ -188,7 +208,12 @@ class UserViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     resetPasswordResult.value = BaseResponse.Success(response.body())
                 } else {
-                    resetPasswordResult.value = BaseResponse.Error(response.body()?.message)
+                    val errorBody = response.errorBody()?.string()
+                    errorBody?.let {
+                        val gson = Gson()
+                        val errorResponse = gson.fromJson(it, CustomResponse::class.java)
+                        resetPasswordResult.value = BaseResponse.Error(errorResponse.message)
+                    }
                 }
             } catch (e: Exception) {
                 resetPasswordResult.value = BaseResponse.Error(e.message)
@@ -199,7 +224,6 @@ class UserViewModel : ViewModel() {
 
     fun getUser(token: String?, userId: Int) {
         userResult.value = BaseResponse.Loading()
-
         viewModelScope.launch {
             try {
                 val response = userRepo.getUser(token, userId)
@@ -303,11 +327,15 @@ class UserViewModel : ViewModel() {
                 val response = userRepo.updateUserProfile(
                     token = token, userId = userId, updateUser = updateUser
                 )
-                Log.d("LOG_TAG_MAIN", response.toString())
                 if (response.isSuccessful) {
                     updateUserResult.value = BaseResponse.Success(response.body())
                 } else {
-                    updateUserResult.value = BaseResponse.Error(response.message())
+                    val errorBody = response.errorBody()?.string()
+                    errorBody?.let {
+                        val gson = Gson()
+                        val errorResponse = gson.fromJson(it, CustomResponse::class.java)
+                        updateUserResult.value = BaseResponse.Error(errorResponse.message)
+                    }
                 }
             } catch (e: Exception) {
                 updateUserResult.value = BaseResponse.Error(e.message)
@@ -318,11 +346,6 @@ class UserViewModel : ViewModel() {
 
     fun changePassword(token: String) {
         updatePasswordResult.value = BaseResponse.Loading()
-        Log.d(
-            "LOG_TAG_MAIN",
-            "${currentPassword.value.toString()} + ${newPassword.value.toString()} + ${confirmPassword.value.toString()}"
-        )
-        Log.d("LOG_TAG_MAIN", "${confirmPassword.value == newPassword.value}")
 
         if (confirmPassword.value != newPassword.value) {
             updatePasswordResult.value = BaseResponse.Error("confirm Password not match")
@@ -335,11 +358,15 @@ class UserViewModel : ViewModel() {
                     val response = userRepo.updatePassword(
                         token = token, updatePassword = updatePassword
                     )
-                    Log.d("LOG_TAG_MAIN", response.toString())
                     if (response.isSuccessful) {
                         updatePasswordResult.value = BaseResponse.Success(response.body())
                     } else {
-                        updatePasswordResult.value = BaseResponse.Error(response.message())
+                        val errorBody = response.errorBody()?.string()
+                        errorBody?.let {
+                            val gson = Gson()
+                            val errorResponse = gson.fromJson(it, CustomResponse::class.java)
+                            updatePasswordResult.value = BaseResponse.Error(errorResponse.message)
+                        }
                     }
                 } catch (e: Exception) {
                     updatePasswordResult.value = BaseResponse.Error(e.message)
@@ -369,7 +396,9 @@ class UserViewModel : ViewModel() {
         val imageData = outputStream.toByteArray()
 
 
-        val blobClient = BlobClientBuilder().connectionString("").containerName("user-profile")
+        val blobClient =
+            BlobClientBuilder().connectionString("")
+                .containerName("user-profile")
             .blobName("${System.currentTimeMillis()}.jpg").buildClient()
 
 

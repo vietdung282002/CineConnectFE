@@ -1,21 +1,22 @@
 package com.example.cineconnect.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.example.cineconnect.model.Comment
-import com.example.cineconnect.model.CommentRequest
-import com.example.cineconnect.model.Review
-import com.example.cineconnect.model.ReviewList
-import com.example.cineconnect.model.ReviewRequest
-import com.example.cineconnect.network.BaseResponse
-import com.example.cineconnect.paging.CommentPagingSource
-import com.example.cineconnect.paging.ReviewPagingSource
-import com.example.cineconnect.repository.ReviewRepository
+import com.example.cineconnect.model.entities.Comment
+import com.example.cineconnect.model.entities.CommentRequest
+import com.example.cineconnect.model.entities.CustomResponse
+import com.example.cineconnect.model.entities.Review
+import com.example.cineconnect.model.entities.ReviewList
+import com.example.cineconnect.model.entities.ReviewRequest
+import com.example.cineconnect.model.network.BaseResponse
+import com.example.cineconnect.model.paging.CommentPagingSource
+import com.example.cineconnect.model.paging.ReviewPagingSource
+import com.example.cineconnect.model.repository.ReviewRepository
+import com.google.gson.Gson
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -25,7 +26,7 @@ import kotlinx.coroutines.launch
 class ReviewViewModel : ViewModel() {
     private val reviewRepository = ReviewRepository()
     val reviewResult: MutableLiveData<BaseResponse<Review>> = MutableLiveData()
-    val editReviewResult: MutableLiveData<BaseResponse<Unit>> = MutableLiveData()
+    var editReviewResult: MutableLiveData<BaseResponse<Unit>> = MutableLiveData()
     private val getCommentResult: MutableLiveData<BaseResponse<Comment>> = MutableLiveData()
     val editCommentResult: MutableLiveData<BaseResponse<Unit>> = MutableLiveData()
 
@@ -52,6 +53,7 @@ class ReviewViewModel : ViewModel() {
 
     fun getReview(token: String?, id: Int) {
         reviewResult.value = BaseResponse.Loading()
+        editReviewResult = MutableLiveData()
         viewModelScope.launch {
             try {
                 val response = reviewRepository.getReviews(token, id)
@@ -178,14 +180,17 @@ class ReviewViewModel : ViewModel() {
                 val commentRequest = CommentRequest(
                     review = reviewId, comment = comment.value.toString()
                 )
-                Log.d("LOG_TAG_MAIN", commentRequest.toString())
                 val response = reviewRepository.comment(token, commentRequest)
-                Log.d("LOG_TAG_MAIN", response.toString())
                 if (response.isSuccessful) {
                     comment.value = ""
                     commentResult.value = BaseResponse.Success(Unit)
                 } else {
-                    commentResult.value = BaseResponse.Error(response.message())
+                    val errorBody = response.errorBody()?.string()
+                    errorBody?.let {
+                        val gson = Gson()
+                        val errorResponse = gson.fromJson(it, CustomResponse::class.java)
+                        commentResult.value = BaseResponse.Error(errorResponse.message)
+                    }
                 }
             } catch (e: Exception) {
                 commentResult.value = BaseResponse.Error(e.message)
@@ -205,7 +210,12 @@ class ReviewViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     editReviewResult.value = BaseResponse.Success()
                 } else {
-                    editReviewResult.value = BaseResponse.Error(response.message())
+                    val errorBody = response.errorBody()?.string()
+                    errorBody?.let {
+                        val gson = Gson()
+                        val errorResponse = gson.fromJson(it, CustomResponse::class.java)
+                        editReviewResult.value = BaseResponse.Error(errorResponse.message)
+                    }
                 }
             } catch (e: Exception) {
                 editReviewResult.value = BaseResponse.Error(e.message)
@@ -216,18 +226,20 @@ class ReviewViewModel : ViewModel() {
     fun editComment(token: String, content: String, commentId: Int, reviewId: Int) {
         editCommentResult.value = BaseResponse.Loading()
         viewModelScope.launch {
-            Log.d("LOG_TAG_MAIN", commentId.toString())
             val commentRequest = CommentRequest(
                 review = reviewId, comment = content
             )
-            Log.d("LOG_TAG_MAIN", commentRequest.toString())
             try {
                 val response = reviewRepository.editComment(token, commentRequest, commentId)
-                Log.d("LOG_TAG_MAIN", response.toString())
                 if (response.isSuccessful) {
                     editCommentResult.value = BaseResponse.Success()
                 } else {
-                    editCommentResult.value = BaseResponse.Error(response.message())
+                    val errorBody = response.errorBody()?.string()
+                    errorBody?.let {
+                        val gson = Gson()
+                        val errorResponse = gson.fromJson(it, CustomResponse::class.java)
+                        editCommentResult.value = BaseResponse.Error(errorResponse.message)
+                    }
                 }
             } catch (e: Exception) {
                 editCommentResult.value = BaseResponse.Error(e.message)
@@ -243,7 +255,12 @@ class ReviewViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     editReviewResult.value = BaseResponse.Success()
                 } else {
-                    editReviewResult.value = BaseResponse.Error(response.message())
+                    val errorBody = response.errorBody()?.string()
+                    errorBody?.let {
+                        val gson = Gson()
+                        val errorResponse = gson.fromJson(it, CustomResponse::class.java)
+                        editReviewResult.value = BaseResponse.Error(errorResponse.message)
+                    }
                 }
             } catch (e: Exception) {
                 editReviewResult.value = BaseResponse.Error(e.message)
@@ -259,7 +276,12 @@ class ReviewViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     editCommentResult.value = BaseResponse.Success()
                 } else {
-                    editCommentResult.value = BaseResponse.Error(response.message())
+                    val errorBody = response.errorBody()?.string()
+                    errorBody?.let {
+                        val gson = Gson()
+                        val errorResponse = gson.fromJson(it, CustomResponse::class.java)
+                        editCommentResult.value = BaseResponse.Error(errorResponse.message)
+                    }
                 }
             } catch (e: Exception) {
                 editCommentResult.value = BaseResponse.Error(e.message)

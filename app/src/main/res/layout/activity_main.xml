@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
-    tools:context=".MainActivity">
+    tools:context=".view.activity.MainActivity">
 
 
     <FrameLayout
@@ -19,7 +19,7 @@
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/home_fragment"
-                android:name="com.example.cineconnect.fragment.mainFragment.HomeFragment"
+                android:name="com.example.cineconnect.view.fragment.mainFragment.HomeFragment"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
@@ -27,7 +27,7 @@
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/discover_fragment"
-                android:name="com.example.cineconnect.fragment.mainFragment.DiscoverFragment"
+                android:name="com.example.cineconnect.view.fragment.mainFragment.DiscoverFragment"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
@@ -36,7 +36,7 @@
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/search_fragment"
-                android:name="com.example.cineconnect.fragment.mainFragment.SearchFragment"
+                android:name="com.example.cineconnect.view.fragment.mainFragment.SearchFragment"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
@@ -45,7 +45,7 @@
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/profile_fragment"
-                android:name="com.example.cineconnect.fragment.mainFragment.ProfileFragment"
+                android:name="com.example.cineconnect.view.fragment.mainFragment.ProfileFragment"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
@@ -54,7 +54,7 @@
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/guess_profile_fragment"
-                android:name="com.example.cineconnect.fragment.mainFragment.GuessProfileFragment"
+                android:name="com.example.cineconnect.view.fragment.mainFragment.GuessProfileFragment"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"

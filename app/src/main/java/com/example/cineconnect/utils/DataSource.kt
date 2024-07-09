@@ -1,8 +1,8 @@
 package com.example.cineconnect.utils
 
-import com.example.cineconnect.model.CastList
-import com.example.cineconnect.model.Genre
-import com.example.cineconnect.model.MovieList
+import com.example.cineconnect.model.entities.CastList
+import com.example.cineconnect.model.entities.Genre
+import com.example.cineconnect.model.entities.MovieList
 
 class DataSource {
     fun loadPoster(): List<String> {

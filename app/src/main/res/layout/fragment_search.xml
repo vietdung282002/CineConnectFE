@@ -2,7 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".fragment.mainFragment.SearchFragment">
+    tools:context=".view.fragment.mainFragment.SearchFragment">
 
     <data>
 
@@ -108,7 +108,7 @@
                 </androidx.appcompat.widget.Toolbar>
             </com.google.android.material.appbar.CollapsingToolbarLayout>
 
-            <com.example.cineconnect.customLayout.CustomTabBar
+            <com.example.cineconnect.view.customLayout.CustomTabBar
                 android:id="@+id/tab_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

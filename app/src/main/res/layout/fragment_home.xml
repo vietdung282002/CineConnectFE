@@ -2,7 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".fragment.mainFragment.HomeFragment">
+    tools:context=".view.fragment.mainFragment.HomeFragment">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -45,7 +45,7 @@
                     </FrameLayout>
                 </androidx.appcompat.widget.Toolbar>
 
-                <com.example.cineconnect.customLayout.CustomTabBar
+                <com.example.cineconnect.view.customLayout.CustomTabBar
                     android:id="@+id/tab_bar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

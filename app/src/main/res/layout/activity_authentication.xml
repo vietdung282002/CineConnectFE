@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".activity.AuthenticationActivity">
+    tools:context=".view.activity.AuthenticationActivity">
 
     <FrameLayout
         android:id="@+id/main"
@@ -11,7 +11,7 @@
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fragment_container_view"
-            android:name="com.example.cineconnect.fragment.authenticationFragment.SignInFragment"
+            android:name="com.example.cineconnect.view.fragment.authenticationFragment.SignInFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:layout="@layout/fragment_sign_in" />

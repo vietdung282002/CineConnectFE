@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:background="@android:color/transparent"
         android:orientation="vertical"
-        tools:context=".fragment.bottomSheet.EditCommentFragment">
+        tools:context=".view.fragment.bottomSheet.EditCommentFragment">
 
         <FrameLayout
             android:layout_width="match_parent"

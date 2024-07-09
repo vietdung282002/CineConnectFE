@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:background="@android:color/transparent"
         android:orientation="vertical"
-        tools:context=".fragment.bottomSheet.BottomSheetFragment">
+        tools:context=".view.fragment.bottomSheet.BottomSheetFragment">
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fragmentContainer"
@@ -17,11 +17,11 @@
             android:layout_height="match_parent"
             android:layout_marginTop="10dp"
             android:background="@drawable/bg_rounded"
-            android:name="com.example.cineconnect.fragment.bottomSheet.SettingFragment"
+            android:name="com.example.cineconnect.view.fragment.bottomSheet.SettingFragment"
             tools:layout="@layout/fragment_setting"
 
             />
-        <!--        android:name="com.example.cineconnect.fragment.bottomSheet.SettingFragment"-->
+        <!--        android:name="com.example.cineconnect.view.fragment.bottomSheet.SettingFragment"-->
         <!--        tools:layout="@layout/fragment_setting"-->
 
     </RelativeLayout>

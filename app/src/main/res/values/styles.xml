@@ -35,5 +35,11 @@
         <item name="android:background">@android:color/transparent</item>
     </style>
 
+    <style name="TextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/white</item>
+        <item name="boxStrokeWidth">20dp</item>
+        <item name="boxStrokeWidthFocused">20dp</item>
+    </style>
+
 
 </resources>

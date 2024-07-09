@@ -46,6 +46,25 @@ class Utils {
             return emailRegex.matches(email)
         }
 
+        fun isPasswordValid(password: String): Boolean {
+            // Check password length
+            if (password.length < 8) {
+                return false
+            }
+            //Check for at least one lowercase letter
+            val containsLowerCase = password.any { it.isLowerCase() }
+
+            // Check for at least one capital letter
+            val containsUpperCase = password.any { it.isUpperCase() }
+
+            // Check has at least one digit
+            val containsDigit = password.any { it.isDigit() }
+
+            // Returns true if all conditions are true
+            return containsLowerCase && containsUpperCase && containsDigit
+        }
+
+
         fun convertTime(date: String): String {
             val formattedDate: String
 

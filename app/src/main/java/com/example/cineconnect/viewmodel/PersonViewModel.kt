@@ -6,11 +6,11 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.example.cineconnect.model.PeopleListResponse
-import com.example.cineconnect.model.Person
-import com.example.cineconnect.network.BaseResponse
-import com.example.cineconnect.paging.PeoplePagingSource
-import com.example.cineconnect.repository.PersonRepository
+import com.example.cineconnect.model.entities.PeopleListResponse
+import com.example.cineconnect.model.entities.Person
+import com.example.cineconnect.model.network.BaseResponse
+import com.example.cineconnect.model.paging.PeoplePagingSource
+import com.example.cineconnect.model.repository.PersonRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch

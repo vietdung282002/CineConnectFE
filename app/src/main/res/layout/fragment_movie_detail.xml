@@ -2,7 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".fragment.detailFragment.MovieDetailFragment">
+    tools:context=".view.fragment.detailFragment.MovieDetailFragment">
 
     <data>
 
@@ -514,7 +514,7 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/ll_like_review" />
 
-                        <com.example.cineconnect.customLayout.CustomTabBar
+                        <com.example.cineconnect.view.customLayout.CustomTabBar
                             android:id="@+id/tab_bar"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

@@ -1,23 +1,24 @@
 package com.example.cineconnect.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.example.cineconnect.model.Movie
-import com.example.cineconnect.model.MovieList
-import com.example.cineconnect.model.MovieListResponse
-import com.example.cineconnect.model.MovieRequest
-import com.example.cineconnect.model.Rating
-import com.example.cineconnect.model.RatingRequest
-import com.example.cineconnect.model.Recommend
-import com.example.cineconnect.model.ReviewRequest
-import com.example.cineconnect.network.BaseResponse
-import com.example.cineconnect.paging.MoviePagingSource
-import com.example.cineconnect.repository.MovieRepository
+import com.example.cineconnect.model.entities.CustomResponse
+import com.example.cineconnect.model.entities.Movie
+import com.example.cineconnect.model.entities.MovieList
+import com.example.cineconnect.model.entities.MovieListResponse
+import com.example.cineconnect.model.entities.MovieRequest
+import com.example.cineconnect.model.entities.Rating
+import com.example.cineconnect.model.entities.RatingRequest
+import com.example.cineconnect.model.entities.Recommend
+import com.example.cineconnect.model.entities.ReviewRequest
+import com.example.cineconnect.model.network.BaseResponse
+import com.example.cineconnect.model.paging.MoviePagingSource
+import com.example.cineconnect.model.repository.MovieRepository
+import com.google.gson.Gson
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -175,7 +176,12 @@ class MovieViewModel : ViewModel() {
                         movieRepository.addRecommend(token, recommend)
                     }
                 } else {
-                    rateState.value = BaseResponse.Error(response.message())
+                    val errorBody = response.errorBody()?.string()
+                    errorBody?.let {
+                        val gson = Gson()
+                        val errorResponse = gson.fromJson(it, CustomResponse::class.java)
+                        rateState.value = BaseResponse.Error(errorResponse.message)
+                    }
                 }
             } catch (e: Exception) {
                 rateState.value = BaseResponse.Error(e.message)
@@ -198,7 +204,12 @@ class MovieViewModel : ViewModel() {
                     rateState.value =
                         BaseResponse.Error("You can't not remove from watched because there is activity on it")
                 } else {
-                    rateState.value = BaseResponse.Error(response.message())
+                    val errorBody = response.errorBody()?.string()
+                    errorBody?.let {
+                        val gson = Gson()
+                        val errorResponse = gson.fromJson(it, CustomResponse::class.java)
+                        watchState.value = BaseResponse.Error(errorResponse.message)
+                    }
 
                 }
             } catch (e: Exception) {
@@ -222,7 +233,6 @@ class MovieViewModel : ViewModel() {
                         val recommend = Recommend(movie = movieId.value!!)
                         val recommendResponse = movieRepository.addRecommend(token, recommend)
 
-                        Log.d("LOG_TAG_MAIN", "like: ${recommendResponse.toString()}")
                     }
                 } else {
                     favoriteState.value = BaseResponse.Error(response.message())
@@ -243,10 +253,13 @@ class MovieViewModel : ViewModel() {
                 val response = movieRepository.addReview(token, reviewRequest = reviewRequest)
                 if (response.isSuccessful) {
                     reviewResult.value = BaseResponse.Success()
-                } else if (response.code() == 409) {
-                    reviewResult.value = BaseResponse.Error("You already reviewed this movie")
                 } else {
-                    reviewResult.value = BaseResponse.Error(response.message())
+                    val errorBody = response.errorBody()?.string()
+                    errorBody?.let {
+                        val gson = Gson()
+                        val errorResponse = gson.fromJson(it, CustomResponse::class.java)
+                        reviewResult.value = BaseResponse.Error(errorResponse.message)
+                    }
                 }
             } catch (e: Exception) {
                 reviewResult.value = BaseResponse.Error(e.message)

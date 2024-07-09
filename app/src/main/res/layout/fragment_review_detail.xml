@@ -2,7 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".fragment.detailFragment.ReviewDetailFragment">
+    tools:context=".view.fragment.detailFragment.ReviewDetailFragment">
 
     <data>
 
@@ -208,6 +208,14 @@
                                                 android:rating="0"
                                                 android:stepSize="0.5"
                                                 android:visibility="gone" />
+
+                                            <ImageView
+                                                android:id="@+id/iv_again"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_gravity="center"
+                                                android:src="@drawable/baseline_autorenew_24"
+                                                android:visibility="gone" />
                                         </LinearLayout>
 
                                         <TextView
@@ -326,11 +334,11 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/text_input"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:theme="@style/TextInputLayoutStyle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    app:boxBackgroundColor="@color/main_color"
+                    app:boxBackgroundColor="#6A6A6A"
                     app:boxCornerRadiusBottomEnd="10dp"
                     app:boxCornerRadiusBottomStart="10dp"
                     app:boxCornerRadiusTopEnd="10dp"
